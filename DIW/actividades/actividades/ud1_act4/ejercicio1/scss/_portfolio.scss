@@ -1,0 +1,76 @@
+#portfolio {
+    display: flex;
+    gap: $espacio-base;
+    flex-direction: column;
+    background-color: $color-fondo-portfolio;
+    padding: $espacio-base;
+
+    #contenido-portfolio {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .titulo {
+        color: $color-textos;
+    }
+
+    .intro {
+        color: $color-subtitulos
+    }
+
+    #paneles-portfolio {
+        display: flex;
+        gap: $espacio-base*2;
+        justify-content: space-around;
+
+        .panel-portfolio {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            flex-basis: 15%;
+            padding: $espacio-base;
+            padding-bottom: $espacio-base*6;
+            text-align: center;
+            color: $color-textos-contacto;
+            font-weight: bold;
+
+        }
+
+        p {
+            display: flex;
+            justify-content: center;
+            color: $color-textos-contacto;
+            background-color: $color-fondo;
+            padding: $espacio-base/2;
+            border-radius: 4px;
+        }
+
+        #kyocera {
+            background: url("img/portfolio/kyocera.png");
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            align-items: flex-end;
+        }
+
+        #sanitas {
+            background: url("img/portfolio/sanitas.png");
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            align-items: center;
+        }
+
+        #kadabra {
+            background: url("img/portfolio/kadabra.png");
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            align-items: center;
+            align-items: flex-end;
+        }
+
+    }
+
+}

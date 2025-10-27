@@ -1,0 +1,24 @@
+#banner {
+        background-image: url("img/banner.jpg");
+        background-size: cover;
+        padding-top: $espacio-base*4;
+        padding-bottom: $espacio-base*2;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        .titulo {
+                color: $color-textos-contacto;
+                text-transform: uppercase;
+                font-size: $espacio-base*4;
+        }
+
+        .subtitulo {
+                background-color: $color-fondo;
+                color: $color-textos-contacto;
+                padding: $espacio-base*2;
+                text-transform: uppercase;
+                text-align: center;
+                border-radius: 4px;
+        }
+}

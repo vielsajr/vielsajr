@@ -1,0 +1,44 @@
+#pie {
+    background-color: $color-fondo-superior;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+
+    .logo {
+        font-family: $tipografia-logo;
+        color: $color-textos-contacto;
+        font-size: $espacio-base*2;
+        padding: $espacio-base;
+        flex-basis: 40%;
+        transition: opacity 0.3s;
+
+        span {
+            color: $color-fondo;
+            font-family: $tipografia-logo;
+        }
+
+        &:hover {
+            opacity: 0.3;
+        }
+    }
+
+    .social {
+        display: flex;
+        gap: $espacio-base;
+        flex-basis: 10%;
+
+        a {
+            transition: opacity 0.3s;
+
+            &:hover {
+                opacity: 0.3;
+            }
+        }
+
+        img {
+            width: 100%;
+        }
+
+    }
+
+}

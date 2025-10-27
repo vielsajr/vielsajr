@@ -1,0 +1,56 @@
+@import "reset";
+
+$color-fondo:#BFC1D0;
+$alto:100px;
+$ancho: 100px;
+
+div{
+    background-color: $color-fondo;
+    border: 2px solid black;
+    width: $ancho*3;
+    display: flex;
+    align-items: center;
+    padding: 1rem;
+    gap: 10px;
+
+        a{
+        width: $ancho/2;
+        height: $alto/2;
+
+            &#facebook{
+                background-image: url("img/facebook_color.png");
+                background-size: cover;
+
+                &:hover{
+                    background-image: url("img/facebook.png");
+                }
+            }
+
+            &#twitter{
+                background-image: url("img/twitter_color.png");
+                background-size: cover;
+
+                &:hover{
+                    background-image: url("img/twitter.png");
+                }
+            }
+
+            &#youtube{
+                background-image: url("img/you_tube_color.png");
+                background-size: cover;
+
+                &:hover{
+                    background-image: url("img/you_tube.png");
+                }
+            }
+
+            &#flickr{
+                background-image: url("img/flickr_color.png");
+                background-size: cover;
+
+                &:hover{
+                    background-image: url("img/flickr.png");
+                }
+            }
+    }
+}

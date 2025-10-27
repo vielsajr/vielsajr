@@ -1,0 +1,53 @@
+@import "reset";
+
+
+$alto:100px;
+$ancho: 100px;
+$color-borde: 3px solid black;
+$no-repetir: no-repeat;
+
+#contenedor{
+    display: flex;
+    align-items: flex-end;
+    padding: 10px;
+    gap: 1rem;
+
+        #cairo {
+        width: $ancho;
+        height: $alto;
+        background-image: url("img/cairo.png");
+        background-size: contain;
+        border: $color-borde;
+        border-radius: 50% 50% 0 0;
+    }
+
+    #pascua {
+        width: $ancho/2;
+        height: $alto*2;
+        background-image: url("img/pascua.png");
+        background-size: 100% 100%;
+        background-repeat: $no-repetir;
+        border: $color-borde;
+    }
+
+    #pisa{
+        width: $ancho/2;
+        height: $alto/2;
+        background-image: url("img/italia.png");
+        background-size: cover;
+        border-radius: 50%;
+        border: $color-borde;
+    }
+
+    #cristo{
+        width: $ancho;
+        height: $alto;
+        background-image: url("img/rio.png");
+        background-size: 50% 50%;
+        background-repeat: $no-repetir;
+        border: $color-borde;
+        background-color: #ACFF03;
+    }
+
+}
+

@@ -1,0 +1,13 @@
+@import "reset";
+
+$alto:400px;
+$ancho:800px;
+
+body{
+    width: $ancho;
+    height: $alto;
+    background-image: url("img/tienda.png"), url("img/paisano.png"), url("img/tienda.png"), url("img/fondo.png");
+    background-position: 25% 575px, 50% 525px, 85% 600px, center;
+    background-repeat: no-repeat;
+    background-size: 150px, 300px, 150px, cover;
+}

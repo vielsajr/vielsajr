@@ -1,0 +1,17 @@
+@import 'reset';
+
+@import 'variables';
+
+*{
+    font-family: $tipografia-pagina;
+}
+
+@import 'datos-contacto';
+@import 'cabecera';
+@import 'banner';
+
+@import 'servicios';
+@import 'portfolio';
+@import 'contacto';
+
+@import 'pie';

@@ -1,0 +1,264 @@
+@import "reset";
+
+@import url('https://fonts.googleapis.com/css2?family=Chewy&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap');
+
+@font-face {
+  font-family: "Roboto";
+  src: url("fonts/Roboto.ttf");
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+$color-lados: #432a47;
+$color-subtitulos: #C4903E;
+$color-header: #E9C46A;
+$color-fuente: #202020;
+$color-letras: #ece9e9;
+$color-section: #708D23;
+
+$color-fondo: #D85A1A;
+$color-fuente: #202020;
+$fuente-principal: "Roboto", "Arial", "sans-serif";
+$fuente-titulo: "Chewy";
+$espacio-base: 1rem;
+
+//Color de todas las tiras
+$estilo-hippie: #461710;
+$estilo-mod: #0d240b;
+$estilo-psicodelico: #4f3b4c;
+$estilo-alta-costura: #d29d7f;
+$estilo-elegante-hombre: #816557;
+$peinado-mujer: #bfab84;
+$zapatos-hombre: #1b1a15;
+$peinado-hombre: #15323F;
+$gafas: #CD0803;
+$bolso: #6B8BA2;
+$coche: #03715E;
+$zapatos-mujer: #aba945;
+$guantes: #31343e;
+$sombrero: #331f17;
+$parches: #d5ac90;
+$pantalones: #1c496c;
+
+body {
+  font-family: $fuente-principal;
+}
+
+#contenedor {
+  background-color: $color-lados;
+  display: flex;
+  flex-direction: column;
+
+}
+
+header {
+  padding: $espacio-base;
+  background-color: $color-header;
+  text-align: center;
+  color: $color-letras;
+
+  h1 {
+    text-transform: uppercase;
+    font-size: $espacio-base*4;
+    letter-spacing: $espacio-base;
+    font-family: "Chewy";
+  }
+
+}
+
+nav {
+  background-color: $color-lados;
+  text-align: center;
+  color: $color-letras;
+
+  ul {
+    list-style-type: none;
+    padding-left: 0;
+    display: flex;
+    gap: $espacio-base;
+
+    li {
+      flex-grow: 1;
+      text-transform: uppercase;
+      padding: $espacio-base*2;
+      transition: background-color 0.3s, color 0.3s;
+
+      &:hover {
+        background-color: $color-section;
+        color: $color-fuente;
+        cursor: pointer;
+      }
+    }
+  }
+}
+
+#banner {
+  background-image: url("img/banner3.png");
+  background-position: center;
+  padding-top: $espacio-base*4;
+  padding-bottom: $espacio-base*4;
+
+  h1 {
+    background-color: #302f2f79;
+    text-align: center;
+    text-transform: uppercase;
+    padding: $espacio-base;
+    color: $color-letras;
+  }
+}
+
+main {
+  display: flex;
+  justify-content: center;
+
+  #galeria {
+    flex-basis: 85%;
+    background-color: $color-fondo;
+    gap: $espacio-base*2;
+    padding: $espacio-base;
+
+    h2 {
+      background-color: $color-section;
+      text-align: center;
+      text-transform: uppercase;
+      padding: $espacio-base*2;
+      color: $color-letras;
+    }
+
+    .contenido-tiras {
+      display: flex;
+      justify-content: center;
+      gap: $espacio-base*2;
+      padding: $espacio-base;
+    }
+
+    .tira {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      flex-basis: 15%;
+      border: 2px solid #15141473;
+      border-radius: 4px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+      color: $color-letras;
+      transition: transform 0.4s ease, box-shadow 0.4s ease;
+
+      &:hover {
+        transform: scale(1.06);
+        box-shadow: 0 12px 25px rgba(0, 0, 0, 0.788);
+      }
+
+      div {
+        display: flex;
+        height: 20vh;
+        width: 100%;
+
+        img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+        }
+      }
+
+      h1 {
+        display: flex;
+        align-self: stretch;
+        text-align: center;
+        padding: $espacio-base;
+        font-size: $espacio-base*2;
+        font-family: $fuente-titulo;
+        justify-content: center;
+        align-items: center;
+        color: $color-letras;
+        height: 15vh;
+      }
+
+      .subtitulo {
+        background-color: $color-fondo;
+        align-self: stretch;
+        padding: $espacio-base;
+        text-align: center;
+      }
+    }
+  }
+}
+
+footer {
+  display: flex;
+  justify-content: space-between;
+  padding: $espacio-base;
+  background-color: $color-header;
+  color: $color-letras;
+
+  i {
+    font-size: $espacio-base*1.5;
+  }
+}
+
+//Colores de las tiras
+
+.tira.hippie h1 {
+  background-color: $estilo-hippie;
+}
+
+.tira.mod h1 {
+  background-color: $estilo-mod;
+}
+
+.tira.psicodelica h1 {
+  background-color: $estilo-psicodelico;
+}
+
+.tira.alta-costura h1 {
+  background-color: $estilo-alta-costura;
+}
+
+.tira.hombre-elegante h1 {
+  background-color: $estilo-elegante-hombre;
+}
+
+.tira.peinado-mujer h1 {
+  background-color: $peinado-mujer;
+}
+
+.tira.peinado-hombre h1 {
+  background-color: $peinado-hombre;
+}
+
+.tira.gafas h1 {
+  background-color: $gafas;
+}
+
+.tira.bolso h1 {
+  background-color: $bolso;
+}
+
+.tira.guante h1 {
+  background-color: $guantes;
+}
+
+.tira.sombrero h1 {
+  background-color: $sombrero;
+}
+
+.tira.zapatos-mujer h1 {
+  background-color: $zapatos-mujer;
+}
+
+.tira.zapatos-hombre h1 {
+  background-color: $zapatos-hombre;
+}
+
+.tira.coche h1 {
+  background-color: $coche;
+}
+
+.tira.parche h1 {
+  background-color: $parches;
+}
+
+.tira.pantalon h1 {
+  background-color: $pantalones;
+}

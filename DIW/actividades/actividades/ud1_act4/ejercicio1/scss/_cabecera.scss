@@ -1,0 +1,54 @@
+#cabecera {
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    background-color: $color-cabecera;
+    padding-top: $espacio-base;
+    padding-bottom: $espacio-base;
+
+    .logo {
+        font-family: $tipografia-logo;
+        color: $color-textos-contacto;
+        font-size: $espacio-base*2;
+        flex-basis: 40%;
+        transition: opacity 0.3s;
+
+        span {
+            color: $color-fondo;
+            font-family: $tipografia-logo;
+        }
+
+        &:hover {
+            opacity: 0.3;
+        }
+    }
+
+    .menu {
+        display: flex;
+        align-items: center;
+
+        nav {
+            text-align: center;
+            color: $color-textos-contacto;
+
+            ul {
+                display: flex;
+                list-style-type: none;
+                padding-left: 0;
+                gap: $espacio-base;
+                text-transform: uppercase;
+
+                li {
+                    padding: $espacio-base;
+                    transition: background-color 0.3s color 0.3s;
+
+                    &:hover {
+                        background-color: $color-hover-menu;
+                    }
+                }
+            }
+
+        }
+    }
+
+}
