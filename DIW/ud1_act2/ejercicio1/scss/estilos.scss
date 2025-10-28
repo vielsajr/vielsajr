@@ -1,0 +1,35 @@
+@import "reset";
+
+$color-tipografía: #fffffe;
+$color-fondo: #808080;
+$color-boton: #d0bfbf;
+$espacio-base: 1rem;
+
+@font-face {
+    font-family: "Roboto";
+    src: url("fonts/Roboto.ttf");
+}
+
+body{
+    padding: $espacio-base;
+    
+
+    .contenedor{
+        display: flex;
+        justify-content: space-between;
+        background-color: $color-fondo;
+        padding: $espacio-base;
+        border: 1px solid black;
+        width: 50%;
+    }
+
+    .caja{
+        background-color: $color-boton;
+        color: $color-tipografía;
+        padding: $espacio-base;
+        border: 1px solid black;
+        font-weight: 600;
+        font-family: "Roboto", "Arial", "sans-serif";
+    }
+}
+

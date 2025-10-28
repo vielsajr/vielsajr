@@ -1,0 +1,71 @@
+@import "reset";
+
+$sello: url("../css/img/sello.png");
+$fondo: url("../css/img/fondo.jpg");
+
+body {
+    background-image: $fondo;
+    background-size: cover;
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    display: flex;
+    justify-content: space-around;
+    align-items: flex-end;
+    padding: 25px;
+}
+
+#ralph {
+    background-image: url("../css/img/ralph.png");
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    width: 300px;
+    height: 500px;
+    transform: rotate(15deg);
+    border: 10px solid transparent;
+    border-image-source: $sello;
+    border-image-slice: 33.33%;
+    border-image-repeat: round;
+}
+
+#milhouse {
+    background-image: url("../css/img/milhouse.png");
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    width: 300px;
+    height: 400px;
+    border: 10px solid transparent;
+    border-image-source: $sello;
+    border-image-slice: 33.33%;
+    border-image-repeat: round;
+}
+
+#flanders {
+    background-image: url("../css/img/flanders.png");
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    width: 300px;
+    height: 450px;
+    transform: rotate(-10deg);
+    border: 10px solid transparent;
+    border-image-source: $sello;
+    border-image-slice: 33.33%;
+    border-image-repeat: round;
+}
+
+#nelson {
+    background-image: url("../css/img/nelson.png");
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    width: 300px;
+    height: 500px;
+    transform: rotate(10deg);
+    border: 10px solid transparent;
+    border-image-source: $sello;
+    border-image-slice: 33.33%;
+    border-image-repeat: round;
+}
