@@ -1,0 +1,11 @@
+@import "reset";
+
+
+body{
+    width: 400px;
+    height: 800px;
+    background-image: url("img/tienda.png"), url("img/paisano.png"), url("img/tienda.png"), url("img/fondo.png");
+    background-position: 25% 90%, 50% 88%, 85% 95%, center;
+    background-repeat: no-repeat;
+    background-size: 150px, 300px, 150px, cover;
+}

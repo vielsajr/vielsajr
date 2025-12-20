@@ -1,0 +1,73 @@
+@import "reset";
+
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+
+
+body{
+    font-family: "Montserrat";    
+}
+h1{
+    font-size: x-large;
+    text-align: center;
+}
+.div{
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+.tarjetas{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border: $borde solid black;
+    width: 30%;
+    height: 30%;
+    gap: 30px;
+    padding: 1rem;
+    transition: background-color 0.5s;
+
+}
+i{
+    font-size: 4rem;
+}
+h2{
+    font-size: x-large;
+    letter-spacing: 5px;
+}
+p{
+    font-size: medium;
+}
+button{
+    background-color: black;
+    color: #f7f7f7;
+    border-radius: 20px;
+    padding: 10px;
+    transition: background-color 0.3s, color 0.3s, border-radius 0.3s;
+    &:hover{
+        border-radius: 5px;
+    }
+}
+:hover#TWITTER{
+    background-color: #1da1f2;
+    color: #f7f7f7;
+    button{
+        background-color: #f7f7f7;
+        color: #1da1f2;
+    }
+}
+:hover#INSTAGRAM{
+    background-color: #e1306c;
+    color: #f7f7f7;
+    button{
+        background-color: #f7f7f7;
+        color: #e1306c;
+    }
+}
+:hover#YOUTUBE{
+    background-color: #ff0000;
+    color: #f7f7f7;
+    button{
+        background-color: #f7f7f7;
+        color: #ff0000;
+    }
+}
