@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calendario Semanal</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f7f7f7;
+            margin: 0;
+        }
+        nav {
+            background-color: #6EC1E4;
+            padding: 15px;
+            text-align: center;
+        }
+        nav a {
+            color: white;
+            margin: 0 15px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .calendar {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 15px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+        .day {
+            background-color: white;
+            padding: 10px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .day h3 {
+            text-align: center;
+            font-size: 16px;
+        }
+        input, button {
+            width: 100%;
+            padding: 8px;
+            margin: 5px 0;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+        button {
+            background-color: #6EC1E4;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #4fa3c1;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="registro.html">Registro</a>
+        <a href="login.html">Iniciar sesión</a>
+        <a href="/logout">Cerrar sesión</a>
+    </nav>
+
+    <div class="calendar">
+        <div class="day">
+            <h3>Lunes</h3>
+            <input type="text" placeholder="Estado emocional">
+            <input type="text" placeholder="Actividades">
+            <input type="text" placeholder="Comentarios">
+            <button>Enviar</button>
+            <textarea placeholder="Informe" readonly></textarea>
+        </div>
+        <div class="day">
+            <h3>Martes</h3>
+            <input type="text" placeholder="Estado emocional">
+            <input type="text" placeholder="Actividades">
+            <input type="text" placeholder="Comentarios">
+            <button>Enviar</button>
+            <textarea placeholder="Informe" readonly></textarea>
+        </div>
+        <div class="day">
+            <h3>Miércoles</h3>
+            <input type="text" placeholder="Estado emocional">
+            <input type="text" placeholder="Actividades">
+            <input type="text" placeholder="Comentarios">
+            <button>Enviar</button>
+            <textarea placeholder="Informe" readonly></textarea>
+        </div>
+        <div class="day">
+            <h3>Jueves</h3>
+            <input type="text" placeholder="Estado emocional">
+            <input type="text" placeholder="Actividades">
+            <input type="text" placeholder="Comentarios">
+            <button>Enviar</button>
+            <textarea placeholder="Informe" readonly></textarea>
+        </div>
+        <div class="day">
+            <h3>Viernes</h3>
+            <input type="text" placeholder="Estado emocional">
+            <input type="text" placeholder="Actividades">
+            <input type="text" placeholder="Comentarios">
+            <button>Enviar</button>
+            <textarea placeholder="Informe" readonly></textarea>
+        </div>
+        <div class="day">
+            <h3>Sábado</h3>
+            <input type="text" placeholder="Estado emocional">
+            <input type="text" placeholder="Actividades">
+            <input type="text" placeholder="Comentarios">
+            <button>Enviar</button>
+            <textarea placeholder="Informe" readonly></textarea>
+        </div>
+        <div class="day">
+            <h3>Domingo</h3>
+            <input type="text" placeholder="Estado emocional">
+            <input type="text" placeholder="Actividades">
+            <input type="text" placeholder="Comentarios">
+            <button>Enviar</button>
+            <textarea placeholder="Informe" readonly></textarea>
+        </div>
+    </div>
+</body>
+</html>
