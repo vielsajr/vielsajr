@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Serapīto kanjō – Diagrama de Casos de Uso</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@300;400;700&family=Shippori+Mincho:wght@400;700&display=swap');
+
+  :root {
+    --bg: #0a0c10;
+    --surface: #10141c;
+    --border: #1e2535;
+    --accent: #7eb8f7;
+    --accent2: #c084fc;
+    --accent3: #34d399;
+    --accent4: #fb923c;
+    --accent5: #f87171;
+    --text: #e2e8f0;
+    --muted: #64748b;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Zen Kaku Gothic New', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Background grid */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(126,184,247,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(126,184,247,0.04) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .wrapper {
+    position: relative;
+    z-index: 1;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 48px 24px 80px;
+  }
+
+  /* Header */
+  header {
+    text-align: center;
+    margin-bottom: 60px;
+    animation: fadeDown 0.8s ease both;
+  }
+  header .kana {
+    font-family: 'Shippori Mincho', serif;
+    font-size: 13px;
+    letter-spacing: 0.4em;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+    opacity: 0.7;
+  }
+  header h1 {
+    font-family: 'Shippori Mincho', serif;
+    font-size: clamp(28px, 5vw, 48px);
+    font-weight: 700;
+    background: linear-gradient(135deg, #7eb8f7, #c084fc);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 10px;
+  }
+  header p {
+    color: var(--muted);
+    font-size: 14px;
+    letter-spacing: 0.1em;
+  }
+
+  /* System boundary */
+  .system-boundary {
+    border: 1.5px solid rgba(126,184,247,0.25);
+    border-radius: 24px;
+    padding: 40px;
+    position: relative;
+    background: rgba(16,20,28,0.6);
+    backdrop-filter: blur(8px);
+    margin-bottom: 48px;
+    animation: fadeUp 0.9s ease 0.2s both;
+  }
+  .system-label {
+    position: absolute;
+    top: -13px;
+    left: 32px;
+    background: var(--bg);
+    padding: 2px 16px;
+    font-size: 11px;
+    letter-spacing: 0.3em;
+    color: rgba(126,184,247,0.6);
+    text-transform: uppercase;
+    border: 1px solid rgba(126,184,247,0.2);
+    border-radius: 20px;
+  }
+
+  /* Actors */
+  .actors-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 24px;
+    margin-bottom: 40px;
+    flex-wrap: wrap;
+    animation: fadeUp 1s ease 0.4s both;
+  }
+
+  .actor-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+  }
+  .actor-icon {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    border: 2px solid;
+    position: relative;
+  }
+  .actor-icon::after {
+    content: '';
+    position: absolute;
+    inset: -6px;
+    border-radius: 50%;
+    border: 1px dashed;
+    opacity: 0.3;
+  }
+  .actor-user .actor-icon { border-color: var(--accent); color: var(--accent); background: rgba(126,184,247,0.08); }
+  .actor-user .actor-icon::after { border-color: var(--accent); }
+  .actor-ai .actor-icon { border-color: var(--accent2); color: var(--accent2); background: rgba(192,132,252,0.08); }
+  .actor-ai .actor-icon::after { border-color: var(--accent2); }
+  .actor-label {
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    opacity: 0.7;
+    text-align: center;
+    max-width: 100px;
+  }
+
+  /* Groups */
+  .groups-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 24px;
+  }
+
+  .group {
+    border-radius: 16px;
+    padding: 20px;
+    border: 1px solid;
+    position: relative;
+    animation: fadeUp 1s ease both;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  .group:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 20px 60px -10px rgba(0,0,0,0.5);
+  }
+
+  .group-cuenta { border-color: rgba(126,184,247,0.25); background: rgba(126,184,247,0.04); animation-delay: 0.3s; }
+  .group-emocional { border-color: rgba(192,132,252,0.25); background: rgba(192,132,252,0.04); animation-delay: 0.4s; }
+  .group-actividades { border-color: rgba(52,211,153,0.25); background: rgba(52,211,153,0.04); animation-delay: 0.5s; }
+  .group-comentarios { border-color: rgba(251,146,60,0.25); background: rgba(251,146,60,0.04); animation-delay: 0.6s; }
+  .group-calendario { border-color: rgba(248,113,113,0.25); background: rgba(248,113,113,0.04); animation-delay: 0.7s; }
+
+  .group-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid rgba(255,255,255,0.07);
+  }
+  .group-icon { font-size: 18px; }
+  .group-title {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+  }
+  .group-cuenta .group-title { color: var(--accent); }
+  .group-emocional .group-title { color: var(--accent2); }
+  .group-actividades .group-title { color: var(--accent3); }
+  .group-comentarios .group-title { color: var(--accent4); }
+  .group-calendario .group-title { color: var(--accent5); }
+
+  .cu-list { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+  .cu-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 12px;
+    border-radius: 8px;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.05);
+    font-size: 13px;
+    transition: background 0.2s, border-color 0.2s;
+    cursor: default;
+  }
+  .cu-item:hover { background: rgba(255,255,255,0.07); }
+  .cu-item:hover .cu-badge { transform: scale(1.1); }
+  .cu-badge {
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 7px;
+    border-radius: 20px;
+    flex-shrink: 0;
+    transition: transform 0.2s;
+    font-family: 'Shippori Mincho', serif;
+  }
+  .group-cuenta .cu-badge { background: rgba(126,184,247,0.15); color: var(--accent); border: 1px solid rgba(126,184,247,0.3); }
+  .group-emocional .cu-badge { background: rgba(192,132,252,0.15); color: var(--accent2); border: 1px solid rgba(192,132,252,0.3); }
+  .group-actividades .cu-badge { background: rgba(52,211,153,0.15); color: var(--accent3); border: 1px solid rgba(52,211,153,0.3); }
+  .group-comentarios .cu-badge { background: rgba(251,146,60,0.15); color: var(--accent4); border: 1px solid rgba(251,146,60,0.3); }
+  .group-calendario .cu-badge { background: rgba(248,113,113,0.15); color: var(--accent5); border: 1px solid rgba(248,113,113,0.3); }
+
+  /* AI Section */
+  .ai-section {
+    margin-top: 40px;
+    border: 1.5px solid rgba(192,132,252,0.3);
+    border-radius: 20px;
+    padding: 32px;
+    position: relative;
+    background: rgba(192,132,252,0.04);
+    animation: fadeUp 1s ease 0.8s both;
+  }
+  .ai-section-label {
+    position: absolute;
+    top: -13px;
+    left: 28px;
+    background: var(--bg);
+    padding: 2px 16px;
+    font-size: 11px;
+    letter-spacing: 0.25em;
+    color: rgba(192,132,252,0.8);
+    border: 1px solid rgba(192,132,252,0.3);
+    border-radius: 20px;
+    text-transform: uppercase;
+  }
+  .ai-header-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+  .ai-actor-mini {
+    width: 38px; height: 38px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px;
+    border: 1.5px solid var(--accent2);
+    background: rgba(192,132,252,0.1);
+    flex-shrink: 0;
+  }
+  .ai-actor-label { font-size: 12px; color: var(--accent2); letter-spacing: 0.12em; text-transform: uppercase; font-weight: 700; }
+  .ai-actor-sub { font-size: 11px; color: var(--muted); }
+
+  .ai-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 10px;
+  }
+  .ai-cu-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    border-radius: 8px;
+    background: rgba(192,132,252,0.06);
+    border: 1px solid rgba(192,132,252,0.15);
+    font-size: 12px;
+    transition: all 0.2s;
+    cursor: default;
+  }
+  .ai-cu-item:hover { background: rgba(192,132,252,0.14); border-color: rgba(192,132,252,0.35); transform: translateY(-2px); }
+  .ai-badge {
+    font-size: 10px; font-weight: 700;
+    padding: 2px 6px; border-radius: 20px;
+    background: rgba(192,132,252,0.15); color: var(--accent2);
+    border: 1px solid rgba(192,132,252,0.3);
+    flex-shrink: 0;
+    font-family: 'Shippori Mincho', serif;
+  }
+
+  /* Legend */
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-top: 40px;
+    padding: 20px;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: rgba(255,255,255,0.02);
+    animation: fadeUp 1s ease 1s both;
+  }
+  .legend-title { font-size: 11px; letter-spacing: 0.2em; color: var(--muted); text-transform: uppercase; width: 100%; }
+  .legend-item { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--muted); }
+  .legend-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+
+  /* Stats bar */
+  .stats-row {
+    display: flex;
+    gap: 24px;
+    flex-wrap: wrap;
+    margin-bottom: 40px;
+    animation: fadeUp 0.9s ease 0.3s both;
+  }
+  .stat-chip {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    border-radius: 40px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--border);
+    font-size: 12px;
+    color: var(--muted);
+  }
+  .stat-chip strong { color: var(--text); font-weight: 700; font-size: 14px; }
+
+  /* Animations */
+  @keyframes fadeDown {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Responsive */
+  @media (max-width: 640px) {
+    .groups-grid { grid-template-columns: 1fr; }
+    .actors-row { justify-content: center; }
+    .ai-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="wrapper">
+
+  <header>
+    <div class="kana">せらぴーとかんじょう</div>
+    <h1>Serapīto kanjō</h1>
+    <p>Diagrama de Casos de Uso · Sistema de Gestión Emocional con IA</p>
+  </header>
+
+  <!-- Stats -->
+  <div class="stats-row">
+    <div class="stat-chip"><strong>30</strong> casos de uso</div>
+    <div class="stat-chip"><strong>2</strong> actores</div>
+    <div class="stat-chip"><strong>5</strong> módulos de usuario</div>
+    <div class="stat-chip"><strong>1</strong> módulo IA</div>
+  </div>
+
+  <!-- Main System Boundary -->
+  <div class="system-boundary">
+    <span class="system-label">«system» Serapīto kanjō</span>
+
+    <!-- Actors row -->
+    <div class="actors-row">
+      <div class="actor-box actor-user">
+        <div class="actor-icon">👤</div>
+        <div class="actor-label">Usuario<br><small style="opacity:0.5">Actor Principal</small></div>
+      </div>
+      <div style="flex:1; text-align:center; padding-top:14px; color:var(--muted); font-size:11px; letter-spacing:0.1em;">
+        — interactúa con →
+      </div>
+      <div style="flex:1; text-align:center; padding-top:6px; opacity:0.5; font-size:20px;">⟷</div>
+      <div class="actor-box actor-ai">
+        <div class="actor-icon">🤖</div>
+        <div class="actor-label">Sistema IA<br><small style="opacity:0.5">Actor Secundario</small></div>
+      </div>
+    </div>
+
+    <!-- Groups grid -->
+    <div class="groups-grid">
+
+      <!-- Gestión de Cuenta -->
+      <div class="group group-cuenta">
+        <div class="group-header">
+          <span class="group-icon">🔐</span>
+          <span class="group-title">Gestión de Cuenta</span>
+        </div>
+        <ul class="cu-list">
+          <li class="cu-item"><span class="cu-badge">CU1</span> Registrarse</li>
+          <li class="cu-item"><span class="cu-badge">CU2</span> Iniciar sesión</li>
+          <li class="cu-item"><span class="cu-badge">CU3</span> Cerrar sesión</li>
+          <li class="cu-item"><span class="cu-badge">CU4</span> Editar perfil</li>
+          <li class="cu-item"><span class="cu-badge">CU5</span> Eliminar cuenta</li>
+          <li class="cu-item"><span class="cu-badge">CU6</span> Recuperar contraseña</li>
+        </ul>
+      </div>
+
+      <!-- Gestión Emocional -->
+      <div class="group group-emocional">
+        <div class="group-header">
+          <span class="group-icon">💜</span>
+          <span class="group-title">Gestión Emocional</span>
+        </div>
+        <ul class="cu-list">
+          <li class="cu-item"><span class="cu-badge">CU7</span> Registrar estado emocional</li>
+          <li class="cu-item"><span class="cu-badge">CU8</span> Modificar estado emocional</li>
+          <li class="cu-item"><span class="cu-badge">CU9</span> Eliminar estado emocional</li>
+          <li class="cu-item"><span class="cu-badge">CU10</span> Consultar historial emocional</li>
+          <li class="cu-item"><span class="cu-badge">CU11</span> Filtrar emociones por fecha</li>
+          <li class="cu-item"><span class="cu-badge">CU12</span> Visualizar evolución gráfica</li>
+        </ul>
+      </div>
+
+      <!-- Gestión de Actividades -->
+      <div class="group group-actividades">
+        <div class="group-header">
+          <span class="group-icon">🌿</span>
+          <span class="group-title">Gestión de Actividades</span>
+        </div>
+        <ul class="cu-list">
+          <li class="cu-item"><span class="cu-badge">CU13</span> Añadir actividad</li>
+          <li class="cu-item"><span class="cu-badge">CU14</span> Editar actividad</li>
+          <li class="cu-item"><span class="cu-badge">CU15</span> Eliminar actividad</li>
+          <li class="cu-item"><span class="cu-badge">CU16</span> Asociar actividad a emoción</li>
+        </ul>
+      </div>
+
+      <!-- Gestión de Comentarios -->
+      <div class="group group-comentarios">
+        <div class="group-header">
+          <span class="group-icon">💬</span>
+          <span class="group-title">Gestión de Comentarios</span>
+        </div>
+        <ul class="cu-list">
+          <li class="cu-item"><span class="cu-badge">CU17</span> Añadir comentario</li>
+          <li class="cu-item"><span class="cu-badge">CU18</span> Editar comentario</li>
+          <li class="cu-item"><span class="cu-badge">CU19</span> Eliminar comentario</li>
+        </ul>
+      </div>
+
+      <!-- Gestión de Calendario -->
+      <div class="group group-calendario">
+        <div class="group-header">
+          <span class="group-icon">🗓️</span>
+          <span class="group-title">Gestión de Calendario</span>
+        </div>
+        <ul class="cu-list">
+          <li class="cu-item"><span class="cu-badge">CU20</span> Crear evento</li>
+          <li class="cu-item"><span class="cu-badge">CU21</span> Editar evento</li>
+          <li class="cu-item"><span class="cu-badge">CU22</span> Eliminar evento</li>
+          <li class="cu-item"><span class="cu-badge">CU23</span> Visualizar calendario</li>
+          <li class="cu-item"><span class="cu-badge">CU24</span> Recibir recordatorio</li>
+        </ul>
+      </div>
+
+    </div><!-- /groups-grid -->
+
+    <!-- AI Section -->
+    <div class="ai-section">
+      <span class="ai-section-label">«actor» Sistema de IA</span>
+      <div class="ai-header-row">
+        <div class="ai-actor-mini">🤖</div>
+        <div>
+          <div class="ai-actor-label">Módulo de Inteligencia Artificial</div>
+          <div class="ai-actor-sub">Análisis · Generación · Aprendizaje adaptativo</div>
+        </div>
+      </div>
+      <div class="ai-grid">
+        <div class="ai-cu-item"><span class="ai-badge">CU25</span> Generar informe emocional</div>
+        <div class="ai-cu-item"><span class="ai-badge">CU26</span> Generar recomendaciones personalizadas</div>
+        <div class="ai-cu-item"><span class="ai-badge">CU27</span> Analizar patrones emocionales</div>
+        <div class="ai-cu-item"><span class="ai-badge">CU28</span> Registrar feedback de recomendaciones</div>
+        <div class="ai-cu-item"><span class="ai-badge">CU29</span> Ajustar recomendaciones futuras</div>
+        <div class="ai-cu-item"><span class="ai-badge">CU30</span> Comparar evolución entre semanas</div>
+      </div>
+    </div>
+
+  </div><!-- /system-boundary -->
+
+  <!-- Legend -->
+  <div class="legend">
+    <div class="legend-title">Leyenda</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--accent)"></div> Gestión de Cuenta (CU1–CU6)</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--accent2)"></div> Gestión Emocional (CU7–CU12)</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--accent3)"></div> Gestión de Actividades (CU13–CU16)</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--accent4)"></div> Gestión de Comentarios (CU17–CU19)</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--accent5)"></div> Gestión de Calendario (CU20–CU24)</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--accent2); opacity:0.5"></div> Sistema de IA (CU25–CU30)</div>
+  </div>
+
+</div>
+</body>
+</html>
