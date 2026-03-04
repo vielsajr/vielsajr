@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>UT8 — Servicios Web REST | DWES</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<nav>
+  <a class="nav-brand" href="index.html">DWES</a>
+  <div class="nav-links">
+    <a href="index.html">Inicio</a>
+    <a href="ut1.html">UT1</a>
+    <a href="ut2.html">UT2</a>
+    <a href="ut3.html">UT3</a>
+    <a href="ut4.html">UT4</a>
+    <a href="ut5.html">UT5</a>
+    <a href="ut6.html">UT6</a>
+    <a href="ut7.html">UT7</a>
+    <a href="ut8.html" class="active">UT8</a>
+  </div>
+</nav>
+
+<div class="container">
+  <div class="hero">
+    <div class="hero-tag">Unidad Temática 8</div>
+    <h1>Servicios Web <span>REST</span></h1>
+    <p>Introducción a servicios web, SOAP vs REST, clientes cURL y Http facade, creación de APIs en Laravel con Resources, inserción, actualización y autenticación con Sanctum.</p>
+  </div>
+
+  <div class="page-layout">
+    <main>
+
+      <!-- SECTION 1 -->
+      <section id="s1">
+        <h2 class="section-title"><span class="num">01</span> Introducción</h2>
+        <p>Las aplicaciones a veces necesitan <strong>compartir información con otras aplicaciones</strong>. Una primera idea es dar acceso directo a la base de datos, pero esto <strong>no es una buena idea</strong>:</p>
+        <ul>
+          <li>Cuantas más aplicaciones usen los mismos datos, más posibilidades de generar <strong>errores</strong>.</li>
+          <li>La lógica de negocio ya programada no se podrá <strong>aprovechar</strong> en otras aplicaciones.</li>
+          <li>Al dar acceso directo a los datos, será <strong>complicado mantener el control</strong> sobre las modificaciones.</li>
+        </ul>
+      </section>
+
+      <!-- SECTION 2 -->
+      <section id="s2">
+        <h2 class="section-title"><span class="num">02</span> Servicios Web</h2>
+        <p>Un <strong>servicio web</strong> es un método que permite que dos equipos intercambien información a través de una red informática. El servidor ofrece <strong>un punto de acceso controlado</strong> a la información. Los clientes no necesitan conocer la estructura interna de almacenamiento.</p>
+
+        <h3 class="subsection-title">Mecanismos y protocolos</h3>
+        <p>Los servicios web utilizan el protocolo <strong>HTTP</strong>, lo que les permite funcionar sobre cualquier servidor web usando el <strong>puerto 80</strong>. La respuesta obtenida no es una página web, sino la información solicitada en un formato estructurado.</p>
+
+        <h3 class="subsection-title">SOAP vs REST</h3>
+        <div class="info-card">
+          <table>
+            <thead><tr><th>Característica</th><th>SOAP</th><th>REST</th></tr></thead>
+            <tbody>
+              <tr><td>Formato</td><td>XML (estructurado)</td><td>JSON, XML, binario, text…</td></tr>
+              <tr><td>Protocolo</td><td>HTTP, SMTP, etc.</td><td>HTTP (GET, POST, PUT, DELETE, PATCH)</td></tr>
+              <tr><td>Complejidad</td><td>Estructura compleja, reglas y estándares estrictos</td><td>Liviano y flexible</td></tr>
+              <tr><td>Rendimiento</td><td>Mayor sobrecarga de ancho de banda</td><td>Más rápido en procesamiento</td></tr>
+              <tr><td>Interoperabilidad</td><td>Alta entre sistemas heterogéneos</td><td>Alta, muy extendido</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>La gran mayoría de servicios REST transmite en <strong>JSON</strong> porque es interpretado de forma natural por JavaScript.</p>
+      </section>
+
+      <!-- SECTION 3 -->
+      <section id="s3">
+        <h2 class="section-title"><span class="num">03</span> Servicios web REST</h2>
+        <p>REST es mucho más flexible que SOAP. Permite usar los métodos HTTP: <strong>GET, POST, PUT, DELETE, PATCH</strong>. El tipo de datos está definido por el Header <code>Content-Type</code>.</p>
+
+        <h3 class="subsection-title">Cliente clásico — cURL</h3>
+        <p>La librería <strong>cURL</strong> permite conectarse y comunicarse con diferentes tipos de servidores:</p>
+        <pre><code>$url_servicio = "http://museo.laravel/api";
+$curl = curl_init($url_servicio);
+curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "GET");
+curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+$respuesta_curl = curl_exec($curl);
+curl_close($curl);
+
+$respuesta_decodificada = json_decode($respuesta_curl);</code></pre>
+
+        <h3 class="subsection-title">Cliente moderno — Http facade (Laravel)</h3>
+        <p>Laravel incluye un cliente HTTP moderno basado en <strong>Guzzle</strong> mediante la fachada <code>Http</code>:</p>
+        <pre><code>use Illuminate\Support\Facades\Http;
+
+public function obtenerDatos()
+{
+    $respuesta = Http::get('https://URL_API');
+
+    if ($respuesta->failed()) {
+        return response()->json(['error' => 'Servicio no disponible'], 503);
+    }
+
+    return $respuesta->json();
+}
+
+// Con token de autenticación
+$respuesta = Http::withToken($token)
+    ->get('https://api.misitio.com/api/articulos');
+
+// Con cabecera Authorization manual
+$respuesta = Http::withHeaders([
+    'Authorization' => 'Bearer ' . $token
+])->get('https://api.misitio.com/api/articulos');</code></pre>
+
+        <blockquote>Hoja08_ServiciosWeb_01</blockquote>
+      </section>
+
+      <!-- SECTION 4 -->
+      <section id="s4">
+        <h2 class="section-title"><span class="num">04</span> Crear servicios web en Laravel</h2>
+
+        <h3 class="subsection-title">Rutas de la API</h3>
+        <p>Desde Laravel 11, ejecutar el siguiente comando para generar el fichero de rutas de la API:</p>
+        <pre><code>php artisan install:api</code></pre>
+        <p>Crea el fichero <strong><code>routes/api.php</code></strong>. Usar <code>Route::apiResource()</code> para generar rutas RESTful automáticamente:</p>
+        <pre><code>// routes/api.php
+Route::apiResource('articulos', ArticuloApiController::class);</code></pre>
+        <p>Genera las rutas CRUD estándar con los métodos <strong>index, store, show, update y destroy</strong>:</p>
+        <pre><code>GET|HEAD    api/articulos                 articulos.index
+POST        api/articulos                 articulos.store
+GET|HEAD    api/articulos/{articulo}      articulos.show
+PUT|PATCH   api/articulos/{articulo}      articulos.update
+DELETE      api/articulos/{articulo}      articulos.destroy</code></pre>
+
+        <h3 class="subsection-title">Controlador de API</h3>
+        <pre><code>php artisan make:controller ArticuloApiController --api</code></pre>
+        <p>Crea los métodos <strong>index, store, show, update y destroy</strong> predefinidos.</p>
+
+        <blockquote>Hoja08_ServiciosWeb_02</blockquote>
+
+        <h3 class="subsection-title">Resources</h3>
+        <p>Los Resources dan <strong>forma a las respuestas JSON</strong> de la API. Permiten personalizar la presentación y mantener consistencia.</p>
+        <pre><code># Resource para un único modelo
+php artisan make:resource ArticuloResource
+
+# Resource Collection para colecciones
+php artisan make:resource ArticuloCollection</code></pre>
+
+        <div class="info-card">
+          <p><strong>Resource</strong> → transforma <strong>un solo modelo</strong> en respuesta JSON.</p>
+          <p><strong>Resource Collection</strong> → transforma <strong>colecciones</strong> de modelos en respuestas JSON estructuradas.</p>
+        </div>
+
+        <p>El método <strong><code>toArray($request)</code></strong> define la transformación:</p>
+        <pre><code>// App/Http/Resources/ArticuloResource.php
+public function toArray($request)
+{
+    return [
+        'id'                => $this->id,
+        'titulo'            => $this->titulo,
+        'contenido'         => $this->contenido,
+        'fecha_publicacion' => $this->created_at->format('Y-m-d'),
+    ];
+}</code></pre>
+
+        <p>Uso en controladores:</p>
+        <pre><code>// Obtener un artículo (show)
+public function show(Articulo $articulo)
+{
+    return new ArticuloResource($articulo);
+}
+
+// Obtener colección (index)
+public function index()
+{
+    $articulos = Articulo::all();
+    return new ArticuloCollection($articulos);
+}
+
+// Con paginación
+public function index()
+{
+    $articulos = Articulo::paginate(5);
+    return new ArticuloCollection($articulos);
+}</code></pre>
+
+        <blockquote>Hoja08_ServiciosWeb_03</blockquote>
+      </section>
+
+      <!-- SECTION 5 -->
+      <section id="s5">
+        <h2 class="section-title"><span class="num">05</span> Insertar datos</h2>
+        <p>La inserción usa el método <strong>POST</strong>. La ruta ya está generada con <code>Route::apiResource</code>.</p>
+
+        <h3 class="subsection-title">Método store en el controlador</h3>
+        <pre><code>class ArticuloApiController extends Controller
+{
+    public function store(Request $request)
+    {
+        $request->validate([
+            'titulo'    => 'required|string|max:255',
+            'contenido' => 'required|string',
+        ]);
+
+        return new ArticuloResource(Articulo::create($request->all()));
+    }
+}</code></pre>
+
+        <h3 class="subsection-title">Form Request personalizado para la API</h3>
+        <pre><code>php artisan make:request CreateArticuloRequest</code></pre>
+        <p>Se crea en <code>app/Http/Requests/CreateArticuloRequest.php</code>:</p>
+        <pre><code>class CreateArticuloRequest extends FormRequest
+{
+    public function authorize() { return true; }
+
+    public function rules()
+    {
+        return [
+            'titulo'    => 'required|string|max:255',
+            'contenido' => 'required|string',
+        ];
+    }
+}</code></pre>
+
+        <p>En el controlador, usar <code>CreateArticuloRequest</code> en lugar de <code>Request</code>. Si la validación falla, Laravel enviará automáticamente una respuesta JSON con los errores:</p>
+        <pre><code>public function store(CreateArticuloRequest $request)
+{
+    // Los datos ya han sido validados
+    return new ArticuloResource(Articulo::create($request->all()));
+}</code></pre>
+
+        <h3 class="subsection-title">Probar con Postman</h3>
+        <div class="info-card">
+          <ul>
+            <li>Tipo de solicitud: <strong>POST</strong></li>
+            <li>Pestaña <strong>Body</strong> → seleccionar <strong>raw</strong> con formato <strong>JSON</strong></li>
+            <li>Enviar y analizar la respuesta</li>
+          </ul>
+        </div>
+
+        <blockquote>Hoja08_ServiciosWeb_04</blockquote>
+      </section>
+
+      <!-- SECTION 6 -->
+      <section id="s6">
+        <h2 class="section-title"><span class="num">06</span> Actualizar datos</h2>
+        <p>Se usa la ruta <strong>PUT</strong> (o PATCH) generada por <code>apiResource</code>. El método del controlador es <code>update</code>.</p>
+        <pre><code>php artisan make:request UpdateArticuloRequest</code></pre>
+        <pre><code>class ArticuloApiController extends Controller
+{
+    public function update(UpdateArticuloRequest $request, Articulo $articulo)
+    {
+        $articulo->update($request->all());
+        return new ArticuloResource($articulo);
+    }
+}</code></pre>
+
+        <h3 class="subsection-title">PUT vs PATCH</h3>
+        <div class="info-card">
+          <table>
+            <thead><tr><th>Método</th><th>Comportamiento</th></tr></thead>
+            <tbody>
+              <tr><td><code>PUT</code></td><td>El cliente debe proporcionar la representación <strong>completa</strong> del recurso. Los campos no enviados se consideran nulos.</td></tr>
+              <tr><td><code>PATCH</code></td><td>Permite actualizar <strong>solo los campos específicos</strong> sin afectar los demás. Útil para actualizaciones parciales.</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p>Validación que distingue PUT de PATCH usando la regla <strong><code>sometimes</code></strong>:</p>
+        <pre><code>class UpdateArticuloRequest extends FormRequest
+{
+    public function authorize() { return true; }
+
+    public function rules()
+    {
+        $metodo = $this->method();
+        if ($metodo == 'PUT') {
+            return [
+                'titulo'    => 'required|string|max:255',
+                'contenido' => 'required|string',
+            ];
+        } else {
+            // PATCH: solo valida si el campo está presente
+            return [
+                'titulo'    => 'sometimes|string|max:255',
+                'contenido' => 'sometimes|string',
+            ];
+        }
+    }
+}</code></pre>
+        <p>La regla <strong><code>sometimes</code></strong> indica que la validación solo se aplica si el campo está presente en la solicitud.</p>
+
+        <blockquote>Hoja08_ServiciosWeb_05</blockquote>
+      </section>
+
+      <!-- SECTION 7 -->
+      <section id="s7">
+        <h2 class="section-title"><span class="num">07</span> Autenticación con Sanctum</h2>
+        <p>Para proteger las rutas se usa <strong>Sanctum</strong> (incluido en Laravel por defecto en <code>composer.json</code>). Usa un sistema de <strong>tokens</strong> en lugar de sesiones, adecuado para APIs.</p>
+
+        <h3 class="subsection-title">Generación de tokens</h3>
+        <p>Añadir el trait <strong><code>HasApiTokens</code></strong> al modelo <code>User</code>:</p>
+        <pre><code>use Laravel\Sanctum\HasApiTokens;
+
+class User extends Authenticatable
+{
+    use HasApiTokens;
+}</code></pre>
+
+        <p>Crear ruta en <code>routes/web.php</code> para generar tokens:</p>
+        <pre><code>Route::get('/profile/crearToken', [ProfileController::class, 'crearToken'])
+    ->name('profile.crearToken')->middleware('auth');</code></pre>
+
+        <p>Método en el controlador:</p>
+        <pre><code>public function crearToken(Request $request)
+{
+    $request->user()->tokens()->delete(); // Borrar tokens anteriores
+    $token = $request->user()->createToken('token-api');
+    return ['token' => $token->plainTextToken];
+}</code></pre>
+
+        <h3 class="subsection-title">Proteger rutas de la API</h3>
+        <pre><code>// routes/api.php
+Route::middleware("auth:sanctum")->group(function () {
+    Route::apiResource('articulos', ArticuloApiController::class);
+});</code></pre>
+
+        <h3 class="subsection-title">Revocación de tokens</h3>
+        <pre><code>// Revocar todos los tokens del usuario
+$user->tokens()->delete();
+
+// Revocar el token actual de la petición
+$request->user()->currentAccessToken()->delete();
+
+// Revocar un token específico
+$user->tokens()->where('id', $tokenId)->delete();</code></pre>
+
+        <h3 class="subsection-title">Habilidades (Abilities) de tokens</h3>
+        <p>Sanctum permite asignar <strong>habilidades</strong> a los tokens para control de acceso granular:</p>
+        <pre><code>// Crear token con habilidades
+$token = Auth::user()->createToken('token-api', ['crear-articulo']);
+
+// Comprobar habilidad
+if ($user->tokenCan('crear-articulo')) {
+    // ...
+}</code></pre>
+
+        <p>Añadir middleware de habilidades en <code>bootstrap/app.php</code>:</p>
+        <pre><code>use Laravel\Sanctum\Http\Middleware\CheckAbilities;
+use Laravel\Sanctum\Http\Middleware\CheckForAnyAbility;
+
+->withMiddleware(function (Middleware $middleware) {
+    $middleware->alias([
+        'abilities' => CheckAbilities::class,     // TODAS las habilidades
+        'ability'   => CheckForAnyAbility::class, // AL MENOS UNA habilidad
+    ]);
+})</code></pre>
+
+        <pre><code>// Token debe tener TODAS las habilidades enumeradas
+Route::get('/orders', function () {
+    // ...
+})->middleware(['auth:sanctum', 'abilities:crear-articulo,editar-articulo']);
+
+// Token debe tener AL MENOS UNA habilidad
+Route::get('/orders', function () {
+    // ...
+})->middleware(['auth:sanctum', 'ability:crear-articulo,editar-articulo']);</code></pre>
+
+        <blockquote>Hoja08_ServiciosWeb_06</blockquote>
+      </section>
+
+    </main>
+
+    <!-- TOC SIDEBAR -->
+    <aside class="toc">
+      <div class="toc-title">Contenido</div>
+      <a href="#s1">01. Introducción</a>
+      <a href="#s2">02. Servicios Web</a>
+      <a class="sub" href="#s2">SOAP vs REST</a>
+      <a href="#s3">03. Servicios REST</a>
+      <a class="sub" href="#s3">cURL y Http facade</a>
+      <a href="#s4">04. APIs en Laravel</a>
+      <a class="sub" href="#s4">Resources</a>
+      <a href="#s5">05. Insertar datos</a>
+      <a class="sub" href="#s5">Form Request</a>
+      <a href="#s6">06. Actualizar datos</a>
+      <a class="sub" href="#s6">PUT vs PATCH</a>
+      <a href="#s7">07. Autenticación Sanctum</a>
+      <a class="sub" href="#s7">Tokens y Abilities</a>
+    </aside>
+  </div>
+</div>
+
+<footer>
+  <a href="ut7.html">← UT7</a> &nbsp;·&nbsp; DWES &nbsp;·&nbsp; <span style="color:var(--text-muted)">Fin del curso</span>
+</footer>
+
+<script>
+  const sections = document.querySelectorAll('section[id]');
+  const tocLinks = document.querySelectorAll('.toc a');
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        tocLinks.forEach(a => a.classList.remove('active'));
+        const active = document.querySelector(`.toc a[href="#${entry.target.id}"]`);
+        if (active) active.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-20% 0px -70% 0px' });
+  sections.forEach(s => observer.observe(s));
+</script>
+</body>
+</html>

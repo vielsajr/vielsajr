@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>UT2 — PHP Fundamentos | DWES</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<nav>
+  <a class="nav-brand" href="index.html">DWES</a>
+  <div class="nav-links">
+    <a href="index.html">Inicio</a>
+    <a href="ut1.html">UT1</a>
+    <a href="ut2.html" class="active">UT2</a>
+    <a href="ut3.html">UT3</a>
+    <a href="ut4.html">UT4</a>
+    <a href="ut5.html">UT5</a>
+    <a href="ut6.html">UT6</a>
+    <a href="ut7.html">UT7</a>
+    <a href="ut8.html">UT8</a>
+  </div>
+</nav>
+
+<div class="container">
+  <div class="hero">
+    <div class="hero-tag">Unidad Temática 2</div>
+    <h1>PHP — <span>Fundamentos del lenguaje</span></h1>
+    <p>Lenguajes embebidos en HTML, sintaxis PHP, variables y tipos de datos, operadores, funciones, fechas y superglobales.</p>
+  </div>
+
+  <div class="page-layout">
+    <main>
+
+      <!-- 1 -->
+      <section id="s1">
+        <h2 class="section-title"><span class="num">01</span> Lenguajes embebidos en HTML</h2>
+        <ul>
+          <li>Estructura páginas estáticas: sencilla, con tres partes: Cabecera (definición directivas), Zona metadatos, Cuerpo del documento.</li>
+          <li>Una vez creada la página se inserta el código a compilar e interpretar por el servidor.</li>
+          <li>El código de servidor se ejecutará al procesar la petición HTTP del cliente.</li>
+        </ul>
+
+        <h3 class="subsection-title" id="s1-1">1.1 Ámbito de ejecución</h3>
+        <ul>
+          <li>Los lenguajes de servidor <strong>solo</strong> pueden tener acceso a los recursos alojados en el servidor o bien otros ofrecidos a través de la red.</li>
+          <li><strong>NO</strong> pueden acceder a recursos del propio cliente.</li>
+          <li>Poseen archivos de configuración para definir el comportamiento de la aplicación (<code>php.ini</code>).</li>
+        </ul>
+      </section>
+
+      <!-- 2 -->
+      <section id="s2">
+        <h2 class="section-title"><span class="num">02</span> Tecnologías asociadas: PHP</h2>
+        <ul>
+          <li><strong>PHP</strong> — Hypertext Preprocessor.</li>
+          <li>Lenguaje de código <strong>abierto</strong>.</li>
+          <li>Permite su uso junto con documentos HTML mediante la <strong>inserción de fragmentos</strong> de código PHP acotados por etiquetas especiales.</li>
+          <li>El código PHP es <strong>interpretado</strong> por el servidor web y genera el correspondiente código HTML para mostrar en el navegador.</li>
+          <li>Las páginas tienen <strong>extensión .php</strong>.</li>
+          <li>Tiene una interfaz de desarrollo basada en la <strong>POO</strong>.</li>
+          <li>Es compatible con diferentes tecnologías y admite los principales servidores web y <strong>diferentes repositorios de BD</strong>.</li>
+        </ul>
+      </section>
+
+      <!-- 3 -->
+      <section id="s3">
+        <h2 class="section-title"><span class="num">03</span> Obtención del lenguaje de marcas para mostrar en el cliente</h2>
+        <p>La incrustación de código PHP en HTML más utilizada (compatible con todas las plataformas):</p>
+        <pre><code>&lt;?php
+    ...
+?&gt;</code></pre>
+
+        <p>Ejemplo completo:</p>
+        <pre><code>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;meta charset="UTF-8"&gt;
+        &lt;title&gt;Desarrollo web&lt;/title&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;h1&gt;Desarrollo en servidor&lt;/h1&gt;
+        &lt;h2&gt;estas líneas están escritas en HTML&lt;/h2&gt;
+        &lt;p&gt;esta es una línea incluida en el cuerpo de la página&lt;/p&gt;
+
+        &lt;?php
+            $expresion="1";
+            if ($expresion =="1"){
+                echo "1.- Empiezan líneas generadas por PHP &lt;br&gt;";
+                echo "2.- El texto está por instrucción print de PHP";
+            }
+        ?&gt;
+    &lt;/body&gt;
+&lt;/html&gt;</code></pre>
+
+        <blockquote>Ejercicio: Realiza una página web que presente como título "Mi primer ejemplo" y un mensaje de texto "primer ejemplo", mediante etiquetas HTML y un mensaje "¡Hola mundo!" con un script PHP.</blockquote>
+      </section>
+
+      <!-- 4 -->
+      <section id="s4">
+        <h2 class="section-title"><span class="num">04</span> Etiquetas para inserción de código</h2>
+
+        <h3 class="subsection-title" id="s4-1">4.1 Combinación de etiquetas HTML y código PHP</h3>
+        <pre><code>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;meta charset="UTF-8"&gt;
+        &lt;title&gt;Hola mundo&lt;/title&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;h1&gt;
+        &lt;?php
+            echo "Hola mundo";
+        ?&gt;
+        &lt;/h1&gt;
+    &lt;/body&gt;
+&lt;/html&gt;</code></pre>
+
+        <h3 class="subsection-title" id="s4-2">4.2 Insertar etiquetas dentro de un script PHP</h3>
+        <pre><code>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;meta charset="UTF-8"&gt;
+        &lt;title&gt;Hola mundo&lt;/title&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;?php
+            echo "&lt;h1&gt; Hola mundo &lt;/h1&gt;";
+        ?&gt;
+    &lt;/body&gt;
+&lt;/html&gt;</code></pre>
+
+        <h3 class="subsection-title" id="s4-3">4.3 Insertar todas las etiquetas dentro de un script PHP</h3>
+        <pre><code>&lt;?php
+    echo "&lt;!DOCTYPE html&gt;";
+    echo "&lt;html&gt;";
+    echo "&lt;head&gt;";
+    echo "&lt;title&gt; hola mundo&lt;/title&gt;";
+    echo "&lt;/head&gt;";
+    echo "&lt;body&gt;";
+    echo "&lt;h1&gt;Hola mundo&lt;/h1&gt;";
+    echo "&lt;/body&gt;";
+    echo "&lt;/html&gt;";
+?&gt;</code></pre>
+      </section>
+
+      <!-- 5 -->
+      <section id="s5">
+        <h2 class="section-title"><span class="num">05</span> Bloques de código</h2>
+
+        <h3 class="subsection-title" id="s5-1">5.1 Sintaxis básica</h3>
+        <ul>
+          <li>Las variables son sensibles a mayúsculas/minúsculas, pero <strong>no</strong> las palabras clave.</li>
+          <li>Los espacios en blanco dentro del código embebido no tienen ningún efecto.</li>
+          <li>El final de instrucción se indica con <code>;</code>.</li>
+          <li>Los scripts embebidos pueden situarse en cualquier parte del código HTML.</li>
+          <li>El número de scripts es indefinido.</li>
+          <li>Cuando se ejecuta un código embebido, el script se sustituye por el resultado de dicha ejecución, incluidas las etiquetas de inicio y fin.</li>
+        </ul>
+        <pre><code>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+    &lt;?php
+        $salida="contenido php";
+    ?&gt;
+    &lt;head&gt;
+        &lt;meta charset="UTF-8"&gt;
+        &lt;title&gt; &lt;?php  echo $salida;  ?&gt;
+        &lt;/title&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;h1&gt;Otro ejemplo&lt;/h1&gt;
+        &lt;h2&gt;
+        &lt;?php
+            echo $salida;
+        ?&gt;
+        &lt;/h2&gt;
+    &lt;/body&gt;
+&lt;/html&gt;</code></pre>
+
+        <h3 class="subsection-title" id="s5-2">5.2 Comentarios</h3>
+        <ul>
+          <li>Comentarios de <strong>una línea</strong> usando <code>//</code></li>
+          <li>Comentarios de <strong>una línea</strong> usando <code>#</code></li>
+          <li>Comentarios de <strong>varias líneas</strong> usando <code>/* ... */</code></li>
+        </ul>
+
+        <h3 class="subsection-title" id="s5-3">5.3 Imprimir: echo y print</h3>
+        <div class="info-card">
+          <p><strong>echo</strong>: muestra una o más cadenas.</p>
+          <pre><code>echo cadena1 [, cadena2...];
+
+// Ejemplo
+echo "Hola Mundo";
+echo "Hola", "Mundo";</code></pre>
+        </div>
+        <div class="info-card">
+          <p><strong>print</strong>: muestra una cadena.</p>
+          <pre><code>print cadena;
+
+// Ejemplo
+print "Hola mundo";
+print "Hola "."mundo";</code></pre>
+        </div>
+      </section>
+
+      <!-- 6 -->
+      <section id="s6">
+        <h2 class="section-title"><span class="num">06</span> Variables y tipos de datos</h2>
+        <p>El tipo de una variable no se suele especificar:</p>
+        <pre><code>$miVariable = 7;</code></pre>
+        <p>Se decide en tiempo de ejecución en función del contexto y puede variar:</p>
+        <pre><code>$miVariable = 7;
+$miVariable = "cambio de tipo";</code></pre>
+
+        <h3 class="subsection-title">Reglas para nombrar variables en PHP</h3>
+        <ul>
+          <li>El nombre debe comenzar con una <strong>letra</strong> o con un <strong>guión bajo</strong> ("_").</li>
+          <li>El nombre únicamente puede contener <strong>caracteres alfanuméricos</strong> y <strong>guiones bajos</strong>.</li>
+          <li>El nombre de una variable <strong>no</strong> debe contener espacios en blanco. Para nombres compuestos se usa <strong>guión bajo</strong> (<code>$mi_variable</code>) o <strong>primera letra en mayúsculas</strong> (<code>$miVariable</code>).</li>
+        </ul>
+
+        <h3 class="subsection-title">Tipos de datos</h3>
+        <ul>
+          <li><strong>boolean</strong>: valores <code>true</code> y <code>false</code>. Cualquier número entero se considera <code>true</code> salvo el 0, que es <code>false</code>.</li>
+          <li><strong>int</strong>: cualquier número sin decimales. Se pueden representar en formato decimal, octal (comenzando por <code>0</code>) o hexadecimal (comenzando por <code>0x</code>).</li>
+          <li><strong>float</strong>: cualquier número con decimales. También en notación científica.</li>
+          <li><strong>string</strong>: conjuntos de caracteres delimitados por comillas simples o dobles.</li>
+          <li><strong>null</strong>: tipo especial para indicar que la variable no tiene valor.</li>
+        </ul>
+
+        <blockquote>
+          Ejercicio 1: Comprueba el resultado visualizando por pantalla: $miBoolean = false; $miEntero= 0x2A; $miReal=7.3e-1; $miCadena="texto"; $miVariable=null;<br><br>
+          Ejercicio 2: ¿De qué tipo es la variable $resultado? $miEntero=3; $miReal=2.3; $resultado=$miEntero+$miReal;
+        </blockquote>
+
+        <h3 class="subsection-title" id="s6-1">6.1 Cadenas de texto</h3>
+        <ul>
+          <li>Se definen tanto con comillas simples como dobles.</li>
+          <li>Cuando se pone una variable dentro de <strong>comillas dobles</strong>, PHP la procesa y sustituye por su valor.</li>
+        </ul>
+        <pre><code>&lt;?php
+    $modulo="DWES";
+    echo "&lt;p&gt; Módulo: $modulo &lt;/p&gt;";
+?&gt;</code></pre>
+        <p>Para que PHP distinga correctamente el texto de la variable, a veces es necesario encerrarla <strong>entre llaves</strong>:</p>
+        <pre><code>&lt;?php
+    echo "&lt;p&gt; Módulo: ${modulo} &lt;/p&gt;";
+?&gt;</code></pre>
+
+        <h3 class="subsection-title">Concatenación de cadenas</h3>
+        <ul>
+          <li>Concatenación con punto (<code>.</code>).</li>
+          <li>Operador de asignación y concatenación (<code>.=</code>): concatena al argumento del lado izquierdo la cadena del lado derecho.</li>
+        </ul>
+        <pre><code>&lt;?php
+    $a="Módulo ";
+    $b= $a."DWES";
+    // ahora $b contiene "Módulo DWES"
+    $a .="DWES";
+    // ahora $a también contiene "Módulo DWES"
+?&gt;</code></pre>
+        <blockquote>Hoja02_PHP_01</blockquote>
+      </section>
+
+      <!-- 7 -->
+      <section id="s7">
+        <h2 class="section-title"><span class="num">07</span> Ámbito de las variables</h2>
+        <ul>
+          <li>Se pueden utilizar en cualquier lugar del programa.</li>
+          <li>Si la variable no existe, se reserva espacio en memoria.</li>
+          <li>Si una variable se define dentro de una función, es una <strong>variable local</strong> a la función.</li>
+          <li>Si aparece fuera de la función, se considera distinta a la definida dentro.</li>
+          <li>Si dentro de una función se quiere usar una variable definida fuera, hay que usar la palabra <strong>global</strong>.</li>
+          <li>Si se quiere mantener el valor de una variable definida dentro de una función al salir de ésta, se debe definir como <strong>static</strong>.</li>
+        </ul>
+      </section>
+
+      <!-- 8 -->
+      <section id="s8">
+        <h2 class="section-title"><span class="num">08</span> Operadores del lenguaje. Tipos</h2>
+        <ul>
+          <li>Operadores <strong>aritméticos</strong>: <code>+</code>, <code>-</code>, <code>*</code>, <code>/</code>, <code>%</code>, <code>++</code>, <code>--</code></li>
+          <li>Operador de <strong>asignación</strong>: <code>=</code></li>
+          <li>Operadores de <strong>comparación</strong>: <code>==</code>, <code>!=</code>, <code>&lt;</code>, <code>&gt;</code>, <code>&lt;=</code>, <code>&gt;=</code></li>
+          <li>Operadores <strong>lógicos</strong>: <code>and (&&)</code>, <code>or (||)</code>, <code>!</code>, <code>xor</code></li>
+          <li>Operadores de <strong>cadena</strong>: concatenación <code>.</code> (punto), asignación con concatenación <code>.=</code></li>
+        </ul>
+
+        <h3 class="subsection-title" id="s8-1">8.1 Precedencia de operadores (de menor a mayor)</h3>
+        <ol>
+          <li><code>++</code>, <code>--</code> (operadores unarios)</li>
+          <li><code>*</code>, <code>/</code>, <code>%</code></li>
+          <li><code>+</code>, <code>-</code></li>
+          <li><code>&lt;</code>, <code>&lt;=</code>, <code>&gt;</code>, <code>&gt;=</code></li>
+          <li><code>==</code>, <code>!=</code></li>
+          <li><code>&amp;&amp;</code></li>
+          <li><code>||</code></li>
+          <li><code>and</code></li>
+          <li><code>or</code></li>
+        </ol>
+      </section>
+
+      <!-- 9 -->
+      <section id="s9">
+        <h2 class="section-title"><span class="num">09</span> Funciones relacionadas con los tipos de datos</h2>
+        <p>Funciones para comprobar y establecer el tipo de datos de una variable:</p>
+        <div class="info-card">
+          <p><strong>gettype()</strong>: obtiene el tipo de variable.</p>
+          <pre><code>gettype($variable);</code></pre>
+          <p><strong>settype()</strong>: convierte una variable al tipo indicado por parámetro.</p>
+          <pre><code>settype($variable, "float");</code></pre>
+        </div>
+
+        <p>Funciones para comprobar si es de un tipo concreto:</p>
+        <div class="info-card">
+          <ul>
+            <li><strong>is_array()</strong>, <strong>is_bool()</strong>, <strong>is_float()</strong>, <strong>is_integer()</strong>...</li>
+            <li><strong>isset()</strong>: indica si una variable está definida y no es null.
+              <pre><code>isset($variable);</code></pre>
+            </li>
+            <li><strong>unset()</strong>: destruye una variable.
+              <pre><code>unset($variable);</code></pre>
+            </li>
+          </ul>
+        </div>
+
+        <blockquote>Hoja02_PHP_02</blockquote>
+
+        <h3 class="subsection-title">Funciones para Fechas</h3>
+        <p>No hay un tipo específico para fechas. La información se almacena como número entero y existen funciones en PHP para trabajar con ellas.</p>
+
+        <div class="info-card">
+          <p><strong>date()</strong>: permite obtener una cadena de texto a partir de una fecha y hora con el formato elegido.</p>
+          <pre><code>// date(string $formato [, int $fechahora]);
+$fechaActual = date('Y-m-d');
+echo $fechaActual; // Imprime: 2024-09-29</code></pre>
+          <p style="margin-bottom:0">Si no se indica el segundo parámetro, se utiliza la hora actual.</p>
+        </div>
+
+        <div class="info-card">
+          <p>La clase <strong>DateTime</strong> es una de las más utilizadas para trabajar con fechas y horas:</p>
+          <pre><code>// Crear un objeto DateTime a partir de una cadena de fecha
+$fecha = new DateTime('2024-10-29');
+// Añadir un día a la fecha
+$fecha-&gt;modify('+1 day');
+// Establecer la zona horaria a Madrid
+$fecha-&gt;setTimezone(new DateTimeZone('Europe/Madrid'));
+// Imprimir la fecha y hora formateada
+echo $fecha-&gt;format('Y-m-d H:i:s');</code></pre>
+        </div>
+
+        <div class="info-card">
+          <p>Diferencia entre dos fechas usando <strong>diff()</strong>:</p>
+          <pre><code>$fecha1 = new DateTime('2024-06-15');
+$fecha2 = new DateTime('2024-09-22');
+$diferencia = $fecha1-&gt;diff($fecha2);
+echo $diferencia-&gt;format('%a días'); // Imprime: 99 días</code></pre>
+        </div>
+
+        <div class="info-card">
+          <p>La clase <strong>IntlDateFormatter</strong> proporciona una forma más avanzada y flexible de formatear fechas (API de internacionalización Intl, maneja diferentes formatos para diferentes idiomas y regiones):</p>
+          <pre><code>$fecha = new DateTime('2024-09-05');
+$formateador = new IntlDateFormatter('es_ES');
+$formateador-&gt;setPattern("MMMM");
+echo $formateador-&gt;format($fecha);
+echo "&lt;br&gt;";
+
+$formateador-&gt;setPattern("EEEE d 'de' MMMM");
+echo $formateador-&gt;format($fecha);
+echo "&lt;br&gt;";
+
+$formateador = new IntlDateFormatter('es_ES', IntlDateFormatter::FULL, IntlDateFormatter::NONE);
+echo $formateador-&gt;format($fecha);
+echo "&lt;br&gt;";
+
+$formateador = new IntlDateFormatter('es_ES', IntlDateFormatter::LONG, IntlDateFormatter::NONE);
+echo $formateador-&gt;format($fecha);
+echo "&lt;br&gt;";
+
+$formateador = new IntlDateFormatter('es_ES', IntlDateFormatter::MEDIUM, IntlDateFormatter::NONE);
+echo $formateador-&gt;format($fecha);
+echo "&lt;br&gt;";
+
+$formateador = new IntlDateFormatter('es_ES', IntlDateFormatter::SHORT, IntlDateFormatter::NONE);
+echo $formateador-&gt;format($fecha);
+echo "&lt;br&gt;";</code></pre>
+        </div>
+
+        <blockquote>Hoja02_PHP_03</blockquote>
+      </section>
+
+      <!-- 10 -->
+      <section id="s10">
+        <h2 class="section-title"><span class="num">10</span> Variables especiales en PHP</h2>
+        <p>PHP incluye variables internas predefinidas que pueden usarse desde cualquier ámbito. Se denominan <strong>superglobales</strong>. Cada una es un array que contiene un conjunto de valores.</p>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Variable</th>
+              <th>Descripción</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>$_SERVER</code></td>
+              <td>Contiene información sobre el entorno del servidor web y de ejecución.</td>
+            </tr>
+            <tr>
+              <td><code>$_GET</code></td>
+              <td>Contiene las variables pasadas al guión actual mediante el método GET (parámetros en la URL).</td>
+            </tr>
+            <tr>
+              <td><code>$_POST</code></td>
+              <td>Contiene las variables pasadas mediante HTTP POST.</td>
+            </tr>
+            <tr>
+              <td><code>$_COOKIE</code></td>
+              <td>Contiene las variables pasadas mediante Cookies HTTP.</td>
+            </tr>
+            <tr>
+              <td><code>$_REQUEST</code></td>
+              <td>Junta en uno solo el contenido de $_GET, $_POST y $_COOKIE.</td>
+            </tr>
+            <tr>
+              <td><code>$_FILES</code></td>
+              <td>Contiene los ficheros que se puedan haber subido al servidor utilizando el método POST.</td>
+            </tr>
+            <tr>
+              <td><code>$_SESSION</code></td>
+              <td>Contiene las variables de sesión disponibles para el guión actual.</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+    </main>
+
+    <!-- TOC -->
+    <aside class="toc">
+        <div class="toc-title">Contenido</div>
+        <a href="#s1">1. Lenguajes embebidos</a>
+        <a href="#s1-1" class="sub">1.1 Ámbito de ejecución</a>
+        <a href="#s2">2. PHP</a>
+        <a href="#s3">3. Obtención de marcas</a>
+        <a href="#s4">4. Etiquetas de inserción</a>
+        <a href="#s4-1" class="sub">4.1 HTML + PHP</a>
+        <a href="#s4-2" class="sub">4.2 Etiquetas en PHP</a>
+        <a href="#s4-3" class="sub">4.3 Todo en PHP</a>
+        <a href="#s5">5. Bloques de código</a>
+        <a href="#s5-1" class="sub">5.1 Sintaxis básica</a>
+        <a href="#s5-2" class="sub">5.2 Comentarios</a>
+        <a href="#s5-3" class="sub">5.3 echo y print</a>
+        <a href="#s6">6. Variables y tipos</a>
+        <a href="#s6-1" class="sub">6.1 Cadenas de texto</a>
+        <a href="#s7">7. Ámbito de variables</a>
+        <a href="#s8">8. Operadores</a>
+        <a href="#s8-1" class="sub">8.1 Precedencia</a>
+        <a href="#s9">9. Funciones de tipos</a>
+        <a href="#s10">10. Superglobales</a>
+    </aside>
+  </div>
+</div>
+
+<footer>
+  <p><a href="ut1.html">← UT1</a> &nbsp;·&nbsp; UT2 — PHP Fundamentos &nbsp;·&nbsp; <a href="ut5.html">UT5 →</a></p>
+</footer>
+
+<script>
+  const sections = document.querySelectorAll('section[id]');
+  const tocLinks = document.querySelectorAll('.toc a');
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        tocLinks.forEach(l => l.classList.remove('active'));
+        const active = document.querySelector(`.toc a[href="#${entry.target.id}"]`);
+        if (active) active.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-20% 0px -70% 0px' });
+  sections.forEach(s => observer.observe(s));
+</script>
+</body>
+</html>

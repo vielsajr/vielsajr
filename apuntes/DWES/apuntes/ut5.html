@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>UT5 — Bases de datos relacionales | DWES</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<nav>
+  <a class="nav-brand" href="index.html">DWES</a>
+  <div class="nav-links">
+    <a href="index.html">Inicio</a>
+    <a href="ut1.html">UT1</a>
+    <a href="ut2.html">UT2</a>
+    <a href="ut3.html">UT3</a>
+    <a href="ut4.html">UT4</a>
+    <a href="ut5.html" class="active">UT5</a>
+    <a href="ut6.html">UT6</a>
+    <a href="ut7.html">UT7</a>
+    <a href="ut8.html">UT8</a>
+  </div>
+</nav>
+
+<div class="container">
+  <div class="hero">
+    <div class="hero-tag">Unidad Temática 5</div>
+    <h1>Bases de datos<br><span>relacionales</span></h1>
+    <p>Utilización de MySQL/MariaDB con PHP. Módulos de acceso, PDO, consultas preparadas, transacciones y manejo de excepciones.</p>
+  </div>
+
+  <div class="page-layout">
+    <main>
+
+      <!-- 1 -->
+      <section id="s1">
+        <h2 class="section-title"><span class="num">01</span> Utilización de bases de datos relacionales</h2>
+        <p>PHP soporta más de 15 <strong>sistemas gestores de bases de datos</strong>: SQLite, Oracle, SQL Server, PostgreSQL, IBM DB2, MySQL, etc.</p>
+
+        <h3 class="subsection-title" id="s1-1">1.1 MySQL / MariaDB</h3>
+        <div class="info-card">
+          <p><strong>MySQL</strong> es un sistema de gestión de bases de datos relacional desarrollado bajo <strong>licencia dual</strong> (Licencia pública general / Licencia comercial) por Oracle Corporation. Está considerada la base de datos de código abierto más popular del mundo.</p>
+        </div>
+        <div class="info-card">
+          <p><strong>MariaDB</strong> es un sistema de gestión de bases de datos derivado de MySQL con <strong>licencia GPL</strong>. Es desarrollado por Michael (Monty) Widenius —fundador de MySQL—, la fundación MariaDB y la comunidad de desarrolladores de software libre.</p>
+        </div>
+
+        <p>Ambas bases de datos incorporan múltiples motores de almacenamiento:</p>
+        <ul>
+          <li><strong>MyISAM</strong> (<strong>Aria</strong> en MariaDB): motor que se utiliza por defecto. Muy rápido pero no contempla integridad referencial ni tablas transaccionales.</li>
+          <li><strong>InnoDB</strong> (<strong>XtraDB</strong> en MariaDB): algo más lento pero sí soporta integridad referencial y tablas transaccionales.</li>
+        </ul>
+      </section>
+
+      <!-- 2 -->
+      <section id="s2">
+        <h2 class="section-title"><span class="num">02</span> Módulos para la gestión del acceso a datos</h2>
+        <ul>
+          <li>Hasta la versión 5 de PHP, el acceso a las bases de datos se hacía principalmente mediante <strong>extensiones nativas</strong> específicas para cada sistema gestor.</li>
+          <li>A partir de la versión 5 se introdujo <strong>PDO</strong> (PHP Data Objects): extensión para acceder de forma común a distintos sistemas gestores.</li>
+        </ul>
+        <div class="info-card">
+          <p>La gran ventaja de PDO es que podemos seguir utilizando la misma sintaxis aunque cambiemos el motor de base de datos. Las extensiones nativas ofrecen más potencia y en algunos casos mayor velocidad, pero PDO ofrece portabilidad.</p>
+        </div>
+
+        <h3 class="subsection-title" id="s2-1">2.1 MySQLi</h3>
+        <p>Esta extensión se desarrolló para aprovechar las ventajas de las versiones 4.1.3 y posteriores de MySQL. Ofrece una <strong>interfaz de programación dual</strong> (objetos o funciones).</p>
+
+        <p>Utilizando <strong>objetos</strong>:</p>
+        <pre><code>$conexion = new mysqli('localhost', 'usuario', 'contraseña', 'base_de_datos');
+print $conexion-&gt;server_info;</code></pre>
+
+        <p>Utilizando <strong>funciones</strong>:</p>
+        <pre><code>$conexion = mysqli_connect('localhost', 'usuario', 'contraseña', 'base_de_datos');
+print mysqli_get_server_info($conexion);</code></pre>
+
+        <h3 class="subsection-title" id="s2-2">2.2 PHP Data Objects (PDO)</h3>
+        <p>PDO se basa en las características de orientación a objetos de PHP. Al contrario que MySQLi, <strong>no ofrece interfaz de programación dual</strong>: hay que emplear obligatoriamente los objetos con sus métodos y propiedades.</p>
+        <div class="info-card">
+          <p style="margin-bottom:0">Nosotros trabajaremos con <strong>PDO</strong>.</p>
+        </div>
+      </section>
+
+      <!-- 3 -->
+      <section id="s3">
+        <h2 class="section-title"><span class="num">03</span> Establecimiento de conexiones</h2>
+        <p>Para establecer una conexión con PDO hay que instanciar un objeto de la clase PDO con los siguientes parámetros (solo el primero es obligatorio):</p>
+        <ul>
+          <li>Origen de datos (DSN).</li>
+          <li>Nombre de usuario con permisos para establecer la conexión.</li>
+          <li>Contraseña del usuario.</li>
+          <li>Opciones de conexión (array).</li>
+        </ul>
+
+        <pre><code>$dwes = new PDO('mysql:host=localhost;dbname=dwes', 'dwes', 'abc123.');</code></pre>
+
+        <p>El <strong>origen de datos (DSN)</strong> es una cadena de texto que indica qué controlador se va a utilizar. Para el <strong>controlador MySQL</strong>, los parámetros separados por <code>;</code> son:</p>
+        <ul>
+          <li><strong>host</strong>: nombre o dirección IP del servidor.</li>
+          <li><strong>port</strong>: número de puerto TCP.</li>
+          <li><strong>dbname</strong>: nombre de la base de datos.</li>
+          <li><strong>unix_socket</strong>: socket de MySQL en sistemas Unix.</li>
+        </ul>
+
+        <p>Para indicar codificación UTF-8:</p>
+        <pre><code>$opciones = array(PDO::MYSQL_ATTR_INIT_COMMAND =&gt; "SET NAMES utf8");
+$dwes = new PDO('mysql:host=localhost;dbname=dwes', 'dwes', 'abc123.', $opciones);</code></pre>
+
+        <blockquote>Hoja05_BBDD_01</blockquote>
+      </section>
+
+      <!-- 4 -->
+      <section id="s4">
+        <h2 class="section-title"><span class="num">04</span> Recuperación y utilización de conjuntos de resultados</h2>
+        <p>Para consultas que generan un conjunto de datos (SELECT) se usa el <strong>método query</strong>, que devuelve un objeto de la clase <strong>PDOStatement</strong>:</p>
+        <pre><code>$dwes = new PDO("mysql:host=localhost;dbname=dwes", "dwes", "abc123.");
+$resultado = $dwes-&gt;query("SELECT producto, unidades FROM stock");</code></pre>
+
+        <p>Para tratar el conjunto de resultados se usa el <strong>método fetch</strong>:</p>
+        <pre><code>$resultado = $dwes-&gt;query('SELECT campo1, campo2 FROM tabla WHERE condicion');
+while ($registro = $resultado-&gt;fetch())
+{
+    echo $registro['campo1'].": ".$registro['campo2']."&lt;br /&gt;";
+}</code></pre>
+
+        <p>El método fetch admite un parámetro opcional para cambiar su comportamiento:</p>
+        <table>
+          <thead>
+            <tr><th>Constante</th><th>Comportamiento</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><code>PDO::FETCH_ASSOC</code></td><td>Devuelve solo un array asociativo.</td></tr>
+            <tr><td><code>PDO::FETCH_NUM</code></td><td>Devuelve solo un array con claves numéricas.</td></tr>
+            <tr><td><code>PDO::FETCH_BOTH</code></td><td>Devuelve array con claves numéricas y asociativas (por defecto).</td></tr>
+            <tr><td><code>PDO::FETCH_OBJ</code></td><td>Devuelve un objeto con propiedades correspondientes a los campos.</td></tr>
+            <tr><td><code>PDO::FETCH_LAZY</code></td><td>Devuelve tanto el objeto como el array con clave dual.</td></tr>
+            <tr><td><code>PDO::FETCH_BOUND</code></td><td>Devuelve true y asigna valores del registro a variables (con bindColumn).</td></tr>
+          </tbody>
+        </table>
+
+        <p>Ejemplo con <strong>FETCH_OBJ</strong>:</p>
+        <pre><code>$resultado = $dwes-&gt;query('SELECT campo1, campo2 FROM tabla WHERE condicion');
+while ($registro = $resultado-&gt;fetch(PDO::FETCH_OBJ))
+{
+    echo $registro-&gt;campo1.": ".$registro-&gt;campo2."&lt;br /&gt;";
+}</code></pre>
+
+        <p>Ejemplo con <strong>FETCH_BOUND</strong>:</p>
+        <pre><code>$resultado = $dwes-&gt;query('SELECT campo1, campo2 FROM tabla WHERE condicion');
+$resultado-&gt;bindColumn(1, $campo1);
+$resultado-&gt;bindColumn(2, $campo2);
+while ($registro = $resultado-&gt;fetch(PDO::FETCH_BOUND))
+{
+    echo $campo1.": ".$campo2."&lt;br /&gt;";
+}</code></pre>
+
+        <blockquote>Hoja05_BBDD_02</blockquote>
+
+        <h3 class="subsection-title" id="s4-1">4.1 Consultas preparadas</h3>
+        <p>Para preparar la consulta se usa el <strong>método prepare</strong> de la clase PDO, que devuelve un objeto <strong>PDOStatement</strong>.</p>
+
+        <p>Con parámetros marcados por signos de interrogación:</p>
+        <pre><code>$consulta = $dwes-&gt;prepare('INSERT INTO tabla (campo1, campo2) VALUES (?, ?)');</code></pre>
+
+        <p>Con parámetros con nombre (precedidos por <code>:</code>):</p>
+        <pre><code>$consulta = $dwes-&gt;prepare('INSERT INTO tabla (campo1, campo2) VALUES (:cm1, :cm2)');</code></pre>
+
+        <p>Enlace de parámetros con <strong>bindParam</strong>:</p>
+        <pre><code>$campo1 = "valor_campo1";
+$campo2 = "valor_campo2";
+$consulta-&gt;bindParam(1, $campo1); // o $consulta-&gt;bindParam(:cm1, $campo1);
+$consulta-&gt;bindParam(2, $campo2); // o $consulta-&gt;bindParam(:cm2, $campo2);</code></pre>
+
+        <p>Ejecución de la consulta preparada:</p>
+        <pre><code>$consulta-&gt;execute();</code></pre>
+      </section>
+
+      <!-- 5 -->
+      <section id="s5">
+        <h2 class="section-title"><span class="num">05</span> Ejecución de consultas</h2>
+        <p>Para sentencias SQL que no devuelven datos (INSERT, DELETE, UPDATE), el <strong>método exec</strong> devuelve el número de registros afectados:</p>
+        <pre><code>$registros = $dwes-&gt;exec('DELETE FROM stock WHERE unidades=0');
+echo "&lt;p&gt;Se han borrado $registros registros.&lt;/p&gt;";</code></pre>
+
+        <blockquote>Hoja05_BBDD_03</blockquote>
+      </section>
+
+      <!-- 6 -->
+      <section id="s6">
+        <h2 class="section-title"><span class="num">06</span> Transacciones</h2>
+        <p>Por defecto PDO trabaja en modo <strong>"autocommit"</strong> (confirma automáticamente cada sentencia). Para trabajar con transacciones, PDO incorpora tres métodos:</p>
+        <ul>
+          <li><strong>beginTransaction</strong>: deshabilita el modo "autocommit" y comienza una nueva transacción.</li>
+          <li><strong>commit</strong>: confirma la transacción actual.</li>
+          <li><strong>rollback</strong>: revierte los cambios llevados a cabo en la transacción actual.</li>
+        </ul>
+        <p>Una vez ejecutado un commit o rollback, se vuelve al modo de confirmación automática.</p>
+        <pre><code>$ok = true;
+$dwes-&gt;beginTransaction();
+if($dwes-&gt;exec('DELETE …') == 0)  $ok = false;
+if($dwes-&gt;exec('UPDATE …') == 0)  $ok = false;
+…
+if ($ok) $dwes-&gt;commit();   // Si todo fue bien confirma los cambios
+else $dwes-&gt;rollback();     // y si no, los revierte</code></pre>
+
+        <blockquote>Hoja05_BBDD_04</blockquote>
+      </section>
+
+      <!-- 7 -->
+      <section id="s7">
+        <h2 class="section-title"><span class="num">07</span> Errores y manejo de excepciones</h2>
+        <p>PHP define una <strong>clasificación de los errores</strong> y ofrece métodos para ajustar su tratamiento. Cada nivel se identifica por una constante (por ejemplo, <code>E_NOTICE</code> para avisos y <code>E_ERROR</code> para errores fatales).</p>
+        <p>La configuración se realiza en <strong>php.ini</strong>. Principales parámetros:</p>
+        <ul>
+          <li><strong>error_reporting</strong>: indica qué tipos de errores se notificarán. Por defecto: <code>E_ALL &amp; ~E_NOTICE</code>.</li>
+          <li><strong>display_errors</strong>: en su valor por defecto (On), envía mensajes a la salida estándar. Se debe desactivar (Off) en servidores de producción.</li>
+        </ul>
+
+        <h3 class="subsection-title" id="s7-1">7.1 Excepciones</h3>
+        <p>PHP tiene un modelo de excepciones similar al de otros lenguajes:</p>
+        <ul>
+          <li>El código susceptible de producir errores se introduce en un bloque <strong>try</strong>.</li>
+          <li>Cuando se produce un error, se lanza una excepción con la instrucción <strong>throw</strong>.</li>
+          <li>Después del bloque try debe haber como mínimo un bloque <strong>catch</strong> encargado de procesar el error.</li>
+          <li>Si no se lanza ninguna excepción, la ejecución continúa en la línea siguiente al bloque catch.</li>
+        </ul>
+
+        <pre><code>try {
+    if ($divisor == 0)
+        throw new Exception("División por cero.");
+    $resultado = $dividendo / $divisor;
+}
+catch (Exception $e) {
+    echo "Se ha producido el siguiente error: ".$e-&gt;getMessage();
+}</code></pre>
+
+        <p>La clase PDO permite definir cómo actuará ante errores mediante <code>PDO::ATTR_ERRMODE</code>:</p>
+        <table>
+          <thead>
+            <tr><th>Modo</th><th>Descripción</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><code>PDO::ERRMODE_SILENT</code></td><td>No se hace nada cuando ocurre un error (comportamiento por defecto).</td></tr>
+            <tr><td><code>PDO::ERRMODE_WARNING</code></td><td>Genera un error de tipo E_WARNING cuando se produce un error.</td></tr>
+            <tr><td><code>PDO::ERRMODE_EXCEPTION</code></td><td>Lanza una excepción PDOException cuando se produce un error.</td></tr>
+          </tbody>
+        </table>
+
+        <p>Para utilizar excepciones con PDO:</p>
+        <pre><code>$dwes-&gt;setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);</code></pre>
+
+        <p>Ejemplo completo capturando una excepción PDO (tabla que no existe):</p>
+        <pre><code>$dwes = new PDO("mysql:host=localhost; dbname=dwes", "dwes", "abc123.");
+$dwes-&gt;setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+try {
+    $sql = "SELECT * FROM tablaincorrecta";
+    $result = $dwes-&gt;query($sql);
+    …
+}
+catch (PDOException $p) {
+    echo "Error ".$p-&gt;getMessage()."&lt;br /&gt;";
+}</code></pre>
+
+        <blockquote>Hoja05_BBDD_05</blockquote>
+      </section>
+
+    </main>
+
+    <!-- TOC -->
+    <aside class="toc">
+        <div class="toc-title">Contenido</div>
+        <a href="#s1">1. Bases de datos relacionales</a>
+        <a href="#s1-1" class="sub">1.1 MySQL / MariaDB</a>
+        <a href="#s2">2. Módulos de acceso</a>
+        <a href="#s2-1" class="sub">2.1 MySQLi</a>
+        <a href="#s2-2" class="sub">2.2 PDO</a>
+        <a href="#s3">3. Conexiones</a>
+        <a href="#s4">4. Recuperación de datos</a>
+        <a href="#s4-1" class="sub">4.1 Consultas preparadas</a>
+        <a href="#s5">5. Ejecución de consultas</a>
+        <a href="#s6">6. Transacciones</a>
+        <a href="#s7">7. Errores y excepciones</a>
+        <a href="#s7-1" class="sub">7.1 Excepciones</a>
+    </aside>
+  </div>
+</div>
+
+<footer>
+  <p><a href="ut2.html">← UT2</a> &nbsp;·&nbsp; UT5 — Bases de datos relacionales &nbsp;·&nbsp; <a href="ut6.html">UT6 →</a></p>
+</footer>
+
+<script>
+  const sections = document.querySelectorAll('section[id]');
+  const tocLinks = document.querySelectorAll('.toc a');
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        tocLinks.forEach(l => l.classList.remove('active'));
+        const active = document.querySelector(`.toc a[href="#${entry.target.id}"]`);
+        if (active) active.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-20% 0px -70% 0px' });
+  sections.forEach(s => observer.observe(s));
+</script>
+</body>
+</html>

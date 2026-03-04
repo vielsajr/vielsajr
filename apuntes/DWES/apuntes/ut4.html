@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>UT4 — Programación Orientada a Objetos en PHP | DWES</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<nav>
+  <a class="nav-brand" href="index.html">DWES</a>
+  <div class="nav-links">
+    <a href="index.html">Inicio</a>
+    <a href="ut1.html">UT1</a>
+    <a href="ut2.html">UT2</a>
+    <a href="ut3.html">UT3</a>
+    <a href="ut4.html" class="active">UT4</a>
+    <a href="ut5.html">UT5</a>
+    <a href="ut6.html">UT6</a>
+    <a href="ut7.html">UT7</a>
+    <a href="ut8.html">UT8</a>
+  </div>
+</nav>
+
+<div class="container">
+  <div class="hero">
+    <div class="hero-tag">Unidad Temática 4</div>
+    <h1>Programación<br><span>Orientada a Objetos</span></h1>
+    <p>Clases, objetos, constructores, herencia, interfaces y patrones de POO en PHP a partir de la versión 5.</p>
+  </div>
+
+  <div class="page-layout">
+    <main>
+
+      <!-- 1 -->
+      <section id="s1">
+        <h2 class="section-title"><span class="num">01</span> Introducción</h2>
+        <p>El lenguaje PHP original no se diseñó con características de orientación a objetos. Las características de POO que se soportan <strong>a partir de PHP 5</strong> (actualmente estamos en la 8.4) incluyen:</p>
+        <ul>
+          <li>Métodos estáticos</li>
+          <li>Métodos constructores y destructores</li>
+          <li>Herencia</li>
+          <li>Interfaces</li>
+          <li>Clases abstractas</li>
+        </ul>
+        <p>No se incluye:</p>
+        <ul>
+          <li>Herencia múltiple</li>
+          <li>Sobrecarga de métodos</li>
+          <li>Sobrecarga de operadores</li>
+        </ul>
+      </section>
+
+      <!-- 2 -->
+      <section id="s2">
+        <h2 class="section-title"><span class="num">02</span> Las clases. Usos de clases</h2>
+        <p>La declaración de una clase en PHP se hace utilizando la palabra <strong>class</strong>. Entre llaves deben figurar los miembros: primero los <strong>atributos</strong>, después los <strong>métodos</strong>.</p>
+        <pre><code>class Producto
+{
+    private int $codigo;
+    public string $nombre;
+    protected float $PVP;
+
+    public function __toString()
+    {
+        return "{$this-&gt;nombre}";
+    }
+}</code></pre>
+
+        <p>Desde PHP 7.4+ los atributos deben inicializarse. Podemos usar:</p>
+        <ul>
+          <li><strong>Valores por defecto</strong>: <code>private int $codigo = 0;</code></li>
+          <li><strong>Constructor</strong>: <code>public function __construct(int $c, string $n, float $p){...}</code></li>
+          <li><strong>Nullable</strong>: <code>private ?int $codigo = null;</code></li>
+        </ul>
+
+        <div class="info-card">
+          <p><strong>Recomendaciones:</strong></p>
+          <ul style="margin-bottom:0">
+            <li>Cada clase en un fichero distinto.</li>
+            <li>Los nombres de las clases deben comenzar por <strong>mayúsculas</strong> para distinguirlos de los objetos y otras variables.</li>
+            <li>Por lo general, los atributos deben ser <strong>privados</strong>.</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- 3 -->
+      <section id="s3">
+        <h2 class="section-title"><span class="num">03</span> Objetos. Declaración y usos</h2>
+        <p>Una vez definida la clase, usamos la palabra <strong>new</strong> para instanciar objetos:</p>
+        <pre><code>$p = new Producto();</code></pre>
+        <p>Para que la línea anterior se ejecute sin error, previamente debemos haber declarado la clase:</p>
+        <pre><code>require_once('producto.class.php');</code></pre>
+        <p>Para acceder desde un objeto a sus atributos o métodos se usa el <strong>operador flecha</strong> (solo se pone <code>$</code> delante del nombre del objeto):</p>
+        <pre><code>$p-&gt;nombre = "Samsung Galaxy S25";
+echo $p;</code></pre>
+        <blockquote>Ejercicio: Crea la clase Producto con los atributos que consideres necesarios.</blockquote>
+      </section>
+
+      <!-- 4 -->
+      <section id="s4">
+        <h2 class="section-title"><span class="num">04</span> Constructores</h2>
+        <p>Se pueden definir <strong>métodos constructores</strong> que se ejecutan cuando se crea el objeto. El constructor debe llamarse <code>__construct</code>.</p>
+        <pre><code>public function __construct()
+{
+}</code></pre>
+
+        <h3 class="subsection-title" id="s4-1">4.1 Operador this</h3>
+        <p>Cuando desde un objeto se invoca un método de la clase, se le pasa siempre una referencia al objeto que hizo la llamada. Esta referencia se almacena en la variable <strong>$this</strong>.</p>
+        <p>Se utiliza para tener acceso a los <strong>atributos privados del objeto</strong> (solo accesibles desde los métodos de la clase).</p>
+        <pre><code>echo "&lt;p&gt;" . $this-&gt;codigo . "&lt;/p&gt;";</code></pre>
+        <p>El constructor puede tener parámetros, que deberán pasarse al crear el objeto. <strong>Solo puede haber un constructor en cada clase.</strong></p>
+        <pre><code>public function __construct(int $codigo, string $nombre, float $precio)
+{
+    $this-&gt;codigo = $codigo;
+    $this-&gt;nombre = $nombre;
+    $this-&gt;PVP = $precio;
+}</code></pre>
+        <blockquote>Ejercicio: Crea un constructor para tu clase Producto.</blockquote>
+
+        <h3 class="subsection-title" id="s4-2">4.2 Constructores en PHP 8</h3>
+        <p>Una novedad de PHP 8 es la <strong>promoción de las propiedades del constructor</strong>: se puede declarar atributos y asignarles valores en una sola línea dentro del constructor.</p>
+        <p>Antes de PHP 8:</p>
+        <pre><code>class Persona {
+    private string $nombre;
+    private int $edad;
+    private string $ciudad;
+
+    public function __construct(string $nombre, int $edad, string $ciudad) {
+        $this-&gt;nombre = $nombre;
+        $this-&gt;edad = $edad;
+        $this-&gt;ciudad = $ciudad;
+    }
+}
+
+$persona = new Persona("Pepe", 30, "Oviedo");</code></pre>
+        <p>Con PHP 8:</p>
+        <pre><code>class Persona {
+    public function __construct(
+        private readonly string $nombre, // readonly = solo lectura, se asigna una vez
+        private int $edad,
+        private string $ciudad
+    ) {}
+}
+
+$persona = new Persona("Pepe", 30, "Oviedo");</code></pre>
+
+        <h3 class="subsection-title" id="s4-3">4.3 Destructores</h3>
+        <p>Es posible definir un método <strong>destructor</strong>, llamado <code>__destruct</code>, que define acciones que se ejecutarán cuando se elimine el objeto (cerrar conexiones, liberar recursos, guardar logs, etc.).</p>
+        <blockquote>Hoja04_POO_01</blockquote>
+      </section>
+
+      <!-- 5 -->
+      <section id="s5">
+        <h2 class="section-title"><span class="num">05</span> Métodos get y set</h2>
+        <p>Aunque no es obligatorio, el nombre del método que permite obtener el valor de un atributo suele empezar por <strong>get</strong> y el que permite modificarlo por <strong>set</strong>:</p>
+        <pre><code>public function setCodigo(int $nuevoCodigo)
+{
+    $this-&gt;codigo = $nuevoCodigo;
+}
+
+public function getCodigo(): int { return $this-&gt;codigo; }</code></pre>
+        <blockquote>Ejercicio: Crea los métodos get y set para la clase Producto.</blockquote>
+      </section>
+
+      <!-- 6 -->
+      <section id="s6">
+        <h2 class="section-title"><span class="num">06</span> Constantes</h2>
+        <p>En una clase también se pueden definir <strong>constantes</strong> usando la palabra <strong>const</strong>.</p>
+        <ul>
+          <li>No pueden cambiar su valor.</li>
+          <li>No usan el carácter <code>$</code>.</li>
+          <li>Están asociadas a la clase, no a cada objeto.</li>
+          <li>Sus nombres suelen escribirse en <strong>mayúsculas</strong>.</li>
+        </ul>
+        <p>Para acceder a ellas, se usa el nombre de la clase y el <strong>operador de resolución de ámbito <code>::</code></strong>:</p>
+        <pre><code>class BaseDatos{
+    const USUARIO = "dwes";
+    ...
+}
+
+echo BaseDatos::USUARIO;</code></pre>
+        <p>No es necesario que exista ningún objeto de una clase para acceder al valor de sus constantes.</p>
+        <blockquote>Ejercicio: Crea una clase BaseDatos con constantes para el dominio, usuario, contraseña y nombre de la base de datos.</blockquote>
+      </section>
+
+      <!-- 7 -->
+      <section id="s7">
+        <h2 class="section-title"><span class="num">07</span> Métodos estáticos</h2>
+        <p>Una clase puede tener atributos o métodos <strong>estáticos</strong> (también llamados de clase). Se definen usando la palabra clave <strong>static</strong> y se referencian con <code>::</code>.</p>
+        <pre><code>class Producto{
+    private static $numProductos = 0;
+    public static function nuevoProducto(){
+        self::$numProductos++;
+    }
+    ...
+}</code></pre>
+        <ul>
+          <li>Los atributos y métodos estáticos <strong>no</strong> pueden ser llamados desde un objeto con el operador <code>-&gt;</code>.</li>
+          <li>Si son públicos, se accede con el nombre de la clase y <code>::</code>: <code>Producto::nuevoProducto();</code></li>
+          <li>Si son privados, solo se accede desde los métodos de la clase usando la palabra <strong>self</strong>: <code>self::$numProductos++;</code></li>
+        </ul>
+
+        <p>Ejemplo completo con contador en constructor y destructor:</p>
+        <pre><code>class Producto{
+    private static $numProductos = 0;
+    private $codigo;
+    public function __construct(string $codigo){
+        $this-&gt;codigo = $codigo;
+        self::$numProductos++;
+    }
+    public function __destruct(){
+        self::$numProductos--;
+    }
+    public static function getNumeroProductos(){
+        return self::$numProductos;
+    }
+}
+
+$p = new Producto('Iphone');
+echo Producto::getNumeroProductos();</code></pre>
+      </section>
+
+      <!-- 8 -->
+      <section id="s8">
+        <h2 class="section-title"><span class="num">08</span> Utilización de objetos</h2>
+        <p>Una vez creado un objeto, puedes usar el operador <strong>instanceof</strong> para comprobar si es o no una instancia de una clase determinada:</p>
+        <pre><code>if ($p instanceof Producto){
+    ...
+}</code></pre>
+
+        <p>Funciones útiles para el desarrollo con POO:</p>
+        <table>
+          <thead><tr><th>Función</th><th>Ejemplo</th><th>Significado</th></tr></thead>
+          <tbody>
+            <tr><td><strong>get_class</strong></td><td><code>echo "La clase es:".get_class($p);</code></td><td>Devuelve el nombre de la clase del objeto.</td></tr>
+            <tr><td><strong>class_exists</strong></td><td><code>if (class_exists('Producto')){ $p= new Producto(); ...}</code></td><td>Devuelve true si la clase está definida.</td></tr>
+            <tr><td><strong>class_alias</strong></td><td><code>class_alias('Producto','Articulo'); $p = new Articulo();</code></td><td>Crea un alias para una clase.</td></tr>
+            <tr><td><strong>get_class_methods</strong></td><td><code>print_r(get_class_methods('Producto'));</code></td><td>Devuelve un array con los nombres de los métodos accesibles.</td></tr>
+            <tr><td><strong>method_exists</strong></td><td><code>if (method_exists('Producto','vende')){ ...}</code></td><td>Devuelve true si existe el método en el objeto o clase.</td></tr>
+            <tr><td><strong>property_exists</strong></td><td><code>if(property_exists('Producto','codigo')){...}</code></td><td>Devuelve true si existe el atributo en el objeto o clase.</td></tr>
+          </tbody>
+        </table>
+
+        <p>Se puede indicar en funciones y métodos <strong>de qué tipo</strong> deben ser los objetos pasados como parámetros:</p>
+        <pre><code>public function vendeProducto(Producto $p){
+    ...
+}</code></pre>
+
+        <h3 class="subsection-title">Copia de objetos</h3>
+        <div class="info-card">
+          <p>Desde PHP5, al asignar un objeto a otra variable (<code>$a = $p;</code>) se crea un <strong>nuevo identificador del mismo objeto</strong>. Cualquier cambio se refleja en ambas variables.</p>
+          <p>Para <strong>copiar</strong> un objeto realmente, se usa <strong>clone</strong>:</p>
+          <pre><code>$p = new Producto();
+$p-&gt;nombre = 'Xiaomi 14';
+$a = clone $p;</code></pre>
+          <p style="margin-bottom:0">Para personalizar la copia, se puede crear el método <code>__clone()</code> en la clase, que se llama automáticamente después de copiar los atributos.</p>
+        </div>
+
+        <h3 class="subsection-title">Comparación de objetos</h3>
+        <ul>
+          <li><strong>Operador ==</strong>: dos objetos son iguales si son instancias de la misma clase y sus atributos tienen los mismos valores.</li>
+          <li><strong>Operador ===</strong>: el resultado es true solo cuando las dos variables sean referencias al <strong>mismo objeto</strong>.</li>
+        </ul>
+        <pre><code>$p = new Producto();
+$p-&gt;nombre = 'Xiaomi 14';
+$a = clone $p;
+// $a == $p  → verdadero (mismos valores)
+// $a === $p → falso (no son el mismo objeto)
+$a = $p;
+// $a === $p → verdadero (ahora son el mismo objeto)</code></pre>
+      </section>
+
+      <!-- 9 -->
+      <section id="s9">
+        <h2 class="section-title"><span class="num">09</span> Herencia. Redefinición de métodos</h2>
+        <p>La herencia permite definir nuevas clases en base a una ya existente (<strong>subclases</strong>). La clase de la que heredan se llama <strong>clase base o superclase</strong>.</p>
+        <pre><code>class Persona{
+    protected $nombre;
+    protected $apellidos;
+    public function __toString(){
+        return "&lt;p&gt;" . $this-&gt;nombre . "," . $this-&gt;apellidos . "&lt;/p&gt;";
+    }
+}
+
+class Alumno extends Persona{
+    private $notas;
+}</code></pre>
+        <blockquote>Ejercicio: Codificar estas dos clases y crear un objeto de tipo Alumno. Comprobar mediante instanceof si el objeto es de tipo Persona o de tipo Alumno.</blockquote>
+
+        <p>Funciones útiles para la herencia:</p>
+        <ul>
+          <li><strong>get_parent_class</strong>: devuelve el nombre de la clase padre.</li>
+          <li><strong>is_subclass_of</strong>: devuelve true si el objeto tiene como clase base a la indicada.</li>
+        </ul>
+        <pre><code>echo "La clase padre es:" . get_parent_class($p);
+
+if (is_subclass_of($t, 'Producto'))
+{
+    ...
+}</code></pre>
+
+        <div class="info-card">
+          <p>La nueva clase hereda todos los atributos y métodos <strong>públicos</strong> de la clase base, pero <strong>no los privados</strong>.</p>
+          <p style="margin-bottom:0">Para crear en la clase base un método no visible al exterior pero que se herede a las subclases, se usa la palabra <strong>protected</strong>.</p>
+        </div>
+
+        <p>Se puede redefinir el comportamiento de los métodos existentes en la clase base, simplemente creando en la subclase un nuevo método con el mismo nombre:</p>
+        <pre><code>class Profesor extends Persona{
+    private $horas;
+    public function __toString(){
+        return "&lt;p&gt;" . $this-&gt;nombre . "," . $this-&gt;apellidos . ":" . $this-&gt;horas . "&lt;/p&gt;";
+    }
+}</code></pre>
+
+        <h3 class="subsection-title">Modificadores final y abstract</h3>
+        <div class="info-card">
+          <p><strong>final</strong>: evita que las clases heredadas puedan redefinir métodos. También se puede declarar una clase entera como final (no se podrán crear clases heredadas).</p>
+          <pre><code>// Método final
+public final function __toString(){ ... }
+
+// Clase final
+final class Persona{ ... }</code></pre>
+        </div>
+        <div class="info-card">
+          <p><strong>abstract</strong>: obliga a que se herede. Una clase con <code>abstract</code> no puede tener objetos que la instancien, pero sí puede usarse como clase base. Un método <code>abstract</code> debe ser redefinido obligatoriamente por las subclases y no puede contener código.</p>
+          <pre><code>abstract class Persona{ ... }
+
+class Persona{
+    ...
+    abstract public function mostrar();
+}</code></pre>
+        </div>
+
+        <h3 class="subsection-title">Llamar al constructor de la clase base</h3>
+        <p>Desde PHP7, si la clase heredada no tiene constructor propio, se llama automáticamente al constructor de la clase base. Si la clase heredada define su propio constructor, debe llamarse al de la base manualmente usando <strong>parent</strong> y el operador de resolución de ámbito:</p>
+        <pre><code>class Alumno extends Persona{
+    private $notas;
+    public function __construct($nombre, $apellidos, $notas){
+        parent::__construct($nombre, $apellidos);
+        $this-&gt;notas = $notas;
+    }
+}</code></pre>
+        <blockquote>Hoja04_POO_02</blockquote>
+      </section>
+
+      <!-- 10 -->
+      <section id="s10">
+        <h2 class="section-title"><span class="num">10</span> Interfaces</h2>
+        <p>Un <strong>interface</strong> es similar a una clase vacía que solo contiene declaraciones de métodos. Se definen usando la palabra <strong>interface</strong>.</p>
+        <pre><code>interface iMuestra{
+    public function muestra(): string;
+}</code></pre>
+        <p>Las clases que lo implementen usan la palabra <strong>implements</strong>:</p>
+        <pre><code>class Profesor extends Persona implements iMuestra{
+    ...
+    public function muestra(): string
+    {
+        return "&lt;p&gt;" . $this-&gt;nombre . ": " . $this-&gt;horas . "&lt;/p&gt;";
+    }
+    ...
+}</code></pre>
+
+        <ul>
+          <li>Todos los métodos declarados en un interface deben ser <strong>públicos</strong>.</li>
+          <li>Los interfaces pueden contener constantes pero <strong>no atributos</strong>.</li>
+          <li>Un interface es como un <strong>contrato</strong> que la clase debe cumplir.</li>
+        </ul>
+
+        <p>Desde PHP7 es posible que una clase implemente varios interfaces (separados por comas). La única restricción es que los nombres de los métodos a implementar no coincidan:</p>
+        <pre><code>class Profesor extends Persona implements iMuestra, Countable{
+    ...
+}</code></pre>
+
+        <p>También se pueden crear nuevos interfaces heredando de otros existentes con <strong>extends</strong>.</p>
+
+        <h3 class="subsection-title">Interfaces vs. Clases abstractas</h3>
+        <table>
+          <thead><tr><th>Aspecto</th><th>Clase abstracta</th><th>Interface</th></tr></thead>
+          <tbody>
+            <tr><td>Métodos con código</td><td>Sí</td><td>No</td></tr>
+            <tr><td>Atributos</td><td>Sí</td><td>No</td></tr>
+            <tr><td>Herencia múltiple</td><td>No (solo una clase base)</td><td>Sí (múltiples interfaces)</td></tr>
+            <tr><td>Instanciar objetos directamente</td><td>No</td><td>No</td></tr>
+          </tbody>
+        </table>
+
+        <p>Funciones de PHP relacionadas con interfaces:</p>
+        <table>
+          <thead><tr><th>Función</th><th>Ejemplo</th><th>Significado</th></tr></thead>
+          <tbody>
+            <tr><td><strong>get_declared_interfaces</strong></td><td><code>print_r(get_declared_interfaces());</code></td><td>Devuelve un array con los nombres de los interfaces declarados.</td></tr>
+            <tr><td><strong>interface_exists</strong></td><td><code>if (interface_exists('iMuestra')){ ...}</code></td><td>Devuelve true si existe el interface indicado.</td></tr>
+          </tbody>
+        </table>
+        <blockquote>Hoja04_POO_03</blockquote>
+      </section>
+
+    </main>
+
+    <aside class="toc">
+        <div class="toc-title">Contenido</div>
+        <a href="#s1">1. Introducción</a>
+        <a href="#s2">2. Clases</a>
+        <a href="#s3">3. Objetos</a>
+        <a href="#s4">4. Constructores</a>
+        <a href="#s4-1" class="sub">4.1 Operador this</a>
+        <a href="#s4-2" class="sub">4.2 Constructores PHP 8</a>
+        <a href="#s4-3" class="sub">4.3 Destructores</a>
+        <a href="#s5">5. Métodos get y set</a>
+        <a href="#s6">6. Constantes</a>
+        <a href="#s7">7. Métodos estáticos</a>
+        <a href="#s8">8. Utilización de objetos</a>
+        <a href="#s9">9. Herencia</a>
+        <a href="#s10">10. Interfaces</a>
+    </aside>
+  </div>
+</div>
+
+<footer>
+  <p><a href="ut3.html">← UT3</a> &nbsp;·&nbsp; UT4 — Programación Orientada a Objetos &nbsp;·&nbsp; <a href="ut5.html">UT5 →</a></p>
+</footer>
+
+<script>
+  const sections = document.querySelectorAll('section[id]');
+  const tocLinks = document.querySelectorAll('.toc a');
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        tocLinks.forEach(l => l.classList.remove('active'));
+        const active = document.querySelector(`.toc a[href="#${entry.target.id}"]`);
+        if (active) active.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-20% 0px -70% 0px' });
+  sections.forEach(s => observer.observe(s));
+</script>
+</body>
+</html>

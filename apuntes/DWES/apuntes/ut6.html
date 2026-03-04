@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>UT6 — Gestión de sesiones | DWES</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    .directive-table th:first-child { width: 220px; }
+    .exercise-section {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 2rem;
+      margin: 2rem 0;
+      position: relative;
+      overflow: hidden;
+    }
+    .exercise-section::before {
+      content: 'EJERCICIO GRUPAL';
+      position: absolute;
+      top: 1rem; right: 1.2rem;
+      font-family: var(--mono-font);
+      font-size: 0.65rem;
+      color: var(--accent2);
+      letter-spacing: 0.1em;
+    }
+    .exercise-section h3 {
+      color: var(--accent2);
+      margin-bottom: 1rem;
+    }
+    .page-flow {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      margin: 1.2rem 0;
+      align-items: center;
+    }
+    .page-box {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 0.5rem 1rem;
+      font-family: var(--mono-font);
+      font-size: 0.82rem;
+      color: var(--accent);
+    }
+    .page-arrow {
+      color: var(--text-muted);
+      font-size: 1.2rem;
+    }
+  </style>
+</head>
+<body>
+<nav>
+  <a class="nav-brand" href="index.html">DWES</a>
+  <div class="nav-links">
+    <a href="index.html">Inicio</a>
+    <a href="ut1.html">UT1</a>
+    <a href="ut2.html">UT2</a>
+    <a href="ut3.html">UT3</a>
+    <a href="ut4.html">UT4</a>
+    <a href="ut5.html">UT5</a>
+    <a href="ut6.html" class="active">UT6</a>
+    <a href="ut7.html">UT7</a>
+    <a href="ut8.html">UT8</a>
+  </div>
+</nav>
+
+<div class="container">
+  <div class="hero">
+    <div class="hero-tag">Unidad Temática 6</div>
+    <h1>Gestión de<br><span>Sesiones</span></h1>
+    <p>Sesiones de usuario, identificadores SID, cookies, configuración en php.ini y ejercicio grupal de aplicación web con valoraciones.</p>
+  </div>
+
+  <div class="page-layout">
+    <main>
+
+      <!-- 1 -->
+      <section id="s1">
+        <h2 class="section-title"><span class="num">01</span> Gestión de sesiones</h2>
+        <p>El término <strong>sesión</strong> hace referencia al conjunto de información relativa a un usuario concreto.</p>
+
+        <p>Ejemplos de información de sesión:</p>
+        <ul>
+          <li>Nombre del usuario.</li>
+          <li>Artículos de la lista de la compra de una tienda online.</li>
+        </ul>
+
+        <div class="info-card">
+          <p>Cada usuario distinto de un sitio web tiene su propia información de sesión. Para distinguir una sesión de otra se usan los <strong>identificadores de sesión (SID)</strong>.</p>
+          <p style="margin-bottom:0">Un <strong>SID</strong> es un atributo que se asigna a cada uno de los visitantes de un sitio web y lo identifica.</p>
+        </div>
+
+        <h3 class="subsection-title">¿Dónde se almacena el SID?</h3>
+        <p>Existen dos maneras de mantener el SID entre las páginas de un sitio web:</p>
+        <ul>
+          <li><strong>Utilizando cookies</strong>.</li>
+          <li><strong>Propagando el SID en la URL</strong>: el SID se añade como una parte más de la URL:
+            <pre><code>http://www.mitienda.com/listado.php&amp;PHPSESSID=34534fg4ffg34ty</code></pre>
+          </li>
+        </ul>
+
+        <h3 class="subsection-title">PHP y el manejo automático de sesiones</h3>
+        <ul>
+          <li>Cuando un usuario visita un sitio web, <strong>no es necesario programar</strong> un procedimiento para ver si existe un SID previo y cargar los datos asociados.</li>
+          <li>Tampoco hay que usar <code>setcookie</code> si se quiere almacenar los SID en cookies, ni ir pasando el SID entre páginas. <strong>PHP lo hace automáticamente</strong>.</li>
+          <li>Por defecto, PHP incluye soporte de sesiones incorporado.</li>
+        </ul>
+
+        <h3 class="subsection-title" id="s1-1">Configuración en php.ini</h3>
+        <p>Antes de utilizar sesiones debes configurar correctamente PHP usando las siguientes directivas en <strong>php.ini</strong>:</p>
+
+        <table class="directive-table">
+          <thead>
+            <tr><th>Directiva</th><th>Significado</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>session.use_cookies</code></td>
+              <td>Indica si se deben usar cookies (1) o propagación en la URL (0) para almacenar el SID.</td>
+            </tr>
+            <tr>
+              <td><code>session.use_only_cookies</code></td>
+              <td>Se debe activar (1) cuando se usan cookies para almacenar los SID, y además no se quiere que se reconozcan los SID que se puedan pasar como parte de la URL (puede usarse para usurpar el identificador de otro usuario).</td>
+            </tr>
+            <tr>
+              <td><code>session.save_handler</code></td>
+              <td>Indica a PHP cómo almacenar los datos de la sesión. Opciones: en ficheros (<code>files</code>), en memoria (<code>mm</code>), en base de datos SQLite (<code>sqlite</code>) o con funciones definidas por el programador (<code>user</code>). El valor por defecto (<code>files</code>) funcionará sin problemas en la mayoría de los casos.</td>
+            </tr>
+            <tr>
+              <td><code>session.name</code></td>
+              <td>Determina el nombre de la cookie para guardar el SID. Su valor por defecto es <code>PHPSESSID</code>.</td>
+            </tr>
+            <tr>
+              <td><code>session.auto_start</code></td>
+              <td>Su valor por defecto es 0; deberás usar <strong>session_start</strong> para gestionar el inicio de sesiones. Si usas sesiones en el sitio, puede ser buena idea cambiarlo a 1 para que PHP active las sesiones automáticamente.</td>
+            </tr>
+            <tr>
+              <td><code>session.cookie_lifetime</code></td>
+              <td>Si se usa la URL para propagar el SID, éste se pierde al cerrar el navegador. Con cookies, el SID se mantiene mientras no se destruya la cookie. En su valor por defecto (0), las cookies se destruyen al cerrar el navegador. Para mantener el SID más tiempo, indicar ese tiempo en segundos.</td>
+            </tr>
+            <tr>
+              <td><code>session.gc_maxlifetime</code></td>
+              <td>Tiempo en segundos para mantener activa la sesión aunque no haya actividad por parte del usuario. Su valor por defecto es 1440 (24 minutos).</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3 class="subsection-title">Inicio de sesión</h3>
+        <p>El inicio de una sesión puede tener lugar de dos formas:</p>
+        <ul>
+          <li>Si se ha activado <code>session.auto_start</code>, la sesión comenzará automáticamente cuando el usuario se conecte.</li>
+          <li>Si no, hay que ejecutar la función <strong>session_start()</strong> para indicar a PHP que inicie una nueva sesión o reanude la anterior. Devuelve <code>false</code> si no puede iniciar o restaurar la sesión.</li>
+        </ul>
+
+        <h3 class="subsection-title">Variable superglobal $_SESSION</h3>
+        <p>Mientras la sesión permanece abierta, puedes usar <code>$_SESSION</code> para añadir o acceder a la información almacenada:</p>
+        <pre><code>var_dump($_SESSION);</code></pre>
+
+        <h3 class="subsection-title">Eliminar información de sesión</h3>
+        <ul>
+          <li><strong>session_unset()</strong>: elimina las variables almacenadas en la sesión actual, pero no elimina la información del dispositivo de almacenamiento. Equivale a hacer <code>$_SESSION = array();</code></li>
+          <li><strong>session_destroy()</strong>: elimina completamente la información de la sesión del dispositivo de almacenamiento.</li>
+        </ul>
+
+        <blockquote>Hoja06_Sesiones_01</blockquote>
+      </section>
+
+      <!-- 2 -->
+      <section id="s2">
+        <h2 class="section-title"><span class="num">02</span> Ejercicio grupal</h2>
+
+        <div class="exercise-section">
+          <p>El trabajo se realizará en <strong>grupo</strong>. La idea es construir una aplicación web que sea una <strong>red de valoraciones/recomendaciones</strong>. Los usuarios podrán valorar elementos como <em>podcasts, películas, libros, restaurantes, videojuegos, series, música, actividades, gadgets</em>, etc.</p>
+
+          <p>La base de datos debe incluir al menos las tablas: <strong>usuarios</strong>, <strong>elementos</strong> y <strong>valoraciones</strong>.</p>
+          <p>Se debe utilizar <strong>POO</strong> y <strong>sesiones</strong> de usuario.</p>
+
+          <div class="page-flow">
+            <div class="page-box">registro.php</div>
+            <span class="page-arrow">→</span>
+            <div class="page-box">login.php</div>
+            <span class="page-arrow">→</span>
+            <div class="page-box">index.php</div>
+            <span class="page-arrow">→</span>
+            <div class="page-box">valorar</div>
+            <span class="page-arrow">→</span>
+            <div class="page-box">logout.php</div>
+          </div>
+        </div>
+
+        <h3 class="subsection-title" id="s2-1">2.1 Registro de usuarios</h3>
+        <p>Crear una página <code>registro.php</code> para que se registren usuarios con sus datos personales.</p>
+
+        <h3 class="subsection-title" id="s2-2">2.2 Login</h3>
+        <p>Crear una página <strong>login.php</strong> con, al menos, un formulario con dos campos:</p>
+        <ul>
+          <li>Un campo de tipo <code>text</code> para el usuario.</li>
+          <li>Un campo de tipo <code>password</code> para la contraseña.</li>
+        </ul>
+        <p>Al pulsar el botón Enviar, el formulario se enviará a esta misma página, donde se compararán las credenciales proporcionadas con las almacenadas en la base de datos.</p>
+        <p>Cuando un usuario proporciona credenciales correctas, se le redirige automáticamente a <strong>index.php</strong>.</p>
+        <div class="info-card">
+          <p style="margin-bottom:0">Se deben utilizar <strong>sesiones</strong>: si los datos son correctos, se iniciará una nueva sesión y se almacenarán datos sobre el usuario que acaba de conectarse.</p>
+        </div>
+
+        <h3 class="subsection-title" id="s2-3">2.3 Elementos (index.php)</h3>
+        <p>Mostrar un listado de los elementos publicados y para cada uno debe existir un botón <strong>"Valorar o Comentar"</strong>.</p>
+        <ul>
+          <li>Lo más sencillo es crear un formulario por cada elemento.</li>
+          <li>En esta página se puede mostrar el número de <strong>valoraciones realizadas</strong> o el <strong>promedio de puntuación</strong> de los elementos.</li>
+          <li><strong>No se permitirá valorar si el usuario no ha iniciado sesión.</strong></li>
+          <li>En la parte superior se mostrarán las <strong>valoraciones de sesión del usuario</strong>.</li>
+        </ul>
+
+        <h3 class="subsection-title" id="s2-4">2.4 Valoraciones</h3>
+        <p>A medida que el usuario va valorando:</p>
+        <ul>
+          <li>Cada valoración se <strong>almacena en sesión</strong>.</li>
+          <li>Los datos de la cabecera se obtienen de la información almacenada en la <strong>sesión</strong> del usuario.</li>
+          <li>Además, <strong>cada valoración efectuada se almacena en base de datos</strong>.</li>
+        </ul>
+        <div class="info-card">
+          <p style="margin-bottom:0">En la parte superior habrá un formulario con un botón de <strong>desconexión</strong> que dirige a <code>logout.php</code>, que cerrará la sesión del usuario.</p>
+        </div>
+
+        <h3 class="subsection-title" id="s2-5">2.5 Logout</h3>
+        <p>La página <code>logout.php</code> no muestra nada en pantalla. Su única función es:</p>
+        <ol>
+          <li>Recuperar la sesión.</li>
+          <li>Eliminarla.</li>
+          <li>Redirigir a <strong>index.php</strong>.</li>
+        </ol>
+      </section>
+
+    </main>
+
+    <!-- TOC -->
+    <aside class="toc">
+        <div class="toc-title">Contenido</div>
+        <a href="#s1">1. Gestión de sesiones</a>
+        <a href="#s1-1" class="sub">Configuración php.ini</a>
+        <a href="#s2">2. Ejercicio grupal</a>
+        <a href="#s2-1" class="sub">2.1 Registro</a>
+        <a href="#s2-2" class="sub">2.2 Login</a>
+        <a href="#s2-3" class="sub">2.3 index.php</a>
+        <a href="#s2-4" class="sub">2.4 Valoraciones</a>
+        <a href="#s2-5" class="sub">2.5 Logout</a>
+    </aside>
+  </div>
+</div>
+
+<footer>
+  <p><a href="ut5.html">← UT5</a> &nbsp;·&nbsp; UT6 — Gestión de sesiones &nbsp;·&nbsp; <a href="index.html">Inicio →</a></p>
+</footer>
+
+<script>
+  const sections = document.querySelectorAll('section[id]');
+  const tocLinks = document.querySelectorAll('.toc a');
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        tocLinks.forEach(l => l.classList.remove('active'));
+        const active = document.querySelector(`.toc a[href="#${entry.target.id}"]`);
+        if (active) active.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-20% 0px -70% 0px' });
+  sections.forEach(s => observer.observe(s));
+</script>
+</body>
+</html>

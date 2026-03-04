@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>UT7 — Laravel y MVC | DWES</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<nav>
+  <a class="nav-brand" href="index.html">DWES</a>
+  <div class="nav-links">
+    <a href="index.html">Inicio</a>
+    <a href="ut1.html">UT1</a>
+    <a href="ut2.html">UT2</a>
+    <a href="ut3.html">UT3</a>
+    <a href="ut4.html">UT4</a>
+    <a href="ut5.html">UT5</a>
+    <a href="ut6.html">UT6</a>
+    <a href="ut7.html" class="active">UT7</a>
+    <a href="ut8.html">UT8</a>
+  </div>
+</nav>
+
+<div class="container">
+  <div class="hero">
+    <div class="hero-tag">Unidad Temática 7</div>
+    <h1>Laravel — <span>Framework MVC</span></h1>
+    <p>Patrón MVC, instalación y estructura de Laravel, rutas, controladores, vistas Blade, base de datos con Eloquent ORM, middleware y autenticación de usuarios.</p>
+  </div>
+
+  <div class="page-layout">
+    <main>
+
+      <!-- SECTION 1 -->
+      <section id="s1">
+        <h2 class="section-title"><span class="num">01</span> Patrón MVC</h2>
+        <p>El patrón <strong>Modelo–Vista–Controlador (MVC)</strong> divide el código en tres partes con funciones diferenciadas:</p>
+        <ul>
+          <li><strong>Modelo</strong>: maneja los datos de la aplicación. Si hay un SGBD, se encarga de almacenar y recuperar la información.</li>
+          <li><strong>Vista</strong>: responsable de la interacción con el usuario. Genera el interfaz HTML según la información del modelo.</li>
+          <li><strong>Controlador</strong>: decide qué hacer en función de las acciones del usuario, interactúa con el modelo y envía instrucciones a la vista.</li>
+        </ul>
+
+        <h3 class="subsection-title">Funcionamiento MVC</h3>
+        <div class="info-card">
+          <ol>
+            <li>El usuario envía una petición al controlador vía URL.</li>
+            <li>El controlador solicita al modelo los datos.</li>
+            <li>El modelo devuelve los datos.</li>
+            <li>El controlador selecciona una vista.</li>
+            <li>Se devuelve la vista al controlador.</li>
+            <li>El controlador devuelve la vista con los datos del modelo.</li>
+          </ol>
+        </div>
+        <p>La arquitectura MVC separa la <strong>lógica de negocio</strong> (modelo) de la <strong>presentación</strong> (vista), facilitando el mantenimiento. El controlador aísla al modelo y la vista de los detalles del protocolo HTTP.</p>
+      </section>
+
+      <!-- SECTION 2 -->
+      <section id="s2">
+        <h2 class="section-title"><span class="num">02</span> Laravel</h2>
+        <p>Laravel es un framework de código abierto para PHP con sintaxis simple y elegante. Creado en 2011 por Taylor Otwell, inspirado en Ruby on Rails y Symfony. Diseñado bajo el patrón <strong>MVC</strong>, incluye el ORM <strong>Eloquent</strong> y el motor de plantillas <strong>Blade</strong>.</p>
+
+        <h3 class="subsection-title">Instalación</h3>
+        <p>Requisitos previos: servidor web (Apache), PHP y un gestor de BD (MySQL). Luego instalar <strong>Composer</strong>:</p>
+        <pre><code># Instalar Laravel globalmente
+composer global require laravel/installer
+
+# Actualizar el instalador
+composer global update laravel/installer
+
+# Comprobar versión
+laravel -v
+
+# Crear un nuevo proyecto
+laravel new prueba-laravel
+
+# Alternativa en un solo paso
+composer create-project laravel/laravel prueba-laravel</code></pre>
+
+        <p>Desde la versión 11, Laravel usa <strong>SQLite</strong> por defecto. Configurar permisos:</p>
+        <pre><code>chmod -R 777 storage bootstrap/cache
+chmod 777 database/database.sqlite
+sudo apt-get install php8.x-sqlite3</code></pre>
+
+        <h3 class="subsection-title">Node.js (NVM)</h3>
+        <pre><code>curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
+source ~/.bashrc
+
+nvm ls-remote          # Ver versiones remotas
+nvm install v20.18.0   # Instalar versión
+nvm use v20.18.0       # Usar versión
+node -v && npm -v      # Comprobar versiones</code></pre>
+
+        <blockquote>Hoja07_MVC_01</blockquote>
+      </section>
+
+      <!-- SECTION 3 -->
+      <section id="s3">
+        <h2 class="section-title"><span class="num">03</span> Estructura del proyecto</h2>
+        <div class="info-card">
+          <table>
+            <thead><tr><th>Carpeta/Fichero</th><th>Descripción</th></tr></thead>
+            <tbody>
+              <tr><td><code>app/Http/Controllers</code></td><td>Controladores que interaccionan con modelos</td></tr>
+              <tr><td><code>app/Http/Middleware</code></td><td>Filtros de seguridad</td></tr>
+              <tr><td><code>app/Models</code></td><td>Modelos (User.php creado por defecto)</td></tr>
+              <tr><td><code>config/</code></td><td>Archivos de configuración (app.php, database.php…)</td></tr>
+              <tr><td><code>database/migrations</code></td><td>Estructura de BD y tablas</td></tr>
+              <tr><td><code>database/factories</code></td><td>Datos generados aleatoriamente</td></tr>
+              <tr><td><code>database/seeders</code></td><td>Datos iniciales de prueba</td></tr>
+              <tr><td><code>public/</code></td><td>Única carpeta accesible al usuario (index.php, assets)</td></tr>
+              <tr><td><code>resources/views</code></td><td>Vistas (welcome.blade.php por defecto)</td></tr>
+              <tr><td><code>routes/web.php</code></td><td>Rutas principales de la aplicación</td></tr>
+              <tr><td><code>storage/</code></td><td>Sesiones, caché, logs del sistema</td></tr>
+              <tr><td><code>vendor/</code></td><td>Librerías del framework y dependencias</td></tr>
+              <tr><td><code>.env</code></td><td>Variables de configuración del entorno local</td></tr>
+              <tr><td><code>composer.json</code></td><td>Índice de dependencias PHP</td></tr>
+              <tr><td><code>package.json</code></td><td>Índice de dependencias JavaScript</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>Los ficheros <code>.env</code>, <code>composer.json</code> y <code>package.json</code> <strong>no deben subirse a repositorios</strong>. Incluirlos en <code>.gitignore</code>. Al importar un proyecto: <code>composer install</code> y <code>npm install</code>.</p>
+      </section>
+
+      <!-- SECTION 4 -->
+      <section id="s4">
+        <h2 class="section-title"><span class="num">04</span> Funcionamiento básico</h2>
+        <div class="info-card">
+          <ol>
+            <li>Todas las peticiones entran por <code>public/index.php</code>, que comprueba el fichero de rutas <code>routes/web.php</code>.</li>
+            <li>Se llama al método del controlador asignado a esa ruta.</li>
+            <li>Se accede a la base de datos mediante los modelos (si es necesario).</li>
+            <li>Los datos se preparan para pasarlos a la vista.</li>
+            <li>Se muestra la vista al usuario.</li>
+          </ol>
+        </div>
+      </section>
+
+      <!-- SECTION 5 -->
+      <section id="s5">
+        <h2 class="section-title"><span class="num">05</span> Artisan</h2>
+        <p>Laravel incluye <strong>Artisan</strong>, una interfaz de línea de comandos (CLI) para realizar múltiples tareas de desarrollo.</p>
+        <pre><code>php artisan list              # Ver todas las opciones
+php artisan route:list        # Listar rutas definidas
+php artisan serve             # Servidor interno (localhost:8000)
+php artisan make:controller TaskController  # Crear controlador</code></pre>
+        <p>Mediante la opción <code>make</code> se pueden generar controladores, modelos, filtros y otros componentes como plantillas.</p>
+      </section>
+
+      <!-- SECTION 6 -->
+      <section id="s6">
+        <h2 class="section-title"><span class="num">06</span> Rutas</h2>
+        <p>Las rutas se definen en <strong><code>routes/web.php</code></strong>. Cualquier ruta no definida devuelve error 404. Construyen URLs amigables.</p>
+
+        <h3 class="subsection-title">Métodos básicos</h3>
+        <pre><code>// Ruta GET básica
+Route::get('/', function() {
+  return view('welcome');
+});
+
+// Ruta POST
+Route::post('foo/bar', function() {
+  return 'Hola mundo';
+});
+
+// GET y POST juntos
+Route::match(['GET','POST'], '/', function() {
+  return 'Hola mundo';
+});
+
+// Cualquier tipo de petición
+Route::any('/', function() {
+  return 'Hola mundo';
+});</code></pre>
+
+        <h3 class="subsection-title">Parámetros en rutas</h3>
+        <pre><code>// Parámetro obligatorio
+Route::get('user/{id}', function($id) {
+  return 'User ' . $id;
+});
+
+// Parámetro opcional
+Route::get('user/{name?}', function($name = 'ivan') {
+  return $name;
+});
+
+// Con expresión regular
+Route::get('user/{name?}', function($name) {
+  return $name;
+})->where('name', '[A-Za-z]+');</code></pre>
+
+        <h3 class="subsection-title">Named routes (rutas con nombre)</h3>
+        <pre><code>Route::get('clientes', function() {
+  return "listado";
+})->name('ruta_clientes');</code></pre>
+
+        <blockquote>Hoja07_MVC_02</blockquote>
+      </section>
+
+      <!-- SECTION 7 -->
+      <section id="s7">
+        <h2 class="section-title"><span class="num">07</span> Controladores</h2>
+        <p>Los controladores agrupan el código para responder a peticiones HTTP. Son el <strong>intermediario entre la vista y el modelo</strong>. Se almacenan en <code>App/Http/Controllers</code> con sufijo <code>Controller</code>.</p>
+        <pre><code>&lt;?php
+namespace App\Http\Controllers;
+use Illuminate\Http\Request;
+
+class HomeController extends Controller
+{
+    public function __invoke(Request $request)
+    {
+       return view('home');
+    }
+}</code></pre>
+        <p>Asociar a una ruta:</p>
+        <pre><code>Route::get('/', HomeController::class)->name('home');</code></pre>
+
+        <h3 class="subsection-title">Crear controladores con Artisan</h3>
+        <pre><code># Controlador básico
+php artisan make:controller EjemploController
+
+# Con método __invoke (opción -i)
+php artisan make:controller EjemploController -i
+
+# Controlador de recursos con -r (métodos CRUD predefinidos)
+php artisan make:controller ArticuloController -r
+
+# En subcarpeta
+php artisan make:controller Fotos/AdminController</code></pre>
+
+        <h3 class="subsection-title">Métodos de un controlador de recursos</h3>
+        <div class="info-card">
+          <table>
+            <thead><tr><th>Método</th><th>Descripción</th></tr></thead>
+            <tbody>
+              <tr><td><code>index</code></td><td>Muestra un listado de los elementos</td></tr>
+              <tr><td><code>create</code></td><td>Muestra el formulario para crear nuevos elementos</td></tr>
+              <tr><td><code>store</code></td><td>Almacena en BD el recurso creado con el formulario</td></tr>
+              <tr><td><code>show</code></td><td>Muestra los datos de un recurso específico (por id)</td></tr>
+              <tr><td><code>edit</code></td><td>Muestra el formulario para editar un recurso</td></tr>
+              <tr><td><code>update</code></td><td>Actualiza en BD el recurso editado</td></tr>
+              <tr><td><code>destroy</code></td><td>Elimina un recurso por su identificador</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3 class="subsection-title">Generar URL a una acción</h3>
+        <pre><code>// En web.php
+Route::get('foo', [FooController::class,'method'])->name("foo.method");
+
+// En la plantilla Blade
+&lt;a href="{{ route('foo.method') }}"&gt;¡Pulsa aquí!&lt;/a&gt;</code></pre>
+
+        <blockquote>Hoja07_MVC_03</blockquote>
+      </section>
+
+      <!-- SECTION 8 -->
+      <section id="s8">
+        <h2 class="section-title"><span class="num">08</span> Vistas</h2>
+        <p>Las vistas presentan el resultado de forma visual al usuario. Se almacenan en <code>resources/views</code> como ficheros PHP. <strong>No realizan consultas</strong>; solo reciben datos y los muestran en HTML.</p>
+
+        <h3 class="subsection-title">Pasar variables a las vistas</h3>
+        <pre><code>// Con método with()
+return view('inicio')->with(['nombre'=>$nombre,'apellidos'=>$apellidos]);
+
+// Como segundo parámetro array
+return view('inicio', ['nombre'=>$nombre,'apellidos'=>$apellidos]);
+
+// Con compact() — la más usada
+return view('inicio', compact('nombre','apellidos'));</code></pre>
+
+        <p>Acceder en la vista con PHP o con <strong>Blade</strong>:</p>
+        <pre><code>&lt;!-- PHP clásico --&gt;
+&lt;p&gt;Bienvenido &lt;?php echo $nombre.",".$apellidos ?&gt;&lt;/p&gt;
+
+&lt;!-- Sintaxis Blade --&gt;
+&lt;p&gt;Bienvenido {{$nombre}}, {{$apellidos}}&lt;/p&gt;</code></pre>
+
+        <h3 class="subsection-title">Organización en subcarpetas</h3>
+        <p>Notación tipo <strong>dot</strong> para vistas en subcarpetas:</p>
+        <pre><code>// Vista en resources/views/user/register.php
+Route::get('register', function() {
+  return view('user.register');
+});</code></pre>
+
+        <blockquote>Hoja07_MVC_04</blockquote>
+      </section>
+
+      <!-- SECTION 9 -->
+      <section id="s9">
+        <h2 class="section-title"><span class="num">09</span> Motor de plantillas Blade</h2>
+        <p>Laravel usa <strong>Blade</strong> para plantillas en vistas. Ficheros con extensión <code>.blade.php</code>. El código empieza por <code>@</code> o <code>{{ }}</code>. No añade sobrecarga porque las vistas son preprocesadas y cacheadas.</p>
+
+        <h3 class="subsection-title">Mostrar datos</h3>
+        <pre><code>Hola {{$name}}
+La hora actual es {{time()}}
+
+{{-- Comentario Blade (no aparece en HTML) --}}
+
+{{-- Dato con valor por defecto --}}
+{{ $name or 'Valor por defecto' }}</code></pre>
+
+        <h3 class="subsection-title">Estructuras de control</h3>
+        <pre><code>@if( count($users) === 1 )
+  ¡Solo hay un usuario!
+@elseif (count($users) > 1)
+  ¡Hay muchos usuarios!
+@else
+  ¡No hay ningún usuario!
+@endif
+
+@for ($i = 0; $i &lt; 10; $i++)
+  El valor actual es {{ $i }}
+@endfor
+
+@foreach ($users as $user)
+  &lt;p&gt;Usuario {{ $user->name }} — ID: {{ $user->id }}&lt;/p&gt;
+@endforeach
+
+@forelse ($elementos as $elemento)
+  &lt;li&gt;{{$elemento}}&lt;/li&gt;
+@empty
+  &lt;li&gt;No hay elementos&lt;/li&gt;
+@endforelse</code></pre>
+
+        <h3 class="subsection-title">Enlaces a otras rutas</h3>
+        <pre><code>&lt;a href="{{route('ruta_contacto')}}"&gt;contacto&lt;/a&gt;
+&lt;a href="{{url('/contacto')}}"&gt;contacto&lt;/a&gt;</code></pre>
+
+        <h3 class="subsection-title">Plantillas (Layouts)</h3>
+        <p>Crear <code>resources/views/layouts/plantilla.blade.php</code>:</p>
+        <pre><code>&lt;!DOCTYPE html&gt;
+&lt;html lang="es"&gt;
+&lt;head&gt;
+    &lt;title&gt;@yield('titulo')&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    @include('layouts.partials.header')
+    @yield('contenido')
+    @include('layouts.partials.footer')
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+
+        <p>Vista hija que usa la plantilla:</p>
+        <pre><code>@extends('layouts.plantilla')
+@section('titulo','Inicio')
+@section('contenido')
+    &lt;h1&gt;Bienvenido a la página principal&lt;/h1&gt;
+@endsection</code></pre>
+
+        <p>Incluir una vista dentro de otra:</p>
+        <pre><code>@include('view_name')
+@include('view_name', ['some' => 'data'])</code></pre>
+
+        <blockquote>Hoja07_MVC_05</blockquote>
+      </section>
+
+      <!-- SECTION 10 -->
+      <section id="s10">
+        <h2 class="section-title"><span class="num">10</span> Redirecciones</h2>
+        <pre><code>// Redirigir a una ruta con nombre
+return redirect()->route('user.login');
+
+// Volver a la ruta anterior
+return back();
+
+// Con datos en sesión
+return redirect()->route('perfil.show')->with('mensaje', "Perfil actualizado");
+
+// Con valores del formulario (para mostrar errores)
+return redirect('form')->withInput();
+return redirect('form')->withInput($request->except('password'));
+return back()->withInput();
+return redirect()->route('formulario.index')->withInput();</code></pre>
+      </section>
+
+      <!-- SECTION 11 -->
+      <section id="s11">
+        <h2 class="section-title"><span class="num">11</span> Formularios</h2>
+        <pre><code>&lt;form action="{{route('cursos.insertar')}}" method="POST"&gt;
+    @csrf
+    &lt;input type="text" name="nombre" value="{{ old('nombre') }}"&gt;
+    @error('nombre')
+        &lt;div class="text-danger"&gt;{{ $message }}&lt;/div&gt;
+    @enderror
+    &lt;button type="submit"&gt;Enviar&lt;/button&gt;
+&lt;/form&gt;</code></pre>
+
+        <h3 class="subsection-title">Protección CSRF</h3>
+        <p>La directiva <strong><code>@csrf</code></strong> añade un campo oculto para proteger contra ataques CSRF (Cross-site request forgery). Olvidarlo provoca error 419.</p>
+
+        <h3 class="subsection-title">Validación de formularios</h3>
+        <pre><code>public function insertar(Request $request) {
+    $request->validate(
+      ['nombre' => 'required|min:4',
+       'apellidos' => 'required|min:4'],
+      ['nombre.required' => 'el nombre es obligatorio',
+       'apellidos.required' => 'los apellidos son obligatorios']
+    );
+}</code></pre>
+
+        <p>Mostrar todos los errores:</p>
+        <pre><code>@if ($errors->any())
+    &lt;ul&gt;
+        @foreach ($errors->all() as $error)
+            &lt;li&gt;{{ $error }}&lt;/li&gt;
+        @endforeach
+    &lt;/ul&gt;
+@endif</code></pre>
+
+        <h3 class="subsection-title">Form Request (validaciones complejas)</h3>
+        <pre><code>php artisan make:request CrearClienteRequest</code></pre>
+        <p>Se almacena en <code>app/Http/Requests</code>. Contiene los métodos: <strong>authorize</strong> (booleano de autorización), <strong>rules</strong> (reglas de validación), <strong>messages</strong> (mensajes de error personalizados) y <strong>attributes</strong> (nombres personalizados de atributos).</p>
+        <pre><code>// En el controlador, usar CrearClienteRequest en lugar de Request
+public function InsertarConValidacion(CrearClienteRequest $request) {
+    // Si llegamos aquí, el formulario es válido
+}</code></pre>
+
+        <blockquote>Hoja07_MVC_06</blockquote>
+      </section>
+
+      <!-- SECTION 12 -->
+      <section id="s12">
+        <h2 class="section-title"><span class="num">12</span> Base de datos</h2>
+
+        <h3 class="subsection-title">Configuración</h3>
+        <p>Configurar en el fichero <code>.env</code> de la raíz del proyecto:</p>
+        <pre><code>DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=(nombre de la base de datos)
+DB_USERNAME=(nombre de usuario)
+DB_PASSWORD=(contraseña de acceso)</code></pre>
+
+        <h3 class="subsection-title">Migraciones: Schema Builder</h3>
+        <p>Las migraciones definen y crean tablas desde código, manteniendo un historial de cambios.</p>
+        <pre><code># Ejecutar migraciones
+php artisan migrate
+
+# Crear migración para nueva tabla
+php artisan make:migration create_users_table
+
+# Migración que modifica tabla existente
+php artisan make:migration add_votes_to_user_table --table=users
+
+# Deshacer última migración
+php artisan migrate:rollback
+
+# Deshacer todas las migraciones
+php artisan migrate:reset
+
+# Rehacer todas las migraciones (desarrollo)
+php artisan migrate:fresh
+
+# Ver estado de migraciones
+php artisan migrate:status</code></pre>
+
+        <p>Estructura de una migración (métodos <strong>up</strong> y <strong>down</strong>):</p>
+        <pre><code>Schema::create('users', function (Blueprint $table) {
+    $table->id();
+    $table->string('name');
+    $table->string('email')->unique();
+    $table->timestamp('email_verified_at')->nullable();
+    $table->string('password');
+    $table->rememberToken();
+    $table->timestamps();
+});
+
+// En el método down:
+Schema::dropIfExists('users');</code></pre>
+
+        <h3 class="subsection-title">Índices y claves ajenas</h3>
+        <pre><code>$table->primary('id');
+$table->unique('email');
+$table->index('state');
+
+// Clave ajena
+$table->foreignId('user_id');
+$table->foreign('user_id')->references('id')->on('users');
+$table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+
+// Eliminar clave ajena (en método down)
+$table->dropForeign('posts_user_id_foreign');</code></pre>
+
+        <blockquote>Hoja07_MVC_07</blockquote>
+
+        <h3 class="subsection-title">Eloquent ORM</h3>
+        <p>Laravel incluye <strong>Eloquent ORM</strong> para mapeo objeto-relacional. Crear modelo con Artisan:</p>
+        <pre><code>php artisan make:model User</code></pre>
+        <p>Eloquent pluraliza automáticamente el nombre del modelo para buscar la tabla. Si el nombre es distinto, usar <code>$table</code>. La clave primaria por defecto es <code>id</code>.</p>
+        <pre><code>class User extends Model
+{
+    protected $table = 'my_users';
+    protected $primaryKey = 'my_id';
+    public $timestamps = false;
+}</code></pre>
+
+        <h3 class="subsection-title">Consultar datos</h3>
+        <pre><code>$users = User::all();           // Todos los registros
+$user = User::find(1);          // Por id
+$user = User::findOrFail(1);    // Lanza excepción si no existe
+
+// Con condiciones
+$users = User::where('votes', '>', 100)->take(10)->get();
+$user  = User::where('votes', '>', 100)->first();
+
+// Agregados
+$count = User::where('votes', '>', 100)->count();
+$max   = Orders::max('price');
+$total = User::sum('votes');</code></pre>
+
+        <h3 class="subsection-title">Insertar, actualizar y borrar</h3>
+        <pre><code>// Insertar
+$user = new User();
+$user->name = "Juan";
+$user->save();
+$insertedId = $user->id;
+
+// Actualizar
+$user = User::find(1);
+$user->email = "juan@gmail.com";
+$user->save();
+
+// Borrar
+$user = User::find(1);
+$user->delete();
+// Borrar conjunto
+User::where('votes', '>', 100)->delete();</code></pre>
+
+        <h3 class="subsection-title">Seeders y Factories</h3>
+        <pre><code># Crear seeder
+php artisan make:seeder UserSeeder
+
+# Ejecutar seeders
+php artisan db:seed
+
+# Crear factory
+php artisan make:factory UserFactory</code></pre>
+        <p>En el factory se usa la librería <strong>Faker</strong> para generar datos ficticios:</p>
+        <pre><code>public function definition() {
+    return [
+        'name'  => fake()->name(),
+        'email' => fake()->unique()->safeEmail(),
+        'password' => bcrypt('password'),
+    ];
+}</code></pre>
+        <p>Llamar desde DatabaseSeeder:</p>
+        <pre><code>User::factory(10)->create();</code></pre>
+
+        <blockquote>Hoja07_MVC_08</blockquote>
+
+        <h3 class="subsection-title">Relaciones con Eloquent ORM</h3>
+
+        <p><strong>Uno a uno</strong> — hasOne / belongsTo:</p>
+        <pre><code>// En modelo Libro
+public function portada() {
+    return $this->hasOne(Portada::class);
+}
+
+// En modelo Portada (relación inversa)
+public function libro() {
+    return $this->belongsTo(Libro::class);
+}
+
+// Uso
+$portada = Libro::findOrFail($id)->portada;
+$libro   = Portada::findOrFail($idportada)->libro;</code></pre>
+
+        <p><strong>Uno a muchos</strong> — hasMany / belongsTo:</p>
+        <pre><code>// En modelo Autor
+public function libros() {
+    return $this->hasMany(Libro::class);
+}
+
+// En modelo Libro (relación inversa)
+public function autor() {
+    return $this->belongsTo(Autor::class);
+}
+
+// Uso
+$libros      = Autor::findOrFail($id)->libros;
+$nombreAutor = Libro::findOrFail($id)->autor->nombre;</code></pre>
+
+        <p><strong>Muchos a muchos</strong> — belongsToMany (requiere tabla intermedia):</p>
+        <pre><code>// En modelo Libro
+public function bibliotecas() {
+    return $this->belongsToMany(Biblioteca::class);
+}
+
+// En modelo Biblioteca
+public function libros() {
+    return $this->belongsToMany(Libro::class);
+}
+
+// Uso
+$bibliotecas = Libro::findOrFail($id)->bibliotecas;</code></pre>
+
+        <blockquote>Hoja07_MVC_09</blockquote>
+      </section>
+
+      <!-- SECTION 13 -->
+      <section id="s13">
+        <h2 class="section-title"><span class="num">13</span> Datos de entrada</h2>
+        <p>Laravel usa <strong>inyección de dependencias</strong>. Añadir la clase <code>Request</code> al constructor o método del controlador:</p>
+        <pre><code>class UserController extends Controller
+{
+    public function store(Request $request)
+    {
+        $name = $request->nombre;
+        if ($request->has('nombre')) {
+            // operaciones
+        }
+    }
+
+    public function edit(Request $request, $id) {
+        // hago operaciones
+    }
+}</code></pre>
+      </section>
+
+      <!-- SECTION 14 -->
+      <section id="s14">
+        <h2 class="section-title"><span class="num">14</span> Ficheros de entrada</h2>
+        <pre><code>// Obtener fichero del campo 'photo'
+$file = $request->photo;
+
+// Comprobar si existe
+if ($request->hasFile('photo')) { … }
+
+// Almacenar (nombre UUID automático)
+$path = $request->photo->store('ruta');
+$path = $request->photo->store('', 'miAlmacenamiento');
+
+// Almacenar con nombre específico
+$path = $request->photo->storeAs('ruta', 'nombreFichero.jpg');
+$path = $request->photo->storeAs('ruta', 'nombreFichero.jpg', 'miAlmacenamiento');</code></pre>
+
+        <blockquote>Hoja07_MVC_10</blockquote>
+      </section>
+
+      <!-- SECTION 15 -->
+      <section id="s15">
+        <h2 class="section-title"><span class="num">15</span> Middleware o filtros</h2>
+        <p>Los Middleware <strong>filtran las peticiones HTTP</strong>. Se almacenan en <code>app/Http/Middleware</code>. Pueden permitir, dar error o redirigir.</p>
+        <pre><code># Crear middleware
+php artisan make:middleware MyMiddleware</code></pre>
+        <pre><code>class MyMiddleware
+{
+    public function handle(Request $request, Closure $next): Response
+    {
+        if ($request->input('age') &lt; 18) {
+            return redirect('home');
+        }
+        return $next($request); // Continuar petición
+        // abort(403, 'Unauthorized action.');
+    }
+}</code></pre>
+
+        <h3 class="subsection-title">Registrar y usar middleware</h3>
+        <p>Registrar en <code>bootstrap/app.php</code>:</p>
+        <pre><code>// Middleware global
+->withMiddleware(function (Middleware $middleware) {
+    $middleware->append(MyMiddleware::class);
+})
+
+// Con alias
+->withMiddleware(function (Middleware $middleware) {
+    $middleware->alias([
+        'es_mayor_de_edad' => MyMiddleware::class
+    ]);
+})</code></pre>
+
+        <p>Proteger rutas con el middleware <code>auth</code>:</p>
+        <pre><code>// Ruta protegida
+Route::get('admin/catalog', function() { ... })->middleware('auth');
+
+// Acción de controlador protegida
+Route::get('profile', [ProfileController::class,'show'])->middleware('auth');
+
+// Middleware propio
+Route::get('/', function() { ... })->middleware('es_mayor_de_edad');
+
+// Múltiples middleware
+Route::get('/', function() { ... })->middleware(['first', 'second']);</code></pre>
+
+        <blockquote>Hoja07_MVC_11</blockquote>
+      </section>
+
+      <!-- SECTION 16 -->
+      <section id="s16">
+        <h2 class="section-title"><span class="num">16</span> Control de usuarios</h2>
+        <p>Laravel incluye por defecto: configuración en <code>config/auth.php</code>, migración de la tabla <code>users</code> y el modelo <code>User.php</code> en <code>app/Models</code>.</p>
+
+        <h3 class="subsection-title">Laravel Breeze</h3>
+        <p>Implementación mínima de autenticación: inicio de sesión, registro, restablecimiento de contraseña, verificación de email y confirmación de contraseña.</p>
+        <pre><code>composer require laravel/breeze --dev
+php artisan breeze:install   # Elegir "Blade with Alpine"
+php artisan migrate
+npm install
+npm run dev</code></pre>
+        <p>Genera rutas en <code>routes/web.php</code> y vistas en <code>resources/views/auth</code>.</p>
+
+        <h3 class="subsection-title">Autenticación y sesión</h3>
+        <pre><code>// Acceder a los datos del usuario autenticado
+use Illuminate\Support\Facades\Auth;
+$user  = Auth::user();
+$email = Auth::user()->email;
+
+// Cerrar sesión
+Auth::logout();
+
+// Comprobar si está autenticado
+if (Auth::check()) {
+    // El usuario está correctamente autenticado
+}
+
+// Registro manual (cifrar contraseña con bcrypt)
+$user->password = bcrypt($request->password);
+$user->save();</code></pre>
+
+        <h3 class="subsection-title">Laravel Jetstream</h3>
+        <p>Aumenta la funcionalidad de Breeze: verificación por email, autenticación de dos pasos, administrador de sesiones, soporte de API, gestión de equipos.</p>
+        <pre><code>composer require laravel/jetstream
+php artisan jetstream:install livewire
+npm install && npm run dev && npm run build
+php artisan migrate</code></pre>
+        <p>En <code>config/jetstream.php</code> se pueden añadir <code>Features::profilePhotos()</code>, <code>Features::api()</code> o <code>Features::teams()</code>.</p>
+
+        <h3 class="subsection-title">Librería laravel-permission (Spatie)</h3>
+        <p>Gestión de roles y permisos en Laravel:</p>
+        <pre><code>composer require spatie/laravel-permission
+php artisan vendor:publish --provider="Spatie\Permission\PermissionServiceProvider"
+php artisan config:clear
+php artisan migrate</code></pre>
+        <p>Añadir trait <code>HasRoles</code> al modelo User:</p>
+        <pre><code>use Spatie\Permission\Traits\HasRoles;
+class User extends Authenticatable {
+    use HasRoles;
+}
+
+// Asignar rol
+$user->assignRole('admin');
+
+// Crear rol y permiso
+$role   = Role::create(['name' => 'gestor']);
+$permiso = Permission::create(['name' => 'editar articulos']);
+$role->givePermissionTo($permiso);
+
+// Verificar
+$user->hasRole('admin');
+$user->can('editar articulos');
+
+// Proteger rutas por rol
+Route::middleware(['role:admin'])->group(function () {
+    // Solo accesible para 'admin'
+});</code></pre>
+
+        <p>Registrar middleware en <code>bootstrap/app.php</code>:</p>
+        <pre><code>$middleware->alias([
+    'role' => \Spatie\Permission\Middleware\RoleMiddleware::class
+]);</code></pre>
+
+        <blockquote>Hoja07_MVC_12</blockquote>
+        <blockquote>Hoja07_MVC_13</blockquote>
+      </section>
+
+    </main>
+
+    <!-- TOC SIDEBAR -->
+    <aside class="toc">
+      <div class="toc-title">Contenido</div>
+      <a href="#s1">01. Patrón MVC</a>
+      <a href="#s2">02. Laravel</a>
+      <a href="#s3">03. Estructura</a>
+      <a href="#s4">04. Funcionamiento básico</a>
+      <a href="#s5">05. Artisan</a>
+      <a href="#s6">06. Rutas</a>
+      <a href="#s7">07. Controladores</a>
+      <a href="#s8">08. Vistas</a>
+      <a href="#s9">09. Blade</a>
+      <a href="#s10">10. Redirecciones</a>
+      <a href="#s11">11. Formularios</a>
+      <a href="#s12">12. Base de datos</a>
+      <a href="#s13">13. Datos de entrada</a>
+      <a href="#s14">14. Ficheros</a>
+      <a href="#s15">15. Middleware</a>
+      <a href="#s16">16. Control de usuarios</a>
+    </aside>
+  </div>
+</div>
+
+<footer>
+  <a href="ut6.html">← UT6</a> &nbsp;·&nbsp; DWES &nbsp;·&nbsp; <a href="ut8.html">UT8 →</a>
+</footer>
+
+<script>
+  const sections = document.querySelectorAll('section[id]');
+  const tocLinks = document.querySelectorAll('.toc a');
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        tocLinks.forEach(a => a.classList.remove('active'));
+        const active = document.querySelector(`.toc a[href="#${entry.target.id}"]`);
+        if (active) active.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-20% 0px -70% 0px' });
+  sections.forEach(s => observer.observe(s));
+</script>
+</body>
+</html>

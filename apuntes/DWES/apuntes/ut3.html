@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>UT3 — PHP: Estructuras y Formularios | DWES</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<nav>
+  <a class="nav-brand" href="index.html">DWES</a>
+  <div class="nav-links">
+    <a href="index.html">Inicio</a>
+    <a href="ut1.html">UT1</a>
+    <a href="ut2.html">UT2</a>
+    <a href="ut3.html" class="active">UT3</a>
+    <a href="ut4.html">UT4</a>
+    <a href="ut5.html">UT5</a>
+    <a href="ut6.html">UT6</a>
+    <a href="ut7.html">UT7</a>
+    <a href="ut8.html">UT8</a>
+  </div>
+</nav>
+
+<div class="container">
+  <div class="hero">
+    <div class="hero-tag">Unidad Temática 3</div>
+    <h1>PHP — <span>Estructuras, Arrays y Formularios</span></h1>
+    <p>Sentencias condicionales, bucles, funciones, arrays, métodos GET/POST y procesamiento de formularios en PHP.</p>
+  </div>
+
+  <div class="page-layout">
+    <main>
+
+      <section id="s1">
+        <h2 class="section-title"><span class="num">01</span> Tomas de decisión</h2>
+        <p>Denominadas <strong>sentencias condicionales</strong>.</p>
+
+        <h3 class="subsection-title">if / elseif / else</h3>
+        <p>Definir una expresión para ejecutar o no la sentencia o conjunto de sentencias siguientes:</p>
+        <pre><code>&lt;?php
+    if ($a&lt;$b)
+        echo "a es menor que b";
+    elseif ($a&gt;$b)
+        echo "a es mayor que b";
+    else
+        echo "a es igual a b";
+?&gt;</code></pre>
+        <p>No es necesario poner <code>{}</code> cuando solo se ejecuta una sentencia en cada caso.</p>
+
+        <h3 class="subsection-title">switch</h3>
+        <p>Similar a enlazar varias sentencias if comparando una misma variable con diferentes valores:</p>
+        <pre><code>&lt;?php
+    switch ($a){
+        case 0:
+            echo " a vale 0";
+            break;
+        case 1:
+            echo " a vale 1";
+            break;
+        default:
+            echo "a no vale 0 ni 1";
+    }
+?&gt;</code></pre>
+        <p>Si se omite <code>break</code>, la ejecución continúa con el siguiente <code>case</code>.</p>
+      </section>
+
+      <section id="s2">
+        <h2 class="section-title"><span class="num">02</span> Bucles</h2>
+        <p>Son <strong>sentencias repetitivas</strong>: <code>while</code>, <code>do...while</code>, <code>for</code>.</p>
+
+        <h3 class="subsection-title">while</h3>
+        <p>Define un bucle que se ejecuta mientras se cumpla una expresión. La expresión se evalúa <strong>antes</strong> de comenzar cada ejecución:</p>
+        <pre><code>&lt;?php
+    $a=1;
+    while ($a &lt;8)
+        $a+=3;
+    echo $a; // el valor obtenido es 10
+?&gt;</code></pre>
+        <p>No es necesario poner <code>{}</code> cuando solo se ejecuta una sentencia.</p>
+
+        <h3 class="subsection-title">do ... while</h3>
+        <p>La expresión se evalúa <strong>al final</strong>, por lo que la sentencia se ejecuta <strong>al menos una vez</strong>:</p>
+        <pre><code>&lt;?php
+    $a = 15;
+    do {
+        $a -= 3;
+    } while ($a &gt; 10);
+    echo $a; // imprime 9
+?&gt;</code></pre>
+
+        <h3 class="subsection-title">for</h3>
+        <p>Compuesto por tres expresiones:</p>
+        <pre><code>for(expr1; expr2; expr3){
+    sentencia o conjunto de sentencias
+}</code></pre>
+        <ul>
+          <li><strong>expr1</strong>: se ejecuta una vez al comienzo del bucle.</li>
+          <li><strong>expr2</strong>: se evalúa para saber si se debe ejecutar la/as sentencia/as.</li>
+          <li><strong>expr3</strong>: se ejecuta tras ejecutar todas las sentencias del bucle.</li>
+        </ul>
+        <pre><code>&lt;?php
+    for ($a=5; $a&lt;10; $a+=3){
+        echo $a; // se muestran los valores 5 y 8
+        echo "&lt;br/&gt;";
+    }
+?&gt;</code></pre>
+        <blockquote>Hoja03_PHP_01</blockquote>
+      </section>
+
+      <section id="s3">
+        <h2 class="section-title"><span class="num">03</span> Funciones</h2>
+        <ul>
+          <li>Permiten <strong>asociar una etiqueta</strong> (el nombre de la función) con un bloque de código a ejecutar.</li>
+          <li>Ayudan a <strong>estructurar mejor el código</strong>.</li>
+          <li>Permiten crear variables locales no visibles fuera de la función.</li>
+        </ul>
+
+        <h3 class="subsection-title" id="s3-1">3.1 Inclusión de funciones en ficheros externos</h3>
+        <p>Formas de incorporar ficheros externos:</p>
+        <ul>
+          <li><strong>include</strong>: incluye el fichero; si no se encuentra, da un aviso y <strong>continúa</strong> la ejecución.</li>
+          <li><strong>include_once</strong>: evita incluir más de una vez el mismo fichero.</li>
+          <li><strong>require</strong>: si el fichero no se encuentra, <strong>detiene</strong> la ejecución.</li>
+          <li><strong>require_once</strong>: combinación de las dos anteriores.</li>
+        </ul>
+        <pre><code>&lt;?php
+   include 'funciones.inc.php';
+   echo fecha();
+?&gt;</code></pre>
+
+        <h3 class="subsection-title" id="s3-2">3.2 Creación y ejecución de funciones</h3>
+        <p>Para crear funciones se usa la palabra <strong>function</strong>:</p>
+        <pre><code>&lt;?php
+    function saludo(){
+        return "Hola, esto es una función";
+    }
+    echo saludo();
+?&gt;</code></pre>
+
+        <h3 class="subsection-title" id="s3-3">3.3 Argumentos en las funciones</h3>
+        <p>Es mejor usar <strong>argumentos o parámetros</strong>. Las funciones pueden <strong>devolver un valor con <code>return</code></strong>:</p>
+        <pre><code>&lt;?php
+    function precio_con_iva($precio){
+        return $precio*1.21;
+    }
+    $precio=10;
+    $precio_iva=precio_con_iva($precio);
+    echo "el precio con IVA es ".$precio_iva;
+?&gt;</code></pre>
+
+        <p>Puedes indicar <strong>valores por defecto</strong> para los argumentos:</p>
+        <pre><code>&lt;?php
+    function precio_con_iva($precio, $iva=0.21){
+        return $precio*(1+$iva);
+    }
+?&gt;</code></pre>
+
+        <p>Para pasar argumentos <strong>por referencia</strong> (que los cambios se reflejen fuera), añade <strong>&amp;</strong> antes del nombre:</p>
+        <pre><code>&lt;?php
+    function precio_con_iva(&amp;$precio, $iva=0.21){
+        return $precio*(1+$iva);
+    }
+?&gt;</code></pre>
+
+        <div class="info-card">
+          <p>Para acceder a una variable global dentro de una función, usa la palabra clave <strong>global</strong>. <strong>Su uso NO es una buena práctica.</strong></p>
+          <pre><code>&lt;?php
+   function precio_con_iva(){
+        global $precio;
+        $precio_iva=$precio*1.21;
+        echo "el precio con IVA es ".$precio_iva;
+   }
+   $precio=10;
+   precio_con_iva();
+?&gt;</code></pre>
+        </div>
+
+        <p>No es necesario definir las funciones antes de usarlas, <strong>excepto cuando están definidas condicionalmente</strong>:</p>
+        <pre><code>&lt;?php
+    $iva=true;
+    $precio=10;
+    precio_con_iva(); // Da error, pues aquí aún no está definida
+    if ($iva){
+        function precio_con_iva(){
+            global $precio;
+            echo "el precio con IVA es ".($precio*1.21);
+        }
+    }
+    precio_con_iva(); // aquí ya no da error
+?&gt;</code></pre>
+        <blockquote>Hoja03_PHP_02</blockquote>
+      </section>
+
+      <section id="s4">
+        <h2 class="section-title"><span class="num">04</span> Tipos de datos compuestos</h2>
+        <p>Un tipo de datos compuesto permite almacenar más de un valor. En PHP se pueden utilizar dos tipos: el <strong>array</strong> y el <strong>objeto</strong>.</p>
+      </section>
+
+      <section id="s5">
+        <h2 class="section-title"><span class="num">05</span> Arrays y cadenas</h2>
+        <p>Un <strong>array</strong> permite almacenar varios valores referenciados por una <strong>clave</strong> (numérica o asociativa):</p>
+        <pre><code>// Array numérico
+$modulos1 = [0=&gt;"Programación", 1=&gt;"Base de datos", ..., 9=&gt;"Desarrollo web en entorno servidor"];
+
+// Array asociativo
+$modulos2 = ["PR"=&gt;"Programación", "BD"=&gt;"Base de datos", ..., "DWES"=&gt;"DWES"];</code></pre>
+
+        <ul>
+          <li><strong>print_r</strong> muestra todo el contenido del array.</li>
+          <li>Para referenciar elementos: <code>$modulos1[9];</code> o <code>$modulos2["DWES"];</code></li>
+        </ul>
+
+        <p>Se pueden crear <strong>arrays multidimensionales</strong>:</p>
+        <pre><code>$ciclos = [
+    "DAW" =&gt; ["PR"=&gt;"Programación", ..., "DWES"=&gt;"DWES"],
+    "DAM" =&gt; ["PR"=&gt;"Programación", ..., "AD"=&gt;"Acceso a datos"]
+];
+// Acceso: $ciclos["DAW"]["DWES"];</code></pre>
+
+        <p>No hay que indicar el tamaño del array. La clave se puede omitir (se asigna automáticamente):</p>
+        <pre><code>$modulos1[] = "Programación";
+$modulos1[] = "Base de datos";
+$modulos1[] = "DWES";</code></pre>
+
+        <h3 class="subsection-title" id="s5-1">5.1 Recorrer un array</h3>
+        <p>Las cadenas de texto se pueden tratar como arrays donde cada posición almacena una letra (<code>$modulo[3] == "a"</code>).</p>
+        <p>Para recorrer un array se usa el <strong>bucle foreach</strong>:</p>
+        <pre><code>// Solo los elementos:
+foreach ($modulos1 as $modulo)
+    echo $modulo . "&lt;br/&gt;";
+
+// Elementos y claves simultáneamente:
+foreach ($modulos2 as $codigo =&gt; $modulo)
+    echo "El código del módulo ".$modulo." es ".$codigo."&lt;br/";</code></pre>
+        <blockquote>Hoja03_PHP_03</blockquote>
+      </section>
+
+      <section id="s6">
+        <h2 class="section-title"><span class="num">06</span> Recuperación de información del cliente Web</h2>
+
+        <h3 class="subsection-title" id="s6-1">6.1 Métodos GET y POST</h3>
+        <ul>
+          <li><strong>GET</strong>: el método más usado, pero <strong>NO es recomendable</strong> para formularios. Pide al servidor que devuelva la información identificada en la URI.</li>
+          <li><strong>POST</strong>: se usa para enviar información a un servidor. Se utiliza básicamente en formularios.</li>
+        </ul>
+        <p>La principal diferencia radica en la <strong>codificación de la información</strong>. Es conveniente usar GET para la recuperación y POST para el envío.</p>
+
+        <h3 class="subsection-title" id="s6-2">6.2 Método GET</h3>
+        <p>Utiliza la dirección URL. Detrás de la URL el símbolo <strong>?</strong> indica el comienzo de las variables, separadas por <strong>&amp;</strong>:</p>
+        <div class="info-card">
+          <p style="margin-bottom:0">Ejemplo: <code>http://www.example.org/file/example1.php?v1=0&amp;v2=3</code></p>
+        </div>
+
+        <h3 class="subsection-title" id="s6-3">6.3 Método POST</h3>
+        <p>La información va codificada en el <strong>cuerpo de la petición HTTP</strong> y por tanto viaja oculta.</p>
+      </section>
+
+      <section id="s7">
+        <h2 class="section-title"><span class="num">07</span> Formularios</h2>
+        <p>Son la forma de hacer llegar los datos a una aplicación web. Van encerrados en <code>&lt;form&gt;...&lt;/form&gt;</code>. Dentro se pueden incluir elementos como <code>&lt;input&gt;</code>, <code>&lt;select&gt;</code>, <code>&lt;textarea&gt;</code>, <code>&lt;button&gt;</code>.</p>
+
+        <ul>
+          <li>Los elementos necesitan el atributo <strong>name</strong> para enviarse al servidor.</li>
+          <li><strong>action</strong>: indica la página a la que se enviarán los datos.</li>
+          <li><strong>method</strong>: <code>get</code> (datos en la URI con <code>?</code>) o <code>post</code> (datos en el cuerpo HTTP).</li>
+        </ul>
+
+        <p><strong>Ejemplo con GET:</strong></p>
+        <pre><code>&lt;form action="ejemplo1.php" method="get"&gt;
+    &lt;label for="nombre"&gt;Introduzca su nombre:&lt;/label&gt;
+    &lt;input type="text" id="nombre" name="nombre"&gt;&lt;br/&gt;
+    &lt;label for="apellido"&gt;Introduzca sus apellidos:&lt;/label&gt;
+    &lt;input type="text" id="apellido" name="apellidos"&gt;&lt;br/&gt;
+    &lt;input type="submit" name="enviar" value="Enviar"&gt;
+&lt;/form&gt;</code></pre>
+
+        <p><strong>Ejemplo con POST:</strong></p>
+        <pre><code>&lt;form action="ejemplo1.php" method="post"&gt;
+    &lt;label for="nombre"&gt;Introduzca su nombre:&lt;/label&gt;
+    &lt;input type="text" id="nombre" name="nombre"&gt;&lt;br/&gt;
+    &lt;label for="apellido"&gt;Introduzca sus apellidos:&lt;/label&gt;
+    &lt;input type="text" id="apellido" name="apellidos"&gt;&lt;br/&gt;
+    &lt;input type="submit" name="enviar" value="Enviar"&gt;
+&lt;/form&gt;</code></pre>
+      </section>
+
+      <section id="s8">
+        <h2 class="section-title"><span class="num">08</span> Procesamiento de la información</h2>
+
+        <h3 class="subsection-title" id="s8-1">8.1 Con GET</h3>
+        <p>La variable <code>$_GET</code> almacena todas las variables pasadas con GET. Es <strong>un array indexado por el nombre del elemento del formulario</strong>:</p>
+        <pre><code>$_GET['nombre'];
+$_GET['apellidos'];
+
+// Mostrar todo el array:
+&lt;?php print_r($_GET); ?&gt;</code></pre>
+
+        <h3 class="subsection-title" id="s8-2">8.2 Con POST</h3>
+        <p>La variable <code>$_POST</code> almacena las variables pasadas con POST, también como <strong>array indexado por el nombre del elemento</strong>:</p>
+        <pre><code>$_POST['nombre'];
+$_POST['apellidos'];</code></pre>
+        <p><code>$_REQUEST</code> contiene tanto el contenido de <code>$_GET</code> como <code>$_POST</code>.</p>
+        <blockquote>Hoja03_PHP_04 (ejercicios 1, 2 y 3)</blockquote>
+
+        <h3 class="subsection-title" id="s8-3">8.3 Validación de datos</h3>
+        <p>Siempre que sea posible, <strong>validar los datos en el navegador antes de enviarlos</strong>, usando código <strong>JavaScript</strong>. Si hay datos que requieren validación en el servidor (p.ej. comprobar datos en la BD), se hace con PHP en la página del <code>action</code>:</p>
+        <pre><code>&lt;html&gt;
+    &lt;body&gt;
+        &lt;?php
+            if (isset($_POST['enviar'])) {
+                $nombre = $_POST['nombre'];
+                $modulos = $_POST['modulos'];
+                print "Nombre: ".$nombre."&lt;br /&gt;";
+                foreach ($modulos as $modulo) { print "Modulo: ".$modulo."&lt;br /&gt;"; }
+            }
+            else {
+        ?&gt;
+        &lt;form name="input" action="" method="post"&gt;
+            &lt;label for="nombre"&gt;Nombre del alumno: &lt;/label&gt;
+            &lt;input type="text" name="nombre" id="nombre" /&gt;&lt;br /&gt;
+            &lt;p&gt;Módulos que cursa:&lt;/p&gt;
+            &lt;input type="checkbox" name="modulos[]" value="DWES" /&gt; DWES&lt;br /&gt;
+            &lt;input type="checkbox" name="modulos[]" value="DWEC" /&gt; DWEC&lt;br /&gt;
+            &lt;input type="submit" name="enviar" value="Enviar" /&gt;
+        &lt;/form&gt;
+        &lt;?php } ?&gt;
+    &lt;/body&gt;
+&lt;/html&gt;</code></pre>
+        <div class="info-card">
+          <p style="margin-bottom:0">En el atributo <code>action</code> del formulario también se puede poner <code>echo $_SERVER['PHP_SELF'];</code> para que el formulario se envíe a sí mismo.</p>
+        </div>
+        <blockquote>Hoja03_PHP_04</blockquote>
+        <blockquote>Hoja03_PHP_05</blockquote>
+      </section>
+
+    </main>
+
+    <aside class="toc">
+        <div class="toc-title">Contenido</div>
+        <a href="#s1">1. Tomas de decisión</a>
+        <a href="#s2">2. Bucles</a>
+        <a href="#s3">3. Funciones</a>
+        <a href="#s3-1" class="sub">3.1 Ficheros externos</a>
+        <a href="#s3-2" class="sub">3.2 Crear funciones</a>
+        <a href="#s3-3" class="sub">3.3 Argumentos</a>
+        <a href="#s4">4. Tipos compuestos</a>
+        <a href="#s5">5. Arrays y cadenas</a>
+        <a href="#s5-1" class="sub">5.1 Recorrer arrays</a>
+        <a href="#s6">6. Info del cliente</a>
+        <a href="#s6-1" class="sub">6.1 GET y POST</a>
+        <a href="#s6-2" class="sub">6.2 Método GET</a>
+        <a href="#s6-3" class="sub">6.3 Método POST</a>
+        <a href="#s7">7. Formularios</a>
+        <a href="#s8">8. Procesamiento</a>
+        <a href="#s8-1" class="sub">8.1 Con GET</a>
+        <a href="#s8-2" class="sub">8.2 Con POST</a>
+        <a href="#s8-3" class="sub">8.3 Validación</a>
+    </aside>
+  </div>
+</div>
+
+<footer>
+  <p><a href="ut2.html">← UT2</a> &nbsp;·&nbsp; UT3 — PHP: Estructuras y Formularios &nbsp;·&nbsp; <a href="ut4.html">UT4 →</a></p>
+</footer>
+
+<script>
+  const sections = document.querySelectorAll('section[id]');
+  const tocLinks = document.querySelectorAll('.toc a');
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        tocLinks.forEach(l => l.classList.remove('active'));
+        const active = document.querySelector(`.toc a[href="#${entry.target.id}"]`);
+        if (active) active.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-20% 0px -70% 0px' });
+  sections.forEach(s => observer.observe(s));
+</script>
+</body>
+</html>

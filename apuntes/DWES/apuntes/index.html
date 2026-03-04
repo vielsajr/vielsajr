@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DWES — Desarrollo Web en Entorno Servidor</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    .stats-row {
+      display: flex;
+      gap: 2rem;
+      margin-top: 2rem;
+      flex-wrap: wrap;
+    }
+    .stat {
+      display: flex;
+      flex-direction: column;
+      gap: 0.2rem;
+    }
+    .stat-num {
+      font-family: var(--heading-font);
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--accent);
+      line-height: 1;
+    }
+    .stat-label {
+      font-family: var(--mono-font);
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+    .section-header {
+      font-family: var(--mono-font);
+      font-size: 0.72rem;
+      color: var(--accent3);
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      margin: 3rem 0 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .section-header::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+    .unavailable {
+      opacity: 0.45;
+      pointer-events: none;
+    }
+    .unavailable .unit-num::after {
+      content: ' — próximamente';
+    }
+    .badge {
+      display: inline-block;
+      font-family: var(--mono-font);
+      font-size: 0.65rem;
+      padding: 0.2em 0.55em;
+      border-radius: 20px;
+      border: 1px solid var(--accent3);
+      color: var(--accent3);
+      vertical-align: middle;
+      margin-left: 0.4rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+  </style>
+</head>
+<body>
+<nav>
+  <span class="nav-brand">DWES</span>
+  <div class="nav-links">
+    <a href="index.html" class="active">Inicio</a>
+    <a href="ut1.html">UT1</a>
+    <a href="ut2.html">UT2</a>
+    <a href="ut3.html">UT3</a>
+    <a href="ut4.html">UT4</a>
+    <a href="ut5.html">UT5</a>
+    <a href="ut6.html">UT6</a>
+    <a href="ut7.html">UT7</a>
+    <a href="ut8.html">UT8</a>
+  </div>
+</nav>
+
+<div class="container">
+  <div class="hero">
+    <div class="hero-tag">Módulo profesional</div>
+    <h1>Desarrollo Web en<br><span>Entorno Servidor</span></h1>
+    <p>Apuntes del módulo DWES. Conceptos, tecnologías y herramientas para el desarrollo de aplicaciones web del lado del servidor.</p>
+    <div class="stats-row">
+      <div class="stat">
+        <span class="stat-num">8</span>
+        <span class="stat-label">Unidades temáticas</span>
+      </div>
+      <div class="stat">
+        <span class="stat-num">PHP</span>
+        <span class="stat-label">Lenguaje principal</span>
+      </div>
+      <div class="stat">
+        <span class="stat-num">PDO</span>
+        <span class="stat-label">Acceso a datos</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-header">Unidades disponibles</div>
+
+  <div class="unit-grid">
+    <a class="unit-card" href="ut1.html">
+      <span class="arrow">↗</span>
+      <div class="unit-num">UT 1</div>
+      <h3>Conceptos básicos &amp; Introducción</h3>
+      <p>Internet, HTML, modelos cliente/servidor, lenguajes de scripting e integración con servidores web.</p>
+    </a>
+    <a class="unit-card" href="ut2.html">
+      <span class="arrow">↗</span>
+      <div class="unit-num">UT 2</div>
+      <h3>PHP — Fundamentos del lenguaje</h3>
+      <p>Sintaxis básica, variables, tipos de datos, operadores, funciones y superglobales en PHP.</p>
+    </a>
+    <a class="unit-card" href="ut3.html">
+      <span class="arrow">↗</span>
+      <div class="unit-num">UT 3</div>
+      <h3>PHP — Estructuras y Formularios</h3>
+      <p>Sentencias condicionales, bucles, funciones, arrays, métodos GET/POST y procesamiento de formularios en PHP.</p>
+    </a>
+    <a class="unit-card" href="ut4.html">
+      <span class="arrow">↗</span>
+      <div class="unit-num">UT 4</div>
+      <h3>Programación Orientada a Objetos en PHP</h3>
+      <p>Clases, objetos, constructores, herencia, interfaces y patrones de POO en PHP a partir de la versión 5.</p>
+    </a>
+    <a class="unit-card" href="ut5.html">
+      <span class="arrow">↗</span>
+      <div class="unit-num">UT 5</div>
+      <h3>Bases de datos relacionales</h3>
+      <p>MySQL/MariaDB, PDO, consultas preparadas, transacciones y manejo de excepciones.</p>
+    </a>
+    <a class="unit-card" href="ut6.html">
+      <span class="arrow">↗</span>
+      <div class="unit-num">UT 6</div>
+      <h3>Gestión de sesiones</h3>
+      <p>Sesiones, identificadores SID, cookies, configuración PHP y ejercicio grupal de aplicación web.</p>
+    </a>
+    <a class="unit-card" href="ut7.html">
+      <span class="arrow">↗</span>
+      <div class="unit-num">UT 7</div>
+      <h3>Laravel y MVC</h3>
+      <p>Patrón MVC, instalación y estructura de Laravel, rutas, controladores, vistas Blade, base de datos con Eloquent ORM, middleware y autenticación de usuarios.</p>
+    </a>
+    <a class="unit-card" href="ut8.html">
+      <span class="arrow">↗</span>
+      <div class="unit-num">UT 8</div>
+      <h3>Servicios Web REST</h3>
+      <p>Introducción a servicios web, SOAP vs REST, clientes cURL y Http facade, creación de APIs en Laravel con Resources, inserción, actualización y autenticación con Sanctum.</p>
+    </a>
+  </div>
+
+<footer>
+  <p>DWES — Desarrollo Web en Entorno Servidor &nbsp;·&nbsp; <a href="index.html">Inicio</a></p>
+</footer>
+</body>
+</html>

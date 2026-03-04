@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>UT1 — Conceptos básicos de Internet | DWES</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<nav>
+  <a class="nav-brand" href="index.html">DWES</a>
+  <div class="nav-links">
+    <a href="index.html">Inicio</a>
+    <a href="ut1.html" class="active">UT1</a>
+    <a href="ut2.html">UT2</a>
+    <a href="ut3.html">UT3</a>
+    <a href="ut4.html">UT4</a>
+    <a href="ut5.html">UT5</a>
+    <a href="ut6.html">UT6</a>
+    <a href="ut7.html">UT7</a>
+    <a href="ut8.html">UT8</a>
+  </div>
+</nav>
+
+<div class="container">
+  <div class="hero">
+    <div class="hero-tag">Unidad Temática 1</div>
+    <h1>Conceptos básicos de<br><span>Internet e Introducción</span></h1>
+    <p>Internet, la web, modelos cliente/servidor, páginas dinámicas, lenguajes de programación y herramientas de desarrollo.</p>
+  </div>
+
+  <div class="page-layout">
+    <main>
+
+      <!-- 1 -->
+      <section id="s1">
+        <h2 class="section-title"><span class="num">01</span> Conceptos básicos de Internet</h2>
+        <ul>
+          <li>Es una gran red de ordenadores y como todas ellas sirve para <strong>compartir recursos e intercambiar información</strong>.</li>
+          <li>Ordenadores unidos a través de conexiones de varios tipos.</li>
+          <li>Se utiliza el protocolo <strong>TCP/IP</strong>.</li>
+          <li>Se ofrecen diferentes servicios a los usuarios: <strong>WWW, FTP, DNS, e-mail, SSH</strong>, etc.</li>
+        </ul>
+      </section>
+
+      <!-- 2 -->
+      <section id="s2">
+        <h2 class="section-title"><span class="num">02</span> Introducción</h2>
+        <ul>
+          <li>Una web es un sistema formado por volúmenes de información organizados mediante recursos web (enlaces, vínculos que permiten relacionarse entre ellos...).</li>
+          <li>Surge como idea original para la búsqueda de un sistema que permita acceder rápidamente a documentos electrónicos mediante enlaces.</li>
+          <li>Se utiliza un lenguaje denominado <strong>HTML</strong> (HyperText Markup Language).</li>
+          <li>HTML es el lenguaje con el que se "escriben" la mayoría de páginas Web.</li>
+        </ul>
+        <div class="info-card">
+          <p>El lenguaje HTML es un estándar reconocido en todo el mundo y cuyas normas define un organismo sin ánimo de lucro llamado <strong>World Wide Web Consortium (W3C)</strong>.</p>
+          <p style="margin-bottom:0">El software para comprender e interpretar la información en un documento HTML se denomina <strong>navegador</strong>.</p>
+        </div>
+      </section>
+
+      <!-- 3 -->
+      <section id="s3">
+        <h2 class="section-title"><span class="num">03</span> Modelos de programación en entornos cliente/servidor</h2>
+        <div class="info-card">
+          <p>El modelo cliente/servidor define cómo interactúan los componentes de una aplicación web: el <strong>cliente</strong> realiza peticiones y el <strong>servidor</strong> las procesa y responde con los resultados.</p>
+          <p style="margin-bottom:0">Este modelo es la base de toda comunicación web y determina dónde se ejecuta la lógica de la aplicación.</p>
+        </div>
+      </section>
+
+      <!-- 4 -->
+      <section id="s4">
+        <h2 class="section-title"><span class="num">04</span> Generación dinámica de páginas web</h2>
+        <p>Podemos dividir las <strong>aplicaciones web</strong> en:</p>
+        <ul>
+          <li><strong>Estáticas</strong>: el usuario recibe una página web cuya interacción no conlleva ningún tipo de acción, ni en la propia página, ni genera respuesta alguna por parte del servidor. Usan lenguaje <strong>HTML</strong>.</li>
+          <li><strong>Dinámicas</strong>: la interacción hace que se genere un diálogo entre el cliente y el servidor. Desde el punto de vista del modelo de programación, la lógica asociada al inicio y gestión de dicho diálogo puede ser ejecutada tanto en el cliente como en el servidor (habitualmente en ambos).</li>
+        </ul>
+        <div class="info-card">
+          <p style="margin-bottom:0">Las más demandadas actualmente son las <strong>dinámicas</strong>. Las tecnologías implicadas varían mucho en función de si son ejecutadas en el lado del <strong>cliente</strong> o en el lado del <strong>servidor</strong>.</p>
+        </div>
+      </section>
+
+      <!-- 5 -->
+      <section id="s5">
+        <h2 class="section-title"><span class="num">05</span> Lenguajes de programación. Lenguajes de scripting</h2>
+        <p>Hay que diferenciar entre:</p>
+        <ul>
+          <li>Lenguajes de programación del lado del <strong>cliente</strong>.</li>
+          <li>Lenguajes de programación del lado del <strong>servidor</strong>.</li>
+        </ul>
+
+        <h3 class="subsection-title" id="s5-1">5.1 Del lado del cliente</h3>
+        <ul>
+          <li><strong>HTML</strong>: solo presenta texto en una página, además de definir algunos aspectos visuales en el documento mediante el uso de estilos.</li>
+          <li><strong>Hojas de estilo (CSS)</strong>: definen reglas de representación del contenido en colaboración con HTML.</li>
+          <li><strong>JavaScript</strong>: lenguaje de programación interpretado, permite el uso de efectos visuales y nuevas interacciones con el usuario. Se usa habitualmente a través de bibliotecas como jQuery, Angular o React.</li>
+          <li><strong>XML</strong>: lenguaje auto descriptivo ampliamente utilizado para el intercambio de datos entre aplicaciones multiplataforma.</li>
+          <li><strong>JSON</strong>: surge como el gran rival del XML ya que es más ligero y legible.</li>
+        </ul>
+
+        <h3 class="subsection-title" id="s5-2">5.2 Del lado del servidor</h3>
+        <p>Es ejecutado por un software específico en el componente que actúa como servidor. Existen múltiples alternativas:</p>
+        <ul>
+          <li>Lenguajes <strong>específicos para web</strong>: <strong>PHP</strong></li>
+          <li>Lenguajes <strong>dinámicos</strong>: Python, Ruby...</li>
+          <li><strong>JavaScript en servidor</strong>: NodeJS</li>
+          <li>Lenguajes <strong>compilados</strong>:
+            <ul>
+              <li>JVM: Java, Scala, Groovy</li>
+              <li>CLR: C# (ASP.NET), ...</li>
+            </ul>
+          </li>
+          <li>Otros: <strong>frameworks</strong>, CMS, etc.</li>
+        </ul>
+
+        <h3 class="subsection-title">PHP</h3>
+        <ul>
+          <li>Lenguaje interpretado por el servidor.</li>
+          <li>El código se incrusta en HTML mediante marcas especiales.</li>
+          <li>Cuando el servidor reconoce código PHP: llama al intérprete, ejecuta el código y devuelve el resultado.</li>
+          <li>Según <strong>w3techs</strong>, más del <strong>73%</strong> de los sitios web utiliza PHP.</li>
+        </ul>
+
+        <h3 class="subsection-title">Lenguajes dinámicos</h3>
+        <ul>
+          <li><strong>Python</strong> y <strong>Ruby</strong>: lenguajes interpretados de propósito general.</li>
+          <li>Buenos frameworks y librerías para Web:
+            <ul>
+              <li>Ruby: <strong>Ruby on Rails</strong></li>
+              <li>Python: <strong>Django</strong></li>
+            </ul>
+          </li>
+        </ul>
+
+        <h3 class="subsection-title">JavaScript del lado del servidor</h3>
+        <ul>
+          <li>Librería <strong>Node.js</strong>: basado en V8 (motor JavaScript de Google), permite usar JavaScript en el servidor, entrada/salida basada en eventos. Muy popular.</li>
+        </ul>
+
+        <h3 class="subsection-title">Lenguajes generales compilados</h3>
+        <ul>
+          <li><strong>Java (JVM)</strong>: Máquina virtual de Java. Empotrado: JSP. Servlets y Contenedores de aplicaciones: Tomcat. Otros lenguajes sobre JVM: Scala, Groovy...</li>
+          <li><strong>ASP .NET</strong>: Basado en CLR (Máquina virtual de C#). ASP permite empotrar lenguaje en HTML (extensión aspx <code>&lt;% ... código %&gt;</code>). Diversos frameworks: ASP.Net MVC. Otros: VB.Net...</li>
+        </ul>
+
+        <h3 class="subsection-title">Frameworks</h3>
+        <ul>
+          <li>Normalmente basados en el <strong>patrón MVC</strong> (separación de modelo, vista, controlador).</li>
+          <li>Numerosos frameworks:
+            <ul>
+              <li><strong>PHP</strong>: <strong>Laravel</strong>, Symfony, CodeIgniter, CakePHP</li>
+              <li><strong>Java</strong>: Spring Boot, Play</li>
+              <li><strong>Python</strong>: Django, Zope</li>
+              <li><strong>Ruby</strong>: Ruby on Rails</li>
+              <li><strong>Scala</strong>: Play, Lift</li>
+              <li><strong>Groovy</strong>: Grails</li>
+              <li><strong>Haskell</strong>: Yesod</li>
+            </ul>
+          </li>
+        </ul>
+      </section>
+
+      <!-- 6 -->
+      <section id="s6">
+        <h2 class="section-title"><span class="num">06</span> Integración con los servidores web</h2>
+        <ul>
+          <li>Los clientes hacen peticiones a los servidores.</li>
+          <li>En ellas tienen que constar unos elementos concretos y especificados en un orden determinado.</li>
+          <li>Las direcciones de las peticiones suelen ser de tipo <strong>URL</strong> (Localizador Uniforme de Recurso): cadena de texto que identifica un recurso e indica cómo acceder a él y cómo localizarlo.</li>
+        </ul>
+        <p>Existen distintos modos o métodos para intercambiar información entre cliente y servidor:</p>
+        <div class="info-card">
+          <p><strong>Método GET</strong>: petición de información.</p>
+          <pre><code>GET consultatelefono.php?cliente=empresa1</code></pre>
+          <ul>
+            <li>Los parámetros se pasan como pares <code>nombre=valor</code>.</li>
+            <li>Se pueden pasar varios parámetros seguidos con <code>&amp;</code>.</li>
+          </ul>
+        </div>
+        <div class="info-card">
+          <p><strong>Método POST</strong>: se usa habitualmente para enviar información a un servidor web.</p>
+          <ul>
+            <li>Enviar el contenido de un formulario de autenticación.</li>
+            <li>Entradas de datos.</li>
+            <li>Especificar parámetros para algún tipo de componente ejecutado en el servidor.</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- 7 -->
+      <section id="s7">
+        <h2 class="section-title"><span class="num">07</span> Herramientas de programación</h2>
+        <ul>
+          <li><strong>Navegadores</strong>.</li>
+          <li><strong>Editores de documentos</strong>: editores de texto que permiten escribir código HTML directamente, sin ninguna ayuda ni facilidad adicional.</li>
+          <li><strong>Entornos de programación</strong>: entornos integrados que permiten editar, compilar y ejecutar los programas generados a partir de diferentes lenguajes usados en el desarrollo de aplicaciones web.</li>
+          <li><strong>Herramientas de tratamiento de imágenes</strong>: la mayoría de las páginas web muestran contenido gráfico. Es necesario el uso de este tipo de herramientas para adecuar las características de las imágenes a su transmisión.</li>
+          <li><strong>Herramientas para la creación y administración de bases de datos</strong>: herramientas para la carga de datos y el mantenimiento posterior de los datos almacenados.</li>
+        </ul>
+        <blockquote>Hoja01_Herramientas_01</blockquote>
+        <blockquote>Hoja01_Herramientas_02</blockquote>
+      </section>
+
+    </main>
+
+    <!-- TOC -->
+    <aside class="toc">
+        <div class="toc-title">Contenido</div>
+        <a href="#s1">1. Conceptos básicos</a>
+        <a href="#s2">2. Introducción</a>
+        <a href="#s3">3. Modelos cliente/servidor</a>
+        <a href="#s4">4. Páginas dinámicas</a>
+        <a href="#s5">5. Lenguajes de scripting</a>
+        <a href="#s5-1" class="sub">5.1 Lado del cliente</a>
+        <a href="#s5-2" class="sub">5.2 Lado del servidor</a>
+        <a href="#s6">6. Integración servidores web</a>
+        <a href="#s7">7. Herramientas</a>
+    </aside>
+  </div>
+</div>
+
+<footer>
+  <p><a href="index.html">← Volver al índice</a> &nbsp;·&nbsp; UT1 — Conceptos básicos de Internet &nbsp;·&nbsp; <a href="ut2.html">UT2 →</a></p>
+</footer>
+
+<script>
+  // Active TOC highlight on scroll
+  const sections = document.querySelectorAll('section[id]');
+  const tocLinks = document.querySelectorAll('.toc a');
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        tocLinks.forEach(l => l.classList.remove('active'));
+        const active = document.querySelector(`.toc a[href="#${entry.target.id}"]`);
+        if (active) active.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-20% 0px -70% 0px' });
+  sections.forEach(s => observer.observe(s));
+</script>
+</body>
+</html>
