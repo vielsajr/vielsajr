@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Spring Boot — Apuntes 2º DAW</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --green: #6ee7b7;
+    --green-dark: #059669;
+    --bg: #0a0f0d;
+    --bg2: #0f1a14;
+    --bg3: #142218;
+    --card: #111c16;
+    --border: #1e3328;
+    --text: #d1fae5;
+    --muted: #6b7c74;
+    --accent: #34d399;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    font-family: 'Syne', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Animated background grid */
+  body::before {
+    content:'';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(52,211,153,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(52,211,153,0.04) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .hero {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    padding: 80px 20px 60px;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+  .badge {
+    display: inline-block;
+    background: rgba(52,211,153,0.1);
+    border: 1px solid rgba(52,211,153,0.3);
+    color: var(--accent);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    padding: 6px 14px;
+    border-radius: 100px;
+    margin-bottom: 28px;
+    letter-spacing: 0.05em;
+  }
+  .hero h1 {
+    font-size: clamp(2.5rem, 6vw, 4.5rem);
+    font-weight: 800;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    background: linear-gradient(135deg, #6ee7b7 0%, #34d399 50%, #059669 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 8px;
+  }
+  .hero .subtitle {
+    font-size: 1.1rem;
+    color: var(--muted);
+    margin-top: 16px;
+    margin-bottom: 10px;
+  }
+  .hero .curso {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.8rem;
+    color: var(--green-dark);
+    margin-bottom: 48px;
+  }
+
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 60px;
+  }
+  .tag {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    color: var(--muted);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    padding: 5px 12px;
+    border-radius: 6px;
+  }
+
+  .plan-section {
+    position: relative;
+    z-index: 1;
+    max-width: 900px;
+    margin: 0 auto 60px;
+    padding: 0 20px;
+  }
+  .section-title {
+    font-size: 0.72rem;
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--accent);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+  }
+  .plan-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 10px;
+  }
+  .plan-item {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px 16px;
+    font-size: 0.82rem;
+    color: var(--muted);
+    line-height: 1.4;
+  }
+  .plan-item strong {
+    display: block;
+    color: var(--accent);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    margin-bottom: 4px;
+  }
+
+  /* Module grid */
+  .modules {
+    position: relative;
+    z-index: 1;
+    max-width: 1100px;
+    margin: 0 auto 80px;
+    padding: 0 20px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 16px;
+  }
+  .module-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 24px;
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    transition: border-color 0.2s, transform 0.2s, background 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+  .module-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+  .module-card:hover {
+    border-color: rgba(52,211,153,0.4);
+    transform: translateY(-3px);
+    background: var(--bg3);
+  }
+  .module-card:hover::before { opacity: 1; }
+  .module-number {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--green-dark);
+    background: rgba(52,211,153,0.08);
+    border: 1px solid rgba(52,211,153,0.15);
+    padding: 3px 9px;
+    border-radius: 100px;
+    width: fit-content;
+  }
+  .module-title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1.3;
+  }
+  .module-desc {
+    font-size: 0.82rem;
+    color: var(--muted);
+    line-height: 1.5;
+    flex: 1;
+  }
+  .module-arrow {
+    font-size: 0.9rem;
+    color: var(--accent);
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+  .module-card:hover .module-arrow { opacity: 1; }
+
+  footer {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    padding: 30px 20px;
+    color: var(--muted);
+    font-size: 0.78rem;
+    font-family: 'JetBrains Mono', monospace;
+    border-top: 1px solid var(--border);
+  }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="badge">📚 2º DAW/DAM · Curso 2024–2025</div>
+  <h1>Spring Boot</h1>
+  <p class="subtitle">Apuntes completos · Desarrollo de Aplicaciones Web con Java</p>
+  <p class="curso">// Examen en 2 meses · 12 módulos · plan 8 semanas</p>
+  <div class="tags">
+    <span class="tag">REST APIs</span>
+    <span class="tag">JPA/Hibernate</span>
+    <span class="tag">Spring Security</span>
+    <span class="tag">JWT</span>
+    <span class="tag">Thymeleaf</span>
+    <span class="tag">Testing</span>
+    <span class="tag">Maven</span>
+    <span class="tag">MySQL</span>
+    <span class="tag">Lombok</span>
+    <span class="tag">MockMvc</span>
+  </div>
+</div>
+
+<div class="plan-section">
+  <p class="section-title">📅 Plan de estudio — 8 semanas</p>
+  <div class="plan-grid">
+    <div class="plan-item"><strong>Semana 1</strong>Fundamentos Java + Maven + Spring Boot: estructura, autoconfiguración, starters</div>
+    <div class="plan-item"><strong>Semana 2</strong>Spring MVC + REST APIs: controladores, peticiones HTTP, serialización JSON</div>
+    <div class="plan-item"><strong>Semana 3</strong>JPA + Hibernate: entidades, repositorios, relaciones, JPQL</div>
+    <div class="plan-item"><strong>Semana 4</strong>Spring Data JPA avanzado: consultas personalizadas, paginación, especificaciones</div>
+    <div class="plan-item"><strong>Semana 5</strong>Spring Security: autenticación, autorización, JWT, roles</div>
+    <div class="plan-item"><strong>Semana 6</strong>Thymeleaf + validación: plantillas, formularios, mensajes de error</div>
+    <div class="plan-item"><strong>Semana 7</strong>Testing: JUnit 5, Mockito, MockMvc, pruebas de integración</div>
+    <div class="plan-item"><strong>Semana 8</strong>Proyecto completo + despliegue + repaso + ejercicios de examen</div>
+  </div>
+</div>
+
+<div style="position:relative;z-index:1;max-width:1100px;margin:0 auto 20px;padding:0 20px;">
+  <p class="section-title">🗂️ Módulos</p>
+</div>
+<div class="modules">
+  <a href="modulo1.html" class="module-card">
+    <span class="module-number">MÓDULO 01</span>
+    <div class="module-title">Fundamentos: Java, Maven y Spring Boot</div>
+    <div class="module-desc">Repaso Java moderno, Maven y pom.xml, estructura de proyecto, clase principal y application.properties.</div>
+    <span class="module-arrow">→</span>
+  </a>
+  <a href="modulo2.html" class="module-card">
+    <span class="module-number">MÓDULO 02</span>
+    <div class="module-title">Spring Core: IoC, DI y Beans</div>
+    <div class="module-desc">Inversión de control, inyección de dependencias por constructor/campo/setter y anotaciones esenciales.</div>
+    <span class="module-arrow">→</span>
+  </a>
+  <a href="modulo3.html" class="module-card">
+    <span class="module-number">MÓDULO 03</span>
+    <div class="module-title">Spring MVC: Controladores REST</div>
+    <div class="module-desc">Controlador REST completo, anotaciones de mapeo, parámetros y ResponseEntity con códigos HTTP.</div>
+    <span class="module-arrow">→</span>
+  </a>
+  <a href="modulo4.html" class="module-card">
+    <span class="module-number">MÓDULO 04</span>
+    <div class="module-title">JPA &amp; Hibernate: Entidades y Relaciones</div>
+    <div class="module-desc">Entidades JPA con Lombok, tipos de relaciones: OneToOne, OneToMany, ManyToOne, ManyToMany.</div>
+    <span class="module-arrow">→</span>
+  </a>
+  <a href="modulo5.html" class="module-card">
+    <span class="module-number">MÓDULO 05</span>
+    <div class="module-title">Spring Data JPA: Repositorios y Consultas</div>
+    <div class="module-desc">Repositorios JPA, métodos derivados, @Query JPQL, SQL nativo, @Modifying y paginación.</div>
+    <span class="module-arrow">→</span>
+  </a>
+  <a href="modulo6.html" class="module-card">
+    <span class="module-number">MÓDULO 06</span>
+    <div class="module-title">Validación y Manejo de Excepciones</div>
+    <div class="module-desc">Bean Validation con todas las anotaciones, manejador global con @RestControllerAdvice.</div>
+    <span class="module-arrow">→</span>
+  </a>
+  <a href="modulo7.html" class="module-card">
+    <span class="module-number">MÓDULO 07</span>
+    <div class="module-title">Spring Security y JWT</div>
+    <div class="module-desc">SecurityFilterChain, JwtService, JwtAuthFilter, AuthController con login y registro.</div>
+    <span class="module-arrow">→</span>
+  </a>
+  <a href="modulo8.html" class="module-card">
+    <span class="module-number">MÓDULO 08</span>
+    <div class="module-title">Thymeleaf: Plantillas del Lado Servidor</div>
+    <div class="module-desc">Controlador MVC, plantillas base, lista con paginación, formularios y todas las directivas th:*.</div>
+    <span class="module-arrow">→</span>
+  </a>
+  <a href="modulo9.html" class="module-card">
+    <span class="module-number">MÓDULO 09</span>
+    <div class="module-title">Testing: JUnit 5, Mockito y MockMvc</div>
+    <div class="module-desc">Tests unitarios con Mockito, tests de integración de controlador con @WebMvcTest y MockMvc.</div>
+    <span class="module-arrow">→</span>
+  </a>
+  <a href="modulo10.html" class="module-card">
+    <span class="module-number">MÓDULO 10</span>
+    <div class="module-title">Configuración, Perfiles y Despliegue</div>
+    <div class="module-desc">Perfiles dev/prod en application.properties, @Profile en código, Dockerfile multi-stage.</div>
+    <span class="module-arrow">→</span>
+  </a>
+  <a href="modulo11.html" class="module-card">
+    <span class="module-number">MÓDULO 11</span>
+    <div class="module-title">Proyecto Completo: API REST de Tienda</div>
+    <div class="module-desc">Arquitectura en capas, patrón DTO, mapper, separación entidad/respuesta API.</div>
+    <span class="module-arrow">→</span>
+  </a>
+  <a href="modulo12.html" class="module-card">
+    <span class="module-number">MÓDULO 12</span>
+    <div class="module-title">Cheat Sheet y Ejercicios de Examen</div>
+    <div class="module-desc">Referencia rápida de anotaciones, ejercicios tipo examen resueltos y checklist final.</div>
+    <span class="module-arrow">→</span>
+  </a>
+</div>
+
+<footer>
+  Spring Boot · Apuntes 2º DAW/DAM · 2024–2025
+</footer>
+
+</body>
+</html>

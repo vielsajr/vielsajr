@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Módulo 6: Validación y Manejo de Excepciones — Spring Boot 2º DAW</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    --green: #6ee7b7;
+    --green-dark: #059669;
+    --bg: #0a0f0d;
+    --bg2: #0f1a14;
+    --bg3: #142218;
+    --card: #111c16;
+    --border: #1e3328;
+    --text: #d1fae5;
+    --muted: #6b7c74;
+    --accent: #34d399;
+    --code-bg: #0d1f16;
+    --code-border: #1a3024;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Syne', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+  }
+  body::before {
+    content:'';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(52,211,153,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(52,211,153,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* NAV */
+  nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(10,15,13,0.9);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 14px 24px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  nav a.home {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--accent);
+    text-decoration: none;
+    padding: 5px 12px;
+    border: 1px solid rgba(52,211,153,0.25);
+    border-radius: 6px;
+    transition: background 0.15s;
+  }
+  nav a.home:hover { background: rgba(52,211,153,0.08); }
+  nav .breadcrumb {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--muted);
+  }
+  nav .nav-links {
+    margin-left: auto;
+    display: flex;
+    gap: 8px;
+  }
+  nav .nav-links a {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--muted);
+    text-decoration: none;
+    padding: 4px 10px;
+    border-radius: 5px;
+    transition: color 0.15s, background 0.15s;
+  }
+  nav .nav-links a:hover { color: var(--accent); background: rgba(52,211,153,0.06); }
+
+  /* HEADER */
+  .mod-header {
+    position: relative;
+    z-index: 1;
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 52px 24px 36px;
+  }
+  .mod-badge {
+    display: inline-block;
+    background: rgba(52,211,153,0.08);
+    border: 1px solid rgba(52,211,153,0.2);
+    color: var(--accent);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    padding: 4px 12px;
+    border-radius: 100px;
+    margin-bottom: 20px;
+    letter-spacing: 0.05em;
+  }
+  .mod-header h1 {
+    font-size: clamp(1.8rem, 4vw, 2.8rem);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    background: linear-gradient(135deg, #6ee7b7, #34d399);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    line-height: 1.15;
+    margin-bottom: 12px;
+  }
+  .mod-header p {
+    color: var(--muted);
+    font-size: 0.95rem;
+    line-height: 1.5;
+  }
+
+  /* CONTENT */
+  .content {
+    position: relative;
+    z-index: 1;
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 0 24px 80px;
+  }
+
+  /* SECTIONS */
+  .section {
+    margin-bottom: 48px;
+  }
+  .section-title {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 18px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .section-title span.num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--accent);
+    background: rgba(52,211,153,0.08);
+    padding: 2px 8px;
+    border-radius: 4px;
+  }
+
+  /* CODE BLOCKS */
+  .code-block {
+    background: var(--code-bg);
+    border: 1px solid var(--code-border);
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: 20px;
+  }
+  .code-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 16px;
+    background: rgba(52,211,153,0.05);
+    border-bottom: 1px solid var(--code-border);
+  }
+  .code-filename {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--accent);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .code-filename::before { content: '📄'; }
+  .copy-btn {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.68rem;
+    color: var(--muted);
+    background: none;
+    border: 1px solid var(--code-border);
+    padding: 3px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: color 0.15s, border-color 0.15s;
+  }
+  .copy-btn:hover { color: var(--accent); border-color: rgba(52,211,153,0.3); }
+  .copy-btn.copied { color: var(--accent); }
+  pre {
+    padding: 20px;
+    overflow-x: auto;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.8rem;
+    line-height: 1.7;
+    color: #a7f3d0;
+    tab-size: 2;
+  }
+  pre .cm { color: #4a7c62; font-style: italic; }  /* comment */
+  pre .kw { color: #34d399; }   /* keyword */
+  pre .an { color: #6ee7b7; font-weight: bold; }   /* annotation */
+  pre .st { color: #86efac; }   /* string */
+  pre .ty { color: #a3e635; }   /* type */
+
+  /* TABLES */
+  .table-wrap { overflow-x: auto; margin-bottom: 20px; border-radius: 12px; border: 1px solid var(--border); }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.84rem;
+  }
+  thead tr { background: rgba(52,211,153,0.06); }
+  th {
+    padding: 12px 16px;
+    text-align: left;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--accent);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+  }
+  td {
+    padding: 11px 16px;
+    border-bottom: 1px solid rgba(30,51,40,0.6);
+    color: var(--text);
+    line-height: 1.5;
+    vertical-align: top;
+  }
+  td:first-child {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--accent);
+    white-space: nowrap;
+  }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: rgba(52,211,153,0.02); }
+
+  /* INFO BOXES */
+  .info-box {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent);
+    border-radius: 10px;
+    padding: 18px 20px;
+    margin-bottom: 20px;
+    font-size: 0.87rem;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+  .info-box strong { color: var(--text); }
+  .info-box code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.8rem;
+    background: rgba(52,211,153,0.08);
+    padding: 1px 6px;
+    border-radius: 4px;
+    color: var(--accent);
+  }
+
+  /* CHECKLIST */
+  .checklist {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 20px;
+  }
+  .checklist-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(30,51,40,0.5);
+    font-size: 0.88rem;
+    color: var(--muted);
+    line-height: 1.4;
+  }
+  .checklist-item:last-child { border-bottom: none; }
+  .checklist-item input[type=checkbox] {
+    margin-top: 2px;
+    accent-color: var(--accent);
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+    cursor: pointer;
+  }
+  .checklist-item label { cursor: pointer; }
+  .checklist-item.done label { text-decoration: line-through; color: var(--green-dark); }
+
+  /* EXERCISE */
+  .exercise {
+    background: linear-gradient(135deg, rgba(52,211,153,0.05), rgba(5,150,105,0.05));
+    border: 1px solid rgba(52,211,153,0.2);
+    border-radius: 12px;
+    padding: 20px 24px;
+    margin-bottom: 20px;
+  }
+  .exercise-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.68rem;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 10px;
+  }
+  .exercise h3 {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 10px;
+  }
+  .exercise p {
+    font-size: 0.85rem;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+
+  /* FOOTER */
+  .page-footer {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 24px;
+    border-top: 1px solid var(--border);
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .page-footer a {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.78rem;
+    color: var(--muted);
+    text-decoration: none;
+    padding: 8px 16px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    transition: color 0.15s, border-color 0.15s;
+  }
+  .page-footer a:hover { color: var(--accent); border-color: rgba(52,211,153,0.3); }
+  .page-footer span {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--green-dark);
+  }
+
+  /* TOC */
+  .toc {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px 24px;
+    margin-bottom: 40px;
+  }
+  .toc-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 14px;
+  }
+  .toc a {
+    display: block;
+    font-size: 0.84rem;
+    color: var(--muted);
+    text-decoration: none;
+    padding: 5px 0;
+    border-bottom: 1px solid rgba(30,51,40,0.4);
+    transition: color 0.15s, padding-left 0.15s;
+  }
+  .toc a:last-child { border-bottom: none; }
+  .toc a:hover { color: var(--accent); padding-left: 6px; }
+  .toc a::before { content: '›  '; color: var(--green-dark); }
+</style>
+
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="home">⌂ Índice</a>
+  <span class="breadcrumb">/ Módulo 6</span>
+  <div class="nav-links">
+    <a href="modulo5.html">← Módulo 5</a>
+    <a href="modulo7.html">Módulo 7 →</a>
+  </div>
+</nav>
+
+<div class="mod-header">
+  <div class="mod-badge">MÓDULO 06</div>
+  <h1>Validación y Manejo Global de Excepciones</h1>
+  <p>Bean Validation con todas sus anotaciones y un manejador global de excepciones con @RestControllerAdvice para respuestas de error consistentes.</p>
+</div>
+<div class="content"><div class="toc"><div class="toc-title">Contenido</div><a href="#s6-1">6.1 Bean Validation</a><a href="#s6-2">6.2 Manejador global de excepciones</a></div>
+<div class="section" id="s6-1">
+  <h2 class="section-title"><span class="num">6.1</span> Bean Validation</h2>
+  
+<div class="code-block">
+  <div class="code-header">
+    <span class="code-filename">UsuarioRequest.java</span>
+    <button class="copy-btn">Copiar</button>
+  </div>
+  <pre>// UsuarioRequest.java — DTO de petición con validaciones
+public record UsuarioRequest(
+    @NotBlank(message = "El nombre es obligatorio")
+    @Size(min = 2, max = 100, message = "Entre 2 y 100 caracteres")
+    String nombre,
+
+    @NotBlank(message = "El email es obligatorio")
+    @Email(message = "Formato de email inválido")
+    String email,
+
+    @NotBlank(message = "La contraseña es obligatoria")
+    @Size(min = 8, message = "Mínimo 8 caracteres")
+    @Pattern(regexp = "^(?=.*[A-Z])(?=.*[0-9]).+$",
+             message = "Debe tener al menos una mayúscula y un número")
+    String password,
+
+    @NotNull(message = "La edad es obligatoria")
+    @Min(value = 18, message = "Debes ser mayor de edad")
+    @Max(value = 120, message = "Edad inválida")
+    Integer edad,
+
+    @Past(message = "La fecha de nacimiento debe ser en el pasado")
+    LocalDate fechaNacimiento,
+
+    @Pattern(regexp = "^\d{9}$", message = "El teléfono debe tener 9 dígitos")
+    String telefono,
+
+    @URL(message = "La URL del perfil no es válida")
+    String urlFoto
+) {}
+
+// Anotaciones de validación disponibles:
+// @NotNull       — valor no puede ser null
+// @NotBlank      — String no null, no vacío, no solo espacios
+// @NotEmpty      — String/Collection no null y no vacío
+// @Size          — longitud de String o tamaño de colección
+// @Min / @Max    — valor numérico mínimo/máximo
+// @Email         — formato email
+// @Pattern       — expresión regular
+// @Past / @Future — fechas pasadas/futuras
+// @Positive / @Negative — números positivos/negativos
+// @AssertTrue / @AssertFalse — booleano true/false</pre>
+</div>
+
+</div>
+
+<div class="section" id="s6-2">
+  <h2 class="section-title"><span class="num">6.2</span> Manejador global de excepciones</h2>
+  
+<div class="code-block">
+  <div class="code-header">
+    <span class="code-filename">GlobalExceptionHandler.java</span>
+    <button class="copy-btn">Copiar</button>
+  </div>
+  <pre>// GlobalExceptionHandler.java
+@RestControllerAdvice  // intercepta excepciones de TODOS los controladores
+public class GlobalExceptionHandler {
+
+    // ── 404: recurso no encontrado ────────────────────────────
+    @ExceptionHandler(RecursoNoEncontradoException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public Map&lt;String, Object&gt; handleNotFound(RecursoNoEncontradoException ex) {
+        return Map.of(
+            "error", "Recurso no encontrado",
+            "mensaje", ex.getMessage(),
+            "timestamp", LocalDateTime.now()
+        );
+    }
+
+    // ── 400: errores de validación (@Valid) ───────────────────
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)  // 422
+    public Map&lt;String, Object&gt; handleValidation(MethodArgumentNotValidException ex) {
+        Map&lt;String, String&gt; errores = new HashMap&lt;&gt;();
+        ex.getBindingResult().getFieldErrors().forEach(error -&gt;
+            errores.put(error.getField(), error.getDefaultMessage())
+        );
+        return Map.of(
+            "error", "Errores de validación",
+            "campos", errores,
+            "timestamp", LocalDateTime.now()
+        );
+    }
+
+    // ── 409: conflicto (email duplicado, etc.) ────────────────
+    @ExceptionHandler(ConflictoException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public Map&lt;String, Object&gt; handleConflicto(ConflictoException ex) {
+        return Map.of("error", "Conflicto", "mensaje", ex.getMessage());
+    }
+
+    // ── 403 / 401: seguridad ──────────────────────────────────
+    @ExceptionHandler(AccessDeniedException.class)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    public Map&lt;String, Object&gt; handleForbidden(AccessDeniedException ex) {
+        return Map.of("error", "Acceso denegado", "mensaje", ex.getMessage());
+    }
+
+    // ── 500: cualquier otra excepción ─────────────────────────
+    @ExceptionHandler(Exception.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public Map&lt;String, Object&gt; handleGeneral(Exception ex) {
+        // En producción: NO exponer detalles del error
+        return Map.of(
+            "error", "Error interno del servidor",
+            "mensaje", "Contacte con el administrador"
+        );
+    }
+}
+
+// ── Excepciones personalizadas ────────────────────────────────
+public class RecursoNoEncontradoException extends RuntimeException {
+    public RecursoNoEncontradoException(String recurso, Long id) {
+        super(recurso + " con id " + id + " no encontrado");
+    }
+}
+
+public class ConflictoException extends RuntimeException {
+    public ConflictoException(String mensaje) { super(mensaje); }
+}</pre>
+</div>
+
+</div>
+</div>
+<div class="page-footer">
+  <a href="modulo5.html">← Módulo 5: Spring Data JPA</a>
+  <span>Módulo 6 / 12</span>
+  <a href="modulo7.html">Módulo 7: Spring Security →</a>
+</div>
+
+<script>
+  document.querySelectorAll('.copy-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const code = btn.closest('.code-block').querySelector('pre').innerText;
+      navigator.clipboard.writeText(code).then(() => {
+        btn.textContent = '✓ Copiado';
+        btn.classList.add('copied');
+        setTimeout(() => { btn.textContent = 'Copiar'; btn.classList.remove('copied'); }, 2000);
+      });
+    });
+  });
+  // Persist checklist
+  document.querySelectorAll('.checklist-item input').forEach(cb => {
+    const key = 'cb_' + cb.id;
+    if (localStorage.getItem(key) === '1') { cb.checked = true; cb.closest('.checklist-item').classList.add('done'); }
+    cb.addEventListener('change', () => {
+      localStorage.setItem(key, cb.checked ? '1' : '0');
+      cb.closest('.checklist-item').classList.toggle('done', cb.checked);
+    });
+  });
+</script>
+
+</body>
+</html>

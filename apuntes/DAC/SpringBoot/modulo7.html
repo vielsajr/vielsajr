@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Módulo 7: Spring Security y JWT — Spring Boot 2º DAW</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    --green: #6ee7b7;
+    --green-dark: #059669;
+    --bg: #0a0f0d;
+    --bg2: #0f1a14;
+    --bg3: #142218;
+    --card: #111c16;
+    --border: #1e3328;
+    --text: #d1fae5;
+    --muted: #6b7c74;
+    --accent: #34d399;
+    --code-bg: #0d1f16;
+    --code-border: #1a3024;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Syne', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+  }
+  body::before {
+    content:'';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(52,211,153,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(52,211,153,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* NAV */
+  nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(10,15,13,0.9);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 14px 24px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  nav a.home {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--accent);
+    text-decoration: none;
+    padding: 5px 12px;
+    border: 1px solid rgba(52,211,153,0.25);
+    border-radius: 6px;
+    transition: background 0.15s;
+  }
+  nav a.home:hover { background: rgba(52,211,153,0.08); }
+  nav .breadcrumb {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--muted);
+  }
+  nav .nav-links {
+    margin-left: auto;
+    display: flex;
+    gap: 8px;
+  }
+  nav .nav-links a {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--muted);
+    text-decoration: none;
+    padding: 4px 10px;
+    border-radius: 5px;
+    transition: color 0.15s, background 0.15s;
+  }
+  nav .nav-links a:hover { color: var(--accent); background: rgba(52,211,153,0.06); }
+
+  /* HEADER */
+  .mod-header {
+    position: relative;
+    z-index: 1;
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 52px 24px 36px;
+  }
+  .mod-badge {
+    display: inline-block;
+    background: rgba(52,211,153,0.08);
+    border: 1px solid rgba(52,211,153,0.2);
+    color: var(--accent);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    padding: 4px 12px;
+    border-radius: 100px;
+    margin-bottom: 20px;
+    letter-spacing: 0.05em;
+  }
+  .mod-header h1 {
+    font-size: clamp(1.8rem, 4vw, 2.8rem);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    background: linear-gradient(135deg, #6ee7b7, #34d399);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    line-height: 1.15;
+    margin-bottom: 12px;
+  }
+  .mod-header p {
+    color: var(--muted);
+    font-size: 0.95rem;
+    line-height: 1.5;
+  }
+
+  /* CONTENT */
+  .content {
+    position: relative;
+    z-index: 1;
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 0 24px 80px;
+  }
+
+  /* SECTIONS */
+  .section {
+    margin-bottom: 48px;
+  }
+  .section-title {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 18px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .section-title span.num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--accent);
+    background: rgba(52,211,153,0.08);
+    padding: 2px 8px;
+    border-radius: 4px;
+  }
+
+  /* CODE BLOCKS */
+  .code-block {
+    background: var(--code-bg);
+    border: 1px solid var(--code-border);
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: 20px;
+  }
+  .code-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 16px;
+    background: rgba(52,211,153,0.05);
+    border-bottom: 1px solid var(--code-border);
+  }
+  .code-filename {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--accent);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .code-filename::before { content: '📄'; }
+  .copy-btn {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.68rem;
+    color: var(--muted);
+    background: none;
+    border: 1px solid var(--code-border);
+    padding: 3px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: color 0.15s, border-color 0.15s;
+  }
+  .copy-btn:hover { color: var(--accent); border-color: rgba(52,211,153,0.3); }
+  .copy-btn.copied { color: var(--accent); }
+  pre {
+    padding: 20px;
+    overflow-x: auto;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.8rem;
+    line-height: 1.7;
+    color: #a7f3d0;
+    tab-size: 2;
+  }
+  pre .cm { color: #4a7c62; font-style: italic; }  /* comment */
+  pre .kw { color: #34d399; }   /* keyword */
+  pre .an { color: #6ee7b7; font-weight: bold; }   /* annotation */
+  pre .st { color: #86efac; }   /* string */
+  pre .ty { color: #a3e635; }   /* type */
+
+  /* TABLES */
+  .table-wrap { overflow-x: auto; margin-bottom: 20px; border-radius: 12px; border: 1px solid var(--border); }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.84rem;
+  }
+  thead tr { background: rgba(52,211,153,0.06); }
+  th {
+    padding: 12px 16px;
+    text-align: left;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--accent);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+  }
+  td {
+    padding: 11px 16px;
+    border-bottom: 1px solid rgba(30,51,40,0.6);
+    color: var(--text);
+    line-height: 1.5;
+    vertical-align: top;
+  }
+  td:first-child {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--accent);
+    white-space: nowrap;
+  }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: rgba(52,211,153,0.02); }
+
+  /* INFO BOXES */
+  .info-box {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent);
+    border-radius: 10px;
+    padding: 18px 20px;
+    margin-bottom: 20px;
+    font-size: 0.87rem;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+  .info-box strong { color: var(--text); }
+  .info-box code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.8rem;
+    background: rgba(52,211,153,0.08);
+    padding: 1px 6px;
+    border-radius: 4px;
+    color: var(--accent);
+  }
+
+  /* CHECKLIST */
+  .checklist {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 20px;
+  }
+  .checklist-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(30,51,40,0.5);
+    font-size: 0.88rem;
+    color: var(--muted);
+    line-height: 1.4;
+  }
+  .checklist-item:last-child { border-bottom: none; }
+  .checklist-item input[type=checkbox] {
+    margin-top: 2px;
+    accent-color: var(--accent);
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+    cursor: pointer;
+  }
+  .checklist-item label { cursor: pointer; }
+  .checklist-item.done label { text-decoration: line-through; color: var(--green-dark); }
+
+  /* EXERCISE */
+  .exercise {
+    background: linear-gradient(135deg, rgba(52,211,153,0.05), rgba(5,150,105,0.05));
+    border: 1px solid rgba(52,211,153,0.2);
+    border-radius: 12px;
+    padding: 20px 24px;
+    margin-bottom: 20px;
+  }
+  .exercise-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.68rem;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 10px;
+  }
+  .exercise h3 {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 10px;
+  }
+  .exercise p {
+    font-size: 0.85rem;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+
+  /* FOOTER */
+  .page-footer {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 24px;
+    border-top: 1px solid var(--border);
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .page-footer a {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.78rem;
+    color: var(--muted);
+    text-decoration: none;
+    padding: 8px 16px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    transition: color 0.15s, border-color 0.15s;
+  }
+  .page-footer a:hover { color: var(--accent); border-color: rgba(52,211,153,0.3); }
+  .page-footer span {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--green-dark);
+  }
+
+  /* TOC */
+  .toc {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px 24px;
+    margin-bottom: 40px;
+  }
+  .toc-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 14px;
+  }
+  .toc a {
+    display: block;
+    font-size: 0.84rem;
+    color: var(--muted);
+    text-decoration: none;
+    padding: 5px 0;
+    border-bottom: 1px solid rgba(30,51,40,0.4);
+    transition: color 0.15s, padding-left 0.15s;
+  }
+  .toc a:last-child { border-bottom: none; }
+  .toc a:hover { color: var(--accent); padding-left: 6px; }
+  .toc a::before { content: '›  '; color: var(--green-dark); }
+</style>
+
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="home">⌂ Índice</a>
+  <span class="breadcrumb">/ Módulo 7</span>
+  <div class="nav-links">
+    <a href="modulo6.html">← Módulo 6</a>
+    <a href="modulo8.html">Módulo 8 →</a>
+  </div>
+</nav>
+
+<div class="mod-header">
+  <div class="mod-badge">MÓDULO 07</div>
+  <h1>Spring Security y JWT</h1>
+  <p>Configuración completa de Spring Security 6 con autenticación stateless, filtro JWT, generación/validación de tokens y controlador de autenticación.</p>
+</div>
+<div class="content"><div class="toc"><div class="toc-title">Contenido</div><a href="#s7-1">7.1 Configuración de seguridad</a><a href="#s7-2">7.2 JwtService — Generación y validación</a><a href="#s7-3">7.3 JwtAuthFilter</a><a href="#s7-4">7.4 AuthController</a></div>
+<div class="section" id="s7-1">
+  <h2 class="section-title"><span class="num">7.1</span> Configuración de seguridad</h2>
+  
+<div class="code-block">
+  <div class="code-header">
+    <span class="code-filename">SecurityConfig.java</span>
+    <button class="copy-btn">Copiar</button>
+  </div>
+  <pre>// SecurityConfig.java — Configuración Spring Security 6
+@Configuration
+@EnableWebSecurity
+@EnableMethodSecurity  // habilita @PreAuthorize, @PostAuthorize
+@RequiredArgsConstructor
+public class SecurityConfig {
+
+    private final JwtAuthFilter jwtAuthFilter;
+    private final UserDetailsServiceImpl userDetailsService;
+
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        return http
+            .csrf(csrf -&gt; csrf.disable())  // deshabilitar CSRF (usamos JWT)
+            .sessionManagement(s -&gt; s
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS))  // sin sesión
+            .authorizeHttpRequests(auth -&gt; auth
+                // Rutas públicas
+                .requestMatchers("/api/auth/**").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/productos/**").permitAll()
+                // Solo ADMIN
+                .requestMatchers("/api/admin/**").hasRole("ADMIN")
+                // Cualquier usuario autenticado
+                .anyRequest().authenticated()
+            )
+            // Añadir filtro JWT ANTES del filtro de usuario/contraseña
+            .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
+            .build();
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder(12);  // coste 12 (más seguro, más lento)
+    }
+
+    @Bean
+    public AuthenticationManager authManager(AuthenticationConfiguration config)
+            throws Exception {
+        return config.getAuthenticationManager();
+    }
+}</pre>
+</div>
+
+</div>
+
+<div class="section" id="s7-2">
+  <h2 class="section-title"><span class="num">7.2</span> JWT — Generación y validación</h2>
+  
+<div class="code-block">
+  <div class="code-header">
+    <span class="code-filename">JwtService.java</span>
+    <button class="copy-btn">Copiar</button>
+  </div>
+  <pre>// JwtService.java — Gestión de tokens JWT
+@Service
+public class JwtService {
+
+    @Value("${app.jwt.secret}")
+    private String secretKey;
+
+    @Value("${app.jwt.expiration}")
+    private long expirationMs;
+
+    // ── Generar token ──────────────────────────────────────────
+    public String generarToken(UserDetails userDetails) {
+        Map&lt;String, Object&gt; claims = new HashMap&lt;&gt;();
+        claims.put("roles", userDetails.getAuthorities().stream()
+            .map(GrantedAuthority::getAuthority).toList());
+        return generarToken(claims, userDetails.getUsername());
+    }
+
+    private String generarToken(Map&lt;String, Object&gt; claims, String subject) {
+        return Jwts.builder()
+            .claims(claims)
+            .subject(subject)
+            .issuedAt(new Date())
+            .expiration(new Date(System.currentTimeMillis() + expirationMs))
+            .signWith(getSigningKey())
+            .compact();
+    }
+
+    // ── Extraer email del token ────────────────────────────────
+    public String extraerEmail(String token) {
+        return extraerClaim(token, Claims::getSubject);
+    }
+
+    // ── Validar token ─────────────────────────────────────────
+    public boolean esValido(String token, UserDetails user) {
+        final String email = extraerEmail(token);
+        return email.equals(user.getUsername()) &amp;&amp; !estaExpirado(token);
+    }
+
+    private boolean estaExpirado(String token) {
+        return extraerClaim(token, Claims::getExpiration).before(new Date());
+    }
+
+    private &lt;T&gt; T extraerClaim(String token, Function&lt;Claims, T&gt; resolver) {
+        return resolver.apply(Jwts.parser()
+            .verifyWith(getSigningKey()).build()
+            .parseSignedClaims(token).getPayload());
+    }
+
+    private SecretKey getSigningKey() {
+        return Keys.hmacShaKeyFor(Decoders.BASE64.decode(secretKey));
+    }
+}</pre>
+</div>
+
+</div>
+
+<div class="section" id="s7-3">
+  <h2 class="section-title"><span class="num">7.3</span> JwtAuthFilter</h2>
+  
+<div class="code-block">
+  <div class="code-header">
+    <span class="code-filename">JwtAuthFilter.java</span>
+    <button class="copy-btn">Copiar</button>
+  </div>
+  <pre>// JwtAuthFilter.java — Filtro que valida el JWT en cada petición
+@Component
+@RequiredArgsConstructor
+public class JwtAuthFilter extends OncePerRequestFilter {
+
+    private final JwtService jwtService;
+    private final UserDetailsServiceImpl userDetailsService;
+
+    @Override
+    protected void doFilterInternal(
+            HttpServletRequest request, HttpServletResponse response,
+            FilterChain filterChain) throws ServletException, IOException {
+
+        final String authHeader = request.getHeader("Authorization");
+
+        // Si no hay token o no empieza por 'Bearer ', continuar sin autenticar
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
+        final String token = authHeader.substring(7);  // quitar 'Bearer '
+        final String email;
+        try {
+            email = jwtService.extraerEmail(token);
+        } catch (JwtException e) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
+        // Si no está autenticado en el contexto de seguridad
+        if (email != null &amp;&amp; SecurityContextHolder.getContext().getAuthentication() == null) {
+            UserDetails user = userDetailsService.loadUserByUsername(email);
+            if (jwtService.esValido(token, user)) {
+                UsernamePasswordAuthenticationToken authToken =
+                    new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
+                authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                SecurityContextHolder.getContext().setAuthentication(authToken);
+            }
+        }
+        filterChain.doFilter(request, response);
+    }
+}</pre>
+</div>
+
+</div>
+
+<div class="section" id="s7-4">
+  <h2 class="section-title"><span class="num">7.4</span> AuthController — Login y registro</h2>
+  
+<div class="code-block">
+  <div class="code-header">
+    <span class="code-filename">AuthController.java</span>
+    <button class="copy-btn">Copiar</button>
+  </div>
+  <pre>// AuthController.java — Login y registro
+@RestController
+@RequestMapping("/api/auth")
+@RequiredArgsConstructor
+public class AuthController {
+
+    private final AuthenticationManager authManager;
+    private final UserDetailsServiceImpl userDetailsService;
+    private final JwtService jwtService;
+    private final UsuarioService usuarioService;
+
+    @PostMapping("/login")
+    public ResponseEntity&lt;AuthResponse&gt; login(@Valid @RequestBody LoginRequest request) {
+        // 1. Autenticar (lanza BadCredentialsException si falla)
+        authManager.authenticate(
+            new UsernamePasswordAuthenticationToken(request.email(), request.password())
+        );
+        // 2. Cargar el usuario
+        UserDetails user = userDetailsService.loadUserByUsername(request.email());
+        // 3. Generar token
+        String token = jwtService.generarToken(user);
+        return ResponseEntity.ok(new AuthResponse(token, "Bearer", 86400));
+    }
+
+    @PostMapping("/registro")
+    public ResponseEntity&lt;UsuarioDTO&gt; registro(@Valid @RequestBody UsuarioRequest req) {
+        UsuarioDTO creado = usuarioService.crear(req);
+        return ResponseEntity.status(HttpStatus.CREATED).body(creado);
+    }
+}
+
+public record LoginRequest(
+    @NotBlank @Email String email,
+    @NotBlank String password
+) {}
+
+public record AuthResponse(String token, String tipo, long expiresIn) {}</pre>
+</div>
+
+</div>
+</div>
+<div class="page-footer">
+  <a href="modulo6.html">← Módulo 6: Validación</a>
+  <span>Módulo 7 / 12</span>
+  <a href="modulo8.html">Módulo 8: Thymeleaf →</a>
+</div>
+
+<script>
+  document.querySelectorAll('.copy-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const code = btn.closest('.code-block').querySelector('pre').innerText;
+      navigator.clipboard.writeText(code).then(() => {
+        btn.textContent = '✓ Copiado';
+        btn.classList.add('copied');
+        setTimeout(() => { btn.textContent = 'Copiar'; btn.classList.remove('copied'); }, 2000);
+      });
+    });
+  });
+  // Persist checklist
+  document.querySelectorAll('.checklist-item input').forEach(cb => {
+    const key = 'cb_' + cb.id;
+    if (localStorage.getItem(key) === '1') { cb.checked = true; cb.closest('.checklist-item').classList.add('done'); }
+    cb.addEventListener('change', () => {
+      localStorage.setItem(key, cb.checked ? '1' : '0');
+      cb.closest('.checklist-item').classList.toggle('done', cb.checked);
+    });
+  });
+</script>
+
+</body>
+</html>

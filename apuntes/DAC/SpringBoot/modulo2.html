@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Módulo 2: Spring Core: IoC, DI y Beans — Spring Boot 2º DAW</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    --green: #6ee7b7;
+    --green-dark: #059669;
+    --bg: #0a0f0d;
+    --bg2: #0f1a14;
+    --bg3: #142218;
+    --card: #111c16;
+    --border: #1e3328;
+    --text: #d1fae5;
+    --muted: #6b7c74;
+    --accent: #34d399;
+    --code-bg: #0d1f16;
+    --code-border: #1a3024;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Syne', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+  }
+  body::before {
+    content:'';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(52,211,153,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(52,211,153,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* NAV */
+  nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(10,15,13,0.9);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 14px 24px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  nav a.home {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--accent);
+    text-decoration: none;
+    padding: 5px 12px;
+    border: 1px solid rgba(52,211,153,0.25);
+    border-radius: 6px;
+    transition: background 0.15s;
+  }
+  nav a.home:hover { background: rgba(52,211,153,0.08); }
+  nav .breadcrumb {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--muted);
+  }
+  nav .nav-links {
+    margin-left: auto;
+    display: flex;
+    gap: 8px;
+  }
+  nav .nav-links a {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--muted);
+    text-decoration: none;
+    padding: 4px 10px;
+    border-radius: 5px;
+    transition: color 0.15s, background 0.15s;
+  }
+  nav .nav-links a:hover { color: var(--accent); background: rgba(52,211,153,0.06); }
+
+  /* HEADER */
+  .mod-header {
+    position: relative;
+    z-index: 1;
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 52px 24px 36px;
+  }
+  .mod-badge {
+    display: inline-block;
+    background: rgba(52,211,153,0.08);
+    border: 1px solid rgba(52,211,153,0.2);
+    color: var(--accent);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    padding: 4px 12px;
+    border-radius: 100px;
+    margin-bottom: 20px;
+    letter-spacing: 0.05em;
+  }
+  .mod-header h1 {
+    font-size: clamp(1.8rem, 4vw, 2.8rem);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    background: linear-gradient(135deg, #6ee7b7, #34d399);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    line-height: 1.15;
+    margin-bottom: 12px;
+  }
+  .mod-header p {
+    color: var(--muted);
+    font-size: 0.95rem;
+    line-height: 1.5;
+  }
+
+  /* CONTENT */
+  .content {
+    position: relative;
+    z-index: 1;
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 0 24px 80px;
+  }
+
+  /* SECTIONS */
+  .section {
+    margin-bottom: 48px;
+  }
+  .section-title {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 18px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .section-title span.num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--accent);
+    background: rgba(52,211,153,0.08);
+    padding: 2px 8px;
+    border-radius: 4px;
+  }
+
+  /* CODE BLOCKS */
+  .code-block {
+    background: var(--code-bg);
+    border: 1px solid var(--code-border);
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: 20px;
+  }
+  .code-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 16px;
+    background: rgba(52,211,153,0.05);
+    border-bottom: 1px solid var(--code-border);
+  }
+  .code-filename {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--accent);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .code-filename::before { content: '📄'; }
+  .copy-btn {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.68rem;
+    color: var(--muted);
+    background: none;
+    border: 1px solid var(--code-border);
+    padding: 3px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: color 0.15s, border-color 0.15s;
+  }
+  .copy-btn:hover { color: var(--accent); border-color: rgba(52,211,153,0.3); }
+  .copy-btn.copied { color: var(--accent); }
+  pre {
+    padding: 20px;
+    overflow-x: auto;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.8rem;
+    line-height: 1.7;
+    color: #a7f3d0;
+    tab-size: 2;
+  }
+  pre .cm { color: #4a7c62; font-style: italic; }  /* comment */
+  pre .kw { color: #34d399; }   /* keyword */
+  pre .an { color: #6ee7b7; font-weight: bold; }   /* annotation */
+  pre .st { color: #86efac; }   /* string */
+  pre .ty { color: #a3e635; }   /* type */
+
+  /* TABLES */
+  .table-wrap { overflow-x: auto; margin-bottom: 20px; border-radius: 12px; border: 1px solid var(--border); }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.84rem;
+  }
+  thead tr { background: rgba(52,211,153,0.06); }
+  th {
+    padding: 12px 16px;
+    text-align: left;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--accent);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+  }
+  td {
+    padding: 11px 16px;
+    border-bottom: 1px solid rgba(30,51,40,0.6);
+    color: var(--text);
+    line-height: 1.5;
+    vertical-align: top;
+  }
+  td:first-child {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--accent);
+    white-space: nowrap;
+  }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: rgba(52,211,153,0.02); }
+
+  /* INFO BOXES */
+  .info-box {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent);
+    border-radius: 10px;
+    padding: 18px 20px;
+    margin-bottom: 20px;
+    font-size: 0.87rem;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+  .info-box strong { color: var(--text); }
+  .info-box code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.8rem;
+    background: rgba(52,211,153,0.08);
+    padding: 1px 6px;
+    border-radius: 4px;
+    color: var(--accent);
+  }
+
+  /* CHECKLIST */
+  .checklist {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 20px;
+  }
+  .checklist-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(30,51,40,0.5);
+    font-size: 0.88rem;
+    color: var(--muted);
+    line-height: 1.4;
+  }
+  .checklist-item:last-child { border-bottom: none; }
+  .checklist-item input[type=checkbox] {
+    margin-top: 2px;
+    accent-color: var(--accent);
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+    cursor: pointer;
+  }
+  .checklist-item label { cursor: pointer; }
+  .checklist-item.done label { text-decoration: line-through; color: var(--green-dark); }
+
+  /* EXERCISE */
+  .exercise {
+    background: linear-gradient(135deg, rgba(52,211,153,0.05), rgba(5,150,105,0.05));
+    border: 1px solid rgba(52,211,153,0.2);
+    border-radius: 12px;
+    padding: 20px 24px;
+    margin-bottom: 20px;
+  }
+  .exercise-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.68rem;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 10px;
+  }
+  .exercise h3 {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 10px;
+  }
+  .exercise p {
+    font-size: 0.85rem;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+
+  /* FOOTER */
+  .page-footer {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 24px;
+    border-top: 1px solid var(--border);
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .page-footer a {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.78rem;
+    color: var(--muted);
+    text-decoration: none;
+    padding: 8px 16px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    transition: color 0.15s, border-color 0.15s;
+  }
+  .page-footer a:hover { color: var(--accent); border-color: rgba(52,211,153,0.3); }
+  .page-footer span {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--green-dark);
+  }
+
+  /* TOC */
+  .toc {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px 24px;
+    margin-bottom: 40px;
+  }
+  .toc-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 14px;
+  }
+  .toc a {
+    display: block;
+    font-size: 0.84rem;
+    color: var(--muted);
+    text-decoration: none;
+    padding: 5px 0;
+    border-bottom: 1px solid rgba(30,51,40,0.4);
+    transition: color 0.15s, padding-left 0.15s;
+  }
+  .toc a:last-child { border-bottom: none; }
+  .toc a:hover { color: var(--accent); padding-left: 6px; }
+  .toc a::before { content: '›  '; color: var(--green-dark); }
+</style>
+
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="home">⌂ Índice</a>
+  <span class="breadcrumb">/ Módulo 2</span>
+  <div class="nav-links">
+    <a href="modulo1.html">← Módulo 1</a>
+    <a href="modulo3.html">Módulo 3 →</a>
+  </div>
+</nav>
+
+<div class="mod-header">
+  <div class="mod-badge">MÓDULO 02</div>
+  <h1>Spring Core: IoC, DI y Beans</h1>
+  <p>Inversión de Control, Dependency Injection y las anotaciones esenciales que gobiernan el contenedor de Spring.</p>
+</div>
+<div class="content"><div class="toc"><div class="toc-title">Contenido</div><a href="#s2-1">2.1 IoC y Dependency Injection</a><a href="#s2-2">2.2 Anotaciones esenciales de Spring</a></div>
+<div class="section" id="s2-1">
+  <h2 class="section-title"><span class="num">2.1</span> Inversión de Control y Dependency Injection</h2>
+  <div class="info-box">Spring gestiona la creación y ciclo de vida de los objetos (beans). En lugar de crear dependencias con <code>new</code>, se las pedimos a Spring. Esto facilita el testing y el desacoplamiento.</div>
+<div class="code-block">
+  <div class="code-header">
+    <span class="code-filename">DependencyInjection.java</span>
+    <button class="copy-btn">Copiar</button>
+  </div>
+  <pre>// ── Formas de inyección de dependencias ────────────────────────
+
+// 1. INYECCIÓN POR CONSTRUCTOR (RECOMENDADA) ──────────────────
+@Service
+public class UsuarioService {
+    private final UsuarioRepository repo;   // final → inmutable
+    private final EmailService emailService;
+
+    // Si hay un solo constructor, @Autowired es opcional
+    public UsuarioService(UsuarioRepository repo, EmailService emailService) {
+        this.repo = repo;
+        this.emailService = emailService;
+    }
+}
+
+// 2. INYECCIÓN POR CAMPO (más simple pero no recomendada en producción)
+@Service
+public class UsuarioService {
+    @Autowired
+    private UsuarioRepository repo;  // Spring inyecta aquí
+}
+
+// 3. INYECCIÓN POR SETTER
+@Service
+public class UsuarioService {
+    private UsuarioRepository repo;
+
+    @Autowired
+    public void setRepo(UsuarioRepository repo) { this.repo = repo; }
+}
+
+// ── Con Lombok (@RequiredArgsConstructor) ──────────────────────
+@Service
+@RequiredArgsConstructor  // genera constructor para campos 'final'
+public class UsuarioService {
+    private final UsuarioRepository repo;
+    private final EmailService emailService;
+    // Spring inyecta automáticamente por el constructor generado
+}</pre>
+</div>
+
+</div>
+
+<div class="section" id="s2-2">
+  <h2 class="section-title"><span class="num">2.2</span> Anotaciones esenciales de Spring</h2>
+  
+<div class="table-wrap">
+<table>
+<thead><tr><th>Anotación</th><th>Descripción</th></tr></thead>
+<tbody><tr><td>@SpringBootApplication</td><td>Punto de entrada. Combina @Configuration + @ComponentScan + @EnableAutoConfiguration</td></tr><tr><td>@Component</td><td>Marca una clase como Bean gestionado por Spring (genérico)</td></tr><tr><td>@Service</td><td>Bean de capa de servicio — lógica de negocio</td></tr><tr><td>@Repository</td><td>Bean de acceso a datos — traduce excepciones a DataAccessException</td></tr><tr><td>@Controller</td><td>Bean de controlador MVC — devuelve vistas</td></tr><tr><td>@RestController</td><td>@Controller + @ResponseBody — devuelve datos (JSON) directamente</td></tr><tr><td>@Configuration</td><td>Clase de configuración — equivale a un XML de Spring</td></tr><tr><td>@Bean</td><td>Método que produce un Bean gestionado por Spring (dentro de @Configuration)</td></tr><tr><td>@Autowired</td><td>Inyección de dependencia automática por tipo</td></tr><tr><td>@Qualifier("nombre")</td><td>Seleccionar qué bean inyectar cuando hay varios del mismo tipo</td></tr><tr><td>@Value("${prop}")</td><td>Inyectar valor de application.properties</td></tr><tr><td>@Profile("dev")</td><td>El bean solo se crea en el perfil indicado</td></tr><tr><td>@Scope("prototype")</td><td>Ámbito del bean: singleton (defecto), prototype, request, session</td></tr><tr><td>@Primary</td><td>Bean preferido cuando hay varios candidatos para una inyección</td></tr><tr><td>@Lazy</td><td>El bean se crea cuando se usa por primera vez (no al arrancar)</td></tr></tbody>
+</table>
+</div>
+
+</div>
+</div>
+<div class="page-footer">
+  <a href="modulo1.html">← Módulo 1: Fundamentos</a>
+  <span>Módulo 2 / 12</span>
+  <a href="modulo3.html">Módulo 3: Spring MVC →</a>
+</div>
+
+<script>
+  document.querySelectorAll('.copy-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const code = btn.closest('.code-block').querySelector('pre').innerText;
+      navigator.clipboard.writeText(code).then(() => {
+        btn.textContent = '✓ Copiado';
+        btn.classList.add('copied');
+        setTimeout(() => { btn.textContent = 'Copiar'; btn.classList.remove('copied'); }, 2000);
+      });
+    });
+  });
+  // Persist checklist
+  document.querySelectorAll('.checklist-item input').forEach(cb => {
+    const key = 'cb_' + cb.id;
+    if (localStorage.getItem(key) === '1') { cb.checked = true; cb.closest('.checklist-item').classList.add('done'); }
+    cb.addEventListener('change', () => {
+      localStorage.setItem(key, cb.checked ? '1' : '0');
+      cb.closest('.checklist-item').classList.toggle('done', cb.checked);
+    });
+  });
+</script>
+
+</body>
+</html>

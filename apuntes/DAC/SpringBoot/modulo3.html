@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Módulo 3: Spring MVC: Controladores REST — Spring Boot 2º DAW</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    --green: #6ee7b7;
+    --green-dark: #059669;
+    --bg: #0a0f0d;
+    --bg2: #0f1a14;
+    --bg3: #142218;
+    --card: #111c16;
+    --border: #1e3328;
+    --text: #d1fae5;
+    --muted: #6b7c74;
+    --accent: #34d399;
+    --code-bg: #0d1f16;
+    --code-border: #1a3024;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Syne', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+  }
+  body::before {
+    content:'';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(52,211,153,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(52,211,153,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* NAV */
+  nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(10,15,13,0.9);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 14px 24px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  nav a.home {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--accent);
+    text-decoration: none;
+    padding: 5px 12px;
+    border: 1px solid rgba(52,211,153,0.25);
+    border-radius: 6px;
+    transition: background 0.15s;
+  }
+  nav a.home:hover { background: rgba(52,211,153,0.08); }
+  nav .breadcrumb {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--muted);
+  }
+  nav .nav-links {
+    margin-left: auto;
+    display: flex;
+    gap: 8px;
+  }
+  nav .nav-links a {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--muted);
+    text-decoration: none;
+    padding: 4px 10px;
+    border-radius: 5px;
+    transition: color 0.15s, background 0.15s;
+  }
+  nav .nav-links a:hover { color: var(--accent); background: rgba(52,211,153,0.06); }
+
+  /* HEADER */
+  .mod-header {
+    position: relative;
+    z-index: 1;
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 52px 24px 36px;
+  }
+  .mod-badge {
+    display: inline-block;
+    background: rgba(52,211,153,0.08);
+    border: 1px solid rgba(52,211,153,0.2);
+    color: var(--accent);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    padding: 4px 12px;
+    border-radius: 100px;
+    margin-bottom: 20px;
+    letter-spacing: 0.05em;
+  }
+  .mod-header h1 {
+    font-size: clamp(1.8rem, 4vw, 2.8rem);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    background: linear-gradient(135deg, #6ee7b7, #34d399);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    line-height: 1.15;
+    margin-bottom: 12px;
+  }
+  .mod-header p {
+    color: var(--muted);
+    font-size: 0.95rem;
+    line-height: 1.5;
+  }
+
+  /* CONTENT */
+  .content {
+    position: relative;
+    z-index: 1;
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 0 24px 80px;
+  }
+
+  /* SECTIONS */
+  .section {
+    margin-bottom: 48px;
+  }
+  .section-title {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 18px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .section-title span.num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--accent);
+    background: rgba(52,211,153,0.08);
+    padding: 2px 8px;
+    border-radius: 4px;
+  }
+
+  /* CODE BLOCKS */
+  .code-block {
+    background: var(--code-bg);
+    border: 1px solid var(--code-border);
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: 20px;
+  }
+  .code-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 16px;
+    background: rgba(52,211,153,0.05);
+    border-bottom: 1px solid var(--code-border);
+  }
+  .code-filename {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--accent);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .code-filename::before { content: '📄'; }
+  .copy-btn {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.68rem;
+    color: var(--muted);
+    background: none;
+    border: 1px solid var(--code-border);
+    padding: 3px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: color 0.15s, border-color 0.15s;
+  }
+  .copy-btn:hover { color: var(--accent); border-color: rgba(52,211,153,0.3); }
+  .copy-btn.copied { color: var(--accent); }
+  pre {
+    padding: 20px;
+    overflow-x: auto;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.8rem;
+    line-height: 1.7;
+    color: #a7f3d0;
+    tab-size: 2;
+  }
+  pre .cm { color: #4a7c62; font-style: italic; }  /* comment */
+  pre .kw { color: #34d399; }   /* keyword */
+  pre .an { color: #6ee7b7; font-weight: bold; }   /* annotation */
+  pre .st { color: #86efac; }   /* string */
+  pre .ty { color: #a3e635; }   /* type */
+
+  /* TABLES */
+  .table-wrap { overflow-x: auto; margin-bottom: 20px; border-radius: 12px; border: 1px solid var(--border); }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.84rem;
+  }
+  thead tr { background: rgba(52,211,153,0.06); }
+  th {
+    padding: 12px 16px;
+    text-align: left;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--accent);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+  }
+  td {
+    padding: 11px 16px;
+    border-bottom: 1px solid rgba(30,51,40,0.6);
+    color: var(--text);
+    line-height: 1.5;
+    vertical-align: top;
+  }
+  td:first-child {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--accent);
+    white-space: nowrap;
+  }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: rgba(52,211,153,0.02); }
+
+  /* INFO BOXES */
+  .info-box {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent);
+    border-radius: 10px;
+    padding: 18px 20px;
+    margin-bottom: 20px;
+    font-size: 0.87rem;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+  .info-box strong { color: var(--text); }
+  .info-box code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.8rem;
+    background: rgba(52,211,153,0.08);
+    padding: 1px 6px;
+    border-radius: 4px;
+    color: var(--accent);
+  }
+
+  /* CHECKLIST */
+  .checklist {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 20px;
+  }
+  .checklist-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(30,51,40,0.5);
+    font-size: 0.88rem;
+    color: var(--muted);
+    line-height: 1.4;
+  }
+  .checklist-item:last-child { border-bottom: none; }
+  .checklist-item input[type=checkbox] {
+    margin-top: 2px;
+    accent-color: var(--accent);
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+    cursor: pointer;
+  }
+  .checklist-item label { cursor: pointer; }
+  .checklist-item.done label { text-decoration: line-through; color: var(--green-dark); }
+
+  /* EXERCISE */
+  .exercise {
+    background: linear-gradient(135deg, rgba(52,211,153,0.05), rgba(5,150,105,0.05));
+    border: 1px solid rgba(52,211,153,0.2);
+    border-radius: 12px;
+    padding: 20px 24px;
+    margin-bottom: 20px;
+  }
+  .exercise-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.68rem;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 10px;
+  }
+  .exercise h3 {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 10px;
+  }
+  .exercise p {
+    font-size: 0.85rem;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+
+  /* FOOTER */
+  .page-footer {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 24px;
+    border-top: 1px solid var(--border);
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .page-footer a {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.78rem;
+    color: var(--muted);
+    text-decoration: none;
+    padding: 8px 16px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    transition: color 0.15s, border-color 0.15s;
+  }
+  .page-footer a:hover { color: var(--accent); border-color: rgba(52,211,153,0.3); }
+  .page-footer span {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--green-dark);
+  }
+
+  /* TOC */
+  .toc {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px 24px;
+    margin-bottom: 40px;
+  }
+  .toc-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 14px;
+  }
+  .toc a {
+    display: block;
+    font-size: 0.84rem;
+    color: var(--muted);
+    text-decoration: none;
+    padding: 5px 0;
+    border-bottom: 1px solid rgba(30,51,40,0.4);
+    transition: color 0.15s, padding-left 0.15s;
+  }
+  .toc a:last-child { border-bottom: none; }
+  .toc a:hover { color: var(--accent); padding-left: 6px; }
+  .toc a::before { content: '›  '; color: var(--green-dark); }
+</style>
+
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="home">⌂ Índice</a>
+  <span class="breadcrumb">/ Módulo 3</span>
+  <div class="nav-links">
+    <a href="modulo2.html">← Módulo 2</a>
+    <a href="modulo4.html">Módulo 4 →</a>
+  </div>
+</nav>
+
+<div class="mod-header">
+  <div class="mod-badge">MÓDULO 03</div>
+  <h1>Spring MVC: Controladores REST</h1>
+  <p>Controlador REST completo con todos los métodos HTTP, anotaciones de mapeo, parámetros y control de respuestas con ResponseEntity.</p>
+</div>
+<div class="content"><div class="toc"><div class="toc-title">Contenido</div><a href="#s3-1">3.1 Controlador REST completo</a><a href="#s3-2">3.2 Anotaciones de mapeo y parámetros</a><a href="#s3-3">3.3 ResponseEntity y códigos HTTP</a></div>
+<div class="section" id="s3-1">
+  <h2 class="section-title"><span class="num">3.1</span> Controlador REST completo</h2>
+  
+<div class="code-block">
+  <div class="code-header">
+    <span class="code-filename">UsuarioController.java</span>
+    <button class="copy-btn">Copiar</button>
+  </div>
+  <pre>// UsuarioController.java — REST API completa
+@RestController
+@RequestMapping("/api/usuarios")
+@RequiredArgsConstructor
+public class UsuarioController {
+
+    private final UsuarioService usuarioService;
+
+    // ── GET /api/usuarios ─────────────────────────────────────
+    @GetMapping
+    public ResponseEntity&lt;Page&lt;UsuarioDTO&gt;&gt; listar(
+            @RequestParam(defaultValue="0") int page,
+            @RequestParam(defaultValue="20") int size,
+            @RequestParam(defaultValue="nombre") String sort) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sort));
+        return ResponseEntity.ok(usuarioService.listarTodos(pageable));
+    }
+
+    // ── GET /api/usuarios/1 ───────────────────────────────────
+    @GetMapping("/{id}")
+    public ResponseEntity&lt;UsuarioDTO&gt; obtener(@PathVariable Long id) {
+        return ResponseEntity.ok(usuarioService.obtenerPorId(id));
+    }
+
+    // ── POST /api/usuarios ────────────────────────────────────
+    @PostMapping
+    public ResponseEntity&lt;UsuarioDTO&gt; crear(
+            @Valid @RequestBody UsuarioRequest request) {
+        UsuarioDTO creado = usuarioService.crear(request);
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest()
+            .path("/{id}").buildAndExpand(creado.id()).toUri();
+        return ResponseEntity.created(location).body(creado);
+    }
+
+    // ── PUT /api/usuarios/1 ───────────────────────────────────
+    @PutMapping("/{id}")
+    public ResponseEntity&lt;UsuarioDTO&gt; actualizar(
+            @PathVariable Long id,
+            @Valid @RequestBody UsuarioRequest request) {
+        return ResponseEntity.ok(usuarioService.actualizar(id, request));
+    }
+
+    // ── PATCH /api/usuarios/1 ────────────────────────────────
+    @PatchMapping("/{id}")
+    public ResponseEntity&lt;UsuarioDTO&gt; patchear(
+            @PathVariable Long id,
+            @RequestBody Map&lt;String, Object&gt; cambios) {
+        return ResponseEntity.ok(usuarioService.patchear(id, cambios));
+    }
+
+    // ── DELETE /api/usuarios/1 ───────────────────────────────
+    @DeleteMapping("/{id}")
+    public ResponseEntity&lt;Void&gt; eliminar(@PathVariable Long id) {
+        usuarioService.eliminar(id);
+        return ResponseEntity.noContent().build();  // 204
+    }
+
+    // ── GET /api/usuarios/buscar?nombre=ana&amp;email=... ──────────
+    @GetMapping("/buscar")
+    public ResponseEntity&lt;List&lt;UsuarioDTO&gt;&gt; buscar(
+            @RequestParam(required=false) String nombre,
+            @RequestParam(required=false) String email) {
+        return ResponseEntity.ok(usuarioService.buscar(nombre, email));
+    }
+}</pre>
+</div>
+
+</div>
+
+<div class="section" id="s3-2">
+  <h2 class="section-title"><span class="num">3.2</span> Anotaciones de mapeo y parámetros</h2>
+  
+<div class="table-wrap">
+<table>
+<thead><tr><th>Anotación</th><th>Descripción</th></tr></thead>
+<tbody><tr><td>@GetMapping("/ruta")</td><td>Mapea peticiones GET</td></tr><tr><td>@PostMapping("/ruta")</td><td>Mapea peticiones POST</td></tr><tr><td>@PutMapping("/ruta")</td><td>Mapea peticiones PUT</td></tr><tr><td>@PatchMapping("/ruta")</td><td>Mapea peticiones PATCH</td></tr><tr><td>@DeleteMapping("/ruta")</td><td>Mapea peticiones DELETE</td></tr><tr><td>@RequestMapping("/base")</td><td>Prefijo de ruta para toda la clase</td></tr><tr><td>@PathVariable</td><td>Extrae variable de la URL: /usuarios/{id}</td></tr><tr><td>@RequestParam</td><td>Extrae parámetro de query string: ?page=2</td></tr><tr><td>@RequestBody</td><td>Deserializa el body JSON a objeto Java</td></tr><tr><td>@RequestHeader</td><td>Extrae cabecera HTTP: @RequestHeader("Authorization")</td></tr><tr><td>@CookieValue</td><td>Extrae valor de una cookie</td></tr><tr><td>@Valid / @Validated</td><td>Activa la validación del objeto anotado (Bean Validation)</td></tr><tr><td>ResponseEntity<T></td><td>Permite controlar código de estado, cabeceras y cuerpo</td></tr><tr><td>@ResponseStatus(HttpStatus.CREATED)</td><td>Establece el código HTTP de la respuesta</td></tr><tr><td>@CrossOrigin</td><td>Habilita CORS para ese controlador o método</td></tr></tbody>
+</table>
+</div>
+
+</div>
+
+<div class="section" id="s3-3">
+  <h2 class="section-title"><span class="num">3.3</span> ResponseEntity y códigos HTTP</h2>
+  
+<div class="code-block">
+  <div class="code-header">
+    <span class="code-filename">ResponseEntityEjemplos.java</span>
+    <button class="copy-btn">Copiar</button>
+  </div>
+  <pre>// ResponseEntity: control total sobre la respuesta HTTP
+
+// 200 OK con cuerpo
+return ResponseEntity.ok(datos);
+
+// 201 Created con Location header
+return ResponseEntity.created(uri).body(creado);
+
+// 204 No Content (para DELETE exitoso)
+return ResponseEntity.noContent().build();
+
+// 400 Bad Request
+return ResponseEntity.badRequest().body(Map.of("error", "Datos inválidos"));
+
+// 404 Not Found
+return ResponseEntity.notFound().build();
+
+// Personalizado con código arbitrario
+return ResponseEntity.status(HttpStatus.ACCEPTED).body(datos);
+return ResponseEntity.status(429).body(Map.of("error", "Too many requests"));
+
+// Con cabeceras personalizadas
+HttpHeaders headers = new HttpHeaders();
+headers.add("X-Total-Count", String.valueOf(total));
+return ResponseEntity.ok().headers(headers).body(lista);</pre>
+</div>
+
+</div>
+</div>
+<div class="page-footer">
+  <a href="modulo2.html">← Módulo 2: Spring Core</a>
+  <span>Módulo 3 / 12</span>
+  <a href="modulo4.html">Módulo 4: JPA & Hibernate →</a>
+</div>
+
+<script>
+  document.querySelectorAll('.copy-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const code = btn.closest('.code-block').querySelector('pre').innerText;
+      navigator.clipboard.writeText(code).then(() => {
+        btn.textContent = '✓ Copiado';
+        btn.classList.add('copied');
+        setTimeout(() => { btn.textContent = 'Copiar'; btn.classList.remove('copied'); }, 2000);
+      });
+    });
+  });
+  // Persist checklist
+  document.querySelectorAll('.checklist-item input').forEach(cb => {
+    const key = 'cb_' + cb.id;
+    if (localStorage.getItem(key) === '1') { cb.checked = true; cb.closest('.checklist-item').classList.add('done'); }
+    cb.addEventListener('change', () => {
+      localStorage.setItem(key, cb.checked ? '1' : '0');
+      cb.closest('.checklist-item').classList.toggle('done', cb.checked);
+    });
+  });
+</script>
+
+</body>
+</html>
