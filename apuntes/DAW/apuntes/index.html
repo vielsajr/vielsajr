@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Docker — Apuntes 2º DAW</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{--acc:#fbbf24;--acc2:#f59e0b;--acc3:#d97706;--bg:#0d0c07;--bg3:#1a1806;--card:#131105;--border:#2a2508;--text:#fef9e7;--muted:#7a7040;}
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:'Syne',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;}
+  body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(251,191,36,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(251,191,36,0.04) 1px,transparent 1px);background-size:40px 40px;pointer-events:none;z-index:0;}
+  .hero{position:relative;z-index:1;text-align:center;padding:80px 20px 60px;max-width:900px;margin:0 auto;}
+  .badge{display:inline-block;background:rgba(251,191,36,0.1);border:1px solid rgba(251,191,36,0.3);color:var(--acc);font-family:'JetBrains Mono',monospace;font-size:.75rem;padding:6px 14px;border-radius:100px;margin-bottom:28px;letter-spacing:.05em;}
+  .hero h1{font-size:clamp(2.5rem,6vw,4.5rem);font-weight:800;line-height:1.05;letter-spacing:-.02em;background:linear-gradient(135deg,#fef08a 0%,#fbbf24 50%,#d97706 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:8px;}
+  .hero .subtitle{font-size:1.1rem;color:var(--muted);margin-top:16px;margin-bottom:10px;}
+  .hero .curso{font-family:'JetBrains Mono',monospace;font-size:.8rem;color:var(--acc3);margin-bottom:48px;}
+  .tags{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin-bottom:60px;}
+  .tag{background:var(--bg3);border:1px solid var(--border);color:var(--muted);font-family:'JetBrains Mono',monospace;font-size:.72rem;padding:5px 12px;border-radius:6px;}
+  .plan-section{position:relative;z-index:1;max-width:900px;margin:0 auto 60px;padding:0 20px;}
+  .section-title{font-size:.72rem;font-family:'JetBrains Mono',monospace;color:var(--acc);letter-spacing:.1em;text-transform:uppercase;margin-bottom:20px;}
+  .plan-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px;}
+  .plan-item{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:14px 16px;font-size:.82rem;color:var(--muted);line-height:1.4;}
+  .plan-item strong{display:block;color:var(--acc);font-family:'JetBrains Mono',monospace;font-size:.7rem;margin-bottom:4px;}
+  .modules{position:relative;z-index:1;max-width:1100px;margin:0 auto 80px;padding:0 20px;display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px;}
+  .module-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:24px;text-decoration:none;color:inherit;display:flex;flex-direction:column;gap:12px;transition:border-color .2s,transform .2s,background .2s;position:relative;overflow:hidden;}
+  .module-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--acc),transparent);opacity:0;transition:opacity .2s;}
+  .module-card:hover{border-color:rgba(251,191,36,0.4);transform:translateY(-3px);background:var(--bg3);}
+  .module-card:hover::before{opacity:1;}
+  .module-number{font-family:'JetBrains Mono',monospace;font-size:.7rem;color:var(--acc3);background:rgba(251,191,36,0.08);border:1px solid rgba(251,191,36,0.15);padding:3px 9px;border-radius:100px;width:fit-content;}
+  .module-title{font-size:1rem;font-weight:700;color:var(--text);line-height:1.3;}
+  .module-desc{font-size:.82rem;color:var(--muted);line-height:1.5;flex:1;}
+  .module-arrow{font-size:.9rem;color:var(--acc);opacity:0;transition:opacity .2s;}
+  .module-card:hover .module-arrow{opacity:1;}
+  footer{position:relative;z-index:1;text-align:center;padding:30px 20px;color:var(--muted);font-size:.78rem;font-family:'JetBrains Mono',monospace;border-top:1px solid var(--border);}
+</style>
+</head>
+<body>
+<div class="hero">
+  <div class="badge">📚 2º DAW · Curso 2024–2025</div>
+  <h1>🐳 Docker</h1>
+  <p class="subtitle">Despliegue de Aplicaciones Web con Contenedores</p>
+  <p class="curso">// Examen en 2 meses · 13 módulos · plan 8 semanas</p>
+  <div class="tags">
+    <span class="tag">Contenedores</span><span class="tag">Imágenes</span><span class="tag">Dockerfile</span><span class="tag">Docker Compose</span><span class="tag">Redes</span><span class="tag">Volúmenes</span><span class="tag">CI/CD</span><span class="tag">LAMP</span><span class="tag">LEMP</span><span class="tag">Laravel</span><span class="tag">Docker Swarm</span><span class="tag">Kubernetes</span><span class="tag">GitHub Actions</span>
+  </div>
+</div>
+<div class="plan-section">
+  <p class="section-title">📅 Plan de estudio — 8 semanas</p>
+  <div class="plan-grid"><div class="plan-item"><strong>Semana 1</strong>Fundamentos — Virtualización vs Contenedores, arquitectura Docker, instalación</div><div class="plan-item"><strong>Semana 2</strong>Imágenes — capas, Dockerfile completo, buenas prácticas, Docker Hub</div><div class="plan-item"><strong>Semana 3</strong>Contenedores — ciclo de vida, redes, volúmenes, bind mounts</div><div class="plan-item"><strong>Semana 4</strong>Docker Compose — servicios múltiples, LAMP/LEMP, proyectos reales</div><div class="plan-item"><strong>Semana 5</strong>Redes avanzadas — tipos, comunicación entre contenedores, DNS interno</div><div class="plan-item"><strong>Semana 6</strong>Persistencia — volúmenes nombrados, backup, bases de datos en Docker</div><div class="plan-item"><strong>Semana 7</strong>Docker en producción — multi-stage builds, variables, secrets, registros privados</div><div class="plan-item"><strong>Semana 8</strong>Orquestación — Docker Swarm, nociones de Kubernetes, repaso + examen</div></div>
+</div>
+<div style="position:relative;z-index:1;max-width:1100px;margin:0 auto 20px;padding:0 20px;"><p class="section-title">🗂️ Módulos</p></div>
+<div class="modules"><a href="modulo1.html" class="module-card"><span class="module-number">MÓDULO 01</span><div class="module-title">Fundamentos: Docker y Contenedores</div><div class="module-desc">El problema que resuelve Docker, diferencias con VMs, arquitectura cliente-servidor e instalación.</div><span class="module-arrow">→</span></a><a href="modulo2.html" class="module-card"><span class="module-number">MÓDULO 02</span><div class="module-title">Imágenes Docker: Capas, Dockerfile y Docker Hub</div><div class="module-desc">Gestión de imágenes, todas las instrucciones del Dockerfile y docker build.</div><span class="module-arrow">→</span></a><a href="modulo3.html" class="module-card"><span class="module-number">MÓDULO 03</span><div class="module-title">Contenedores: Ciclo de Vida y Comandos</div><div class="module-desc">Ciclo de vida, todas las opciones de docker run, gestión, logs, exec y limpieza.</div><span class="module-arrow">→</span></a><a href="modulo4.html" class="module-card"><span class="module-number">MÓDULO 04</span><div class="module-title">Redes en Docker</div><div class="module-desc">Tipos de redes, bridge personalizado vs por defecto, DNS automático y comandos.</div><span class="module-arrow">→</span></a><a href="modulo5.html" class="module-card"><span class="module-number">MÓDULO 05</span><div class="module-title">Persistencia: Volúmenes y Bind Mounts</div><div class="module-desc">Volume vs Bind Mount vs tmpfs, comandos completos, backup y restauración.</div><span class="module-arrow">→</span></a><a href="modulo6.html" class="module-card"><span class="module-number">MÓDULO 06</span><div class="module-title">Docker Compose: Entornos Multi-Contenedor</div><div class="module-desc">Todos los comandos compose y referencia completa de docker-compose.yml.</div><span class="module-arrow">→</span></a><a href="modulo7.html" class="module-card"><span class="module-number">MÓDULO 07</span><div class="module-title">Proyectos Reales con Docker Compose</div><div class="module-desc">Stacks LAMP, LEMP (Nginx+PHP-FPM+Redis) y Laravel completo con queue/scheduler.</div><span class="module-arrow">→</span></a><a href="modulo8.html" class="module-card"><span class="module-number">MÓDULO 08</span><div class="module-title">Dockerfile Avanzado y Buenas Prácticas</div><div class="module-desc">Multi-stage builds para Node.js y PHP, 12 buenas prácticas y optimización de caché.</div><span class="module-arrow">→</span></a><a href="modulo9.html" class="module-card"><span class="module-number">MÓDULO 09</span><div class="module-title">Variables de Entorno, Secrets y Configuración</div><div class="module-desc">Variables en run/Dockerfile/Compose, archivos .env y Docker Secrets para producción.</div><span class="module-arrow">→</span></a><a href="modulo10.html" class="module-card"><span class="module-number">MÓDULO 10</span><div class="module-title">Registros: Docker Hub y Registros Privados</div><div class="module-desc">Flujo completo con Docker Hub y registro privado con Docker Registry + UI web.</div><span class="module-arrow">→</span></a><a href="modulo11.html" class="module-card"><span class="module-number">MÓDULO 11</span><div class="module-title">Orquestación: Docker Swarm y Kubernetes</div><div class="module-desc">Swarm (init, service, stack, rolling update) y nociones de Kubernetes con kubectl.</div><span class="module-arrow">→</span></a><a href="modulo12.html" class="module-card"><span class="module-number">MÓDULO 12</span><div class="module-title">CI/CD con Docker y Flujos de Despliegue</div><div class="module-desc">Conceptos CI/CD, pipeline completo con GitHub Actions y flujo en equipo.</div><span class="module-arrow">→</span></a><a href="modulo13.html" class="module-card"><span class="module-number">MÓDULO 13</span><div class="module-title">Cheat Sheet y Ejercicios de Examen</div><div class="module-desc">Referencia rápida, 3 ejercicios resueltos (básico/medio/avanzado) y checklist.</div><span class="module-arrow">→</span></a></div>
+<footer>Docker · Apuntes 2º DAW · 2024–2025</footer>
+</body>
+</html>

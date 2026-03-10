@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Módulo 9: Variables de Entorno, Secrets y Configuración — Docker 2º DAW</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet"><style>
+  :root{--acc:#fbbf24;--acc2:#f59e0b;--acc3:#d97706;--bg:#0d0c07;--bg3:#1a1806;--card:#131105;--border:#2a2508;--text:#fef9e7;--muted:#7a7040;--code-bg:#0f0d04;--code-border:#28230a;}
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{font-family:'Syne',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+  body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(251,191,36,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(251,191,36,0.03) 1px,transparent 1px);background-size:40px 40px;pointer-events:none;z-index:0;}
+  nav{position:sticky;top:0;z-index:100;background:rgba(13,12,7,0.93);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:14px 24px;display:flex;align-items:center;gap:16px;}
+  nav a.home{font-family:'JetBrains Mono',monospace;font-size:.75rem;color:var(--acc);text-decoration:none;padding:5px 12px;border:1px solid rgba(251,191,36,0.25);border-radius:6px;transition:background .15s;}
+  nav a.home:hover{background:rgba(251,191,36,0.08);}
+  nav .breadcrumb{font-family:'JetBrains Mono',monospace;font-size:.75rem;color:var(--muted);}
+  nav .nav-links{margin-left:auto;display:flex;gap:8px;}
+  nav .nav-links a{font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--muted);text-decoration:none;padding:4px 10px;border-radius:5px;transition:color .15s,background .15s;}
+  nav .nav-links a:hover{color:var(--acc);background:rgba(251,191,36,0.06);}
+  .mod-header{position:relative;z-index:1;max-width:860px;margin:0 auto;padding:52px 24px 36px;}
+  .mod-badge{display:inline-block;background:rgba(251,191,36,0.08);border:1px solid rgba(251,191,36,0.2);color:var(--acc);font-family:'JetBrains Mono',monospace;font-size:.7rem;padding:4px 12px;border-radius:100px;margin-bottom:20px;letter-spacing:.05em;}
+  .mod-header h1{font-size:clamp(1.8rem,4vw,2.8rem);font-weight:800;letter-spacing:-.02em;background:linear-gradient(135deg,#fef08a,#fbbf24,#d97706);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1.15;margin-bottom:12px;}
+  .mod-header p{color:var(--muted);font-size:.95rem;line-height:1.5;}
+  .content{position:relative;z-index:1;max-width:860px;margin:0 auto;padding:0 24px 80px;}
+  .section{margin-bottom:48px;}
+  .section-title{font-size:1.15rem;font-weight:700;color:var(--text);margin-bottom:18px;padding-bottom:10px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;}
+  .section-title span.num{font-family:'JetBrains Mono',monospace;font-size:.7rem;color:var(--acc);background:rgba(251,191,36,0.08);padding:2px 8px;border-radius:4px;}
+  .code-block{background:var(--code-bg);border:1px solid var(--code-border);border-radius:12px;overflow:hidden;margin-bottom:20px;}
+  .code-header{display:flex;align-items:center;justify-content:space-between;padding:10px 16px;background:rgba(251,191,36,0.05);border-bottom:1px solid var(--code-border);}
+  .code-filename{font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--acc);}
+  .code-filename::before{content:'📄 ';}
+  .copy-btn{font-family:'JetBrains Mono',monospace;font-size:.68rem;color:var(--muted);background:none;border:1px solid var(--code-border);padding:3px 10px;border-radius:5px;cursor:pointer;transition:color .15s,border-color .15s;}
+  .copy-btn:hover{color:var(--acc);border-color:rgba(251,191,36,0.3);}
+  .copy-btn.copied{color:var(--acc);}
+  pre{padding:20px;overflow-x:auto;font-family:'JetBrains Mono',monospace;font-size:.8rem;line-height:1.7;color:#fef3c7;tab-size:2;}
+  .table-wrap{overflow-x:auto;margin-bottom:20px;border-radius:12px;border:1px solid var(--border);}
+  table{width:100%;border-collapse:collapse;font-size:.84rem;}
+  thead tr{background:rgba(251,191,36,0.06);}
+  th{padding:12px 16px;text-align:left;font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--acc);letter-spacing:.05em;text-transform:uppercase;border-bottom:1px solid var(--border);white-space:nowrap;}
+  td{padding:11px 16px;border-bottom:1px solid rgba(42,37,8,0.7);color:var(--text);line-height:1.5;vertical-align:top;}
+  td:first-child{font-family:'JetBrains Mono',monospace;font-size:.75rem;color:var(--acc);white-space:nowrap;}
+  tr:last-child td{border-bottom:none;}
+  tr:hover td{background:rgba(251,191,36,0.02);}
+  .info-box{background:var(--card);border:1px solid var(--border);border-left:3px solid var(--acc);border-radius:10px;padding:18px 20px;margin-bottom:20px;font-size:.87rem;color:var(--muted);line-height:1.6;}
+  .info-box strong{color:var(--text);}
+  .info-box code{font-family:'JetBrains Mono',monospace;font-size:.8rem;background:rgba(251,191,36,0.08);padding:1px 6px;border-radius:4px;color:var(--acc);}
+  .tip-box{background:rgba(251,191,36,0.05);border:1px solid rgba(251,191,36,0.2);border-radius:10px;padding:16px 20px;margin-bottom:20px;font-size:.86rem;color:var(--muted);line-height:1.6;}
+  .tip-box strong{color:var(--acc);}
+  .checklist{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:24px;margin-bottom:20px;}
+  .checklist-item{display:flex;align-items:flex-start;gap:12px;padding:8px 0;border-bottom:1px solid rgba(42,37,8,0.6);font-size:.88rem;color:var(--muted);line-height:1.4;}
+  .checklist-item:last-child{border-bottom:none;}
+  .checklist-item input[type=checkbox]{margin-top:2px;accent-color:var(--acc);width:16px;height:16px;flex-shrink:0;cursor:pointer;}
+  .checklist-item label{cursor:pointer;}
+  .checklist-item.done label{text-decoration:line-through;color:var(--acc3);}
+  .exercise{background:linear-gradient(135deg,rgba(251,191,36,0.05),rgba(217,119,6,0.04));border:1px solid rgba(251,191,36,0.2);border-radius:12px;padding:20px 24px;margin-bottom:20px;}
+  .exercise-label{font-family:'JetBrains Mono',monospace;font-size:.68rem;color:var(--acc);text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px;}
+  .exercise h3{font-size:.95rem;font-weight:700;color:var(--text);margin-bottom:10px;}
+  .exercise p{font-size:.85rem;color:var(--muted);line-height:1.6;}
+  .page-footer{position:relative;z-index:1;display:flex;justify-content:space-between;align-items:center;max-width:860px;margin:0 auto;padding:24px;border-top:1px solid var(--border);flex-wrap:wrap;gap:12px;}
+  .page-footer a{font-family:'JetBrains Mono',monospace;font-size:.78rem;color:var(--muted);text-decoration:none;padding:8px 16px;border:1px solid var(--border);border-radius:8px;transition:color .15s,border-color .15s;}
+  .page-footer a:hover{color:var(--acc);border-color:rgba(251,191,36,0.3);}
+  .page-footer span{font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--acc3);}
+  .toc{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px 24px;margin-bottom:40px;}
+  .toc-title{font-family:'JetBrains Mono',monospace;font-size:.7rem;color:var(--acc);text-transform:uppercase;letter-spacing:.08em;margin-bottom:14px;}
+  .toc a{display:block;font-size:.84rem;color:var(--muted);text-decoration:none;padding:5px 0;border-bottom:1px solid rgba(42,37,8,0.5);transition:color .15s,padding-left .15s;}
+  .toc a:last-child{border-bottom:none;}
+  .toc a:hover{color:var(--acc);padding-left:6px;}
+  .toc a::before{content:'›  ';color:var(--acc3);}
+</style>
+</head>
+<body>
+<nav>
+  <a href="index.html" class="home">⌂ Índice</a>
+  <span class="breadcrumb">/ Módulo 9</span>
+  <div class="nav-links"><a href="modulo8.html">← Módulo 8</a><a href="modulo10.html">Módulo 10 →</a></div>
+</nav>
+<div class="mod-header">
+  <div class="mod-badge">MÓDULO 09</div>
+  <h1>Variables de Entorno, Secrets y Configuración</h1>
+  <p>Formas de pasar variables de entorno en docker run, Dockerfile y Compose, gestión de archivos .env y Docker Secrets para producción.</p>
+</div>
+<div class="content">
+  <div class="toc"><div class="toc-title">Contenido</div><a href="#s9-1">9.1 Variables de entorno</a><a href="#s9-2">9.2 Docker Secrets</a></div>
+  <div class="section" id="s9-1"><h2 class="section-title"><span class="num">9.1</span> Variables de entorno</h2><div class="info-box">Las variables de entorno son el mecanismo estándar para configurar contenedores Docker. Siguen la metodología <strong>The Twelve-Factor App</strong> para aplicaciones cloud-native.</div><div class="code-block"><div class="code-header"><span class="code-filename">Formas de pasar variables</span><button class="copy-btn">Copiar</button></div><pre># ── En docker run ─────────────────────────────────────────────
+docker run -e APP_ENV=production -e DEBUG=false mi-app
+docker run --env-file .env mi-app
+
+# ── En Dockerfile (disponibles en build Y runtime) ─────────────
+ENV APP_ENV=production
+ENV DB_PORT=3306 DB_HOST=localhost
+
+# ARG (solo en build)
+ARG BUILD_VERSION=latest
+ENV APP_VERSION=$BUILD_VERSION
+
+# ── En docker-compose.yml ─────────────────────────────────────
+services:
+  app:
+    environment:
+      APP_ENV: production
+      DB_HOST: db               # nombre del servicio como hostname
+      DB_PORT: '3306'           # los números se ponen entre comillas
+      # Variable tomada del entorno del HOST:
+      AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID
+    env_file:
+      - .env                    # archivo de variables
+      - .env.local              # sobrescribe .env</pre></div><div class="code-block"><div class="code-header"><span class="code-filename">.env</span><button class="copy-btn">Copiar</button></div><pre># .env — NO subir a Git. Añadir al .gitignore
+# Aplicación
+APP_NAME=MiApp
+APP_ENV=local
+APP_DEBUG=true
+
+# Base de datos
+DB_CONNECTION=mysql
+DB_HOST=db
+DB_PORT=3306
+DB_DATABASE=mi_bd
+DB_USERNAME=usuario
+DB_PASSWORD=password_muy_segura
+
+# Redis
+REDIS_HOST=redis
+REDIS_PORT=6379
+
+# Correo
+MAIL_HOST=mailhog
+MAIL_PORT=1025
+
+# .env.example — SÍ subir a Git, sin valores reales
+# DB_PASSWORD=
+# AWS_KEY=</pre></div></div><div class="section" id="s9-2"><h2 class="section-title"><span class="num">9.2</span> Docker Secrets (para producción)</h2><div class="info-box">Los Docker Secrets son la forma correcta de gestionar información sensible en Docker Swarm. Los secretos se encriptan y solo son accesibles por los servicios autorizados, montándose en <code>/run/secrets/</code> en el contenedor.</div><div class="code-block"><div class="code-header"><span class="code-filename">Docker Secrets</span><button class="copy-btn">Copiar</button></div><pre># ── Crear secrets ─────────────────────────────────────────────
+echo 'mi_password_super_segura' | docker secret create db_password -
+docker secret create ssl_cert ./certs/server.crt
+
+# Listar y ver secrets
+docker secret ls
+docker secret inspect db_password
+
+# ── En docker-compose.yml (Swarm mode) ───────────────────────
+services:
+  db:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD_FILE: /run/secrets/db_root_password
+    secrets:
+      - db_root_password
+      - db_password
+
+secrets:
+  db_root_password:
+    external: true             # secret ya creado con docker secret create
+  db_password:
+    file: ./secrets/db_pass.txt
+
+# ── En el contenedor, el secret está en: ─────────────────────
+# /run/secrets/db_root_password
+# Leer en código PHP:
+# $password = file_get_contents('/run/secrets/db_password');</pre></div></div>
+</div>
+<div class="page-footer"><a href="modulo8.html">← Módulo 8</a><span>Módulo 9 / 13</span><a href="modulo10.html">Módulo 10 →</a></div>
+<script>
+  document.querySelectorAll('.copy-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const code = btn.closest('.code-block').querySelector('pre').innerText;
+      navigator.clipboard.writeText(code).then(() => {
+        btn.textContent = '✓ Copiado'; btn.classList.add('copied');
+        setTimeout(() => { btn.textContent = 'Copiar'; btn.classList.remove('copied'); }, 2000);
+      });
+    });
+  });
+  document.querySelectorAll('.checklist-item input').forEach(cb => {
+    const key = 'dock_cb_' + cb.id;
+    if (localStorage.getItem(key) === '1') { cb.checked = true; cb.closest('.checklist-item').classList.add('done'); }
+    cb.addEventListener('change', () => {
+      localStorage.setItem(key, cb.checked ? '1' : '0');
+      cb.closest('.checklist-item').classList.toggle('done', cb.checked);
+    });
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Módulo 14: Cheat Sheet y Ejercicios de Examen — Angular 2º DAW</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{--red:#fca5a5;--red-dark:#dc2626;--bg:#0f0a0a;--bg3:#1f1212;--card:#170d0d;--border:#2d1a1a;--text:#fee2e2;--muted:#7c6464;--accent:#f87171;--code-bg:#130a0a;--code-border:#2a1212;}
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{font-family:'Syne',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+  body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(248,113,113,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(248,113,113,0.03) 1px,transparent 1px);background-size:40px 40px;pointer-events:none;z-index:0;}
+  nav{position:sticky;top:0;z-index:100;background:rgba(15,10,10,0.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:14px 24px;display:flex;align-items:center;gap:16px;}
+  nav a.home{font-family:'JetBrains Mono',monospace;font-size:.75rem;color:var(--accent);text-decoration:none;padding:5px 12px;border:1px solid rgba(248,113,113,0.25);border-radius:6px;transition:background .15s;}
+  nav a.home:hover{background:rgba(248,113,113,0.08);}
+  nav .breadcrumb{font-family:'JetBrains Mono',monospace;font-size:.75rem;color:var(--muted);}
+  nav .nav-links{margin-left:auto;display:flex;gap:8px;}
+  nav .nav-links a{font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--muted);text-decoration:none;padding:4px 10px;border-radius:5px;transition:color .15s,background .15s;}
+  nav .nav-links a:hover{color:var(--accent);background:rgba(248,113,113,0.06);}
+  .mod-header{position:relative;z-index:1;max-width:860px;margin:0 auto;padding:52px 24px 36px;}
+  .mod-badge{display:inline-block;background:rgba(248,113,113,0.08);border:1px solid rgba(248,113,113,0.2);color:var(--accent);font-family:'JetBrains Mono',monospace;font-size:.7rem;padding:4px 12px;border-radius:100px;margin-bottom:20px;letter-spacing:.05em;}
+  .mod-header h1{font-size:clamp(1.8rem,4vw,2.8rem);font-weight:800;letter-spacing:-.02em;background:linear-gradient(135deg,#fca5a5,#f87171);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1.15;margin-bottom:12px;}
+  .mod-header p{color:var(--muted);font-size:.95rem;line-height:1.5;}
+  .content{position:relative;z-index:1;max-width:860px;margin:0 auto;padding:0 24px 80px;}
+  .section{margin-bottom:48px;}
+  .section-title{font-size:1.15rem;font-weight:700;color:var(--text);margin-bottom:18px;padding-bottom:10px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;}
+  .section-title span.num{font-family:'JetBrains Mono',monospace;font-size:.7rem;color:var(--accent);background:rgba(248,113,113,0.08);padding:2px 8px;border-radius:4px;}
+  .code-block{background:var(--code-bg);border:1px solid var(--code-border);border-radius:12px;overflow:hidden;margin-bottom:20px;}
+  .code-header{display:flex;align-items:center;justify-content:space-between;padding:10px 16px;background:rgba(248,113,113,0.05);border-bottom:1px solid var(--code-border);}
+  .code-filename{font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--accent);}
+  .code-filename::before{content:'📄 ';}
+  .copy-btn{font-family:'JetBrains Mono',monospace;font-size:.68rem;color:var(--muted);background:none;border:1px solid var(--code-border);padding:3px 10px;border-radius:5px;cursor:pointer;transition:color .15s,border-color .15s;}
+  .copy-btn:hover{color:var(--accent);border-color:rgba(248,113,113,0.3);}
+  .copy-btn.copied{color:var(--accent);}
+  pre{padding:20px;overflow-x:auto;font-family:'JetBrains Mono',monospace;font-size:.8rem;line-height:1.7;color:#fecaca;tab-size:2;}
+  .table-wrap{overflow-x:auto;margin-bottom:20px;border-radius:12px;border:1px solid var(--border);}
+  table{width:100%;border-collapse:collapse;font-size:.84rem;}
+  thead tr{background:rgba(248,113,113,0.06);}
+  th{padding:12px 16px;text-align:left;font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--accent);letter-spacing:.05em;text-transform:uppercase;border-bottom:1px solid var(--border);white-space:nowrap;}
+  td{padding:11px 16px;border-bottom:1px solid rgba(45,26,26,0.6);color:var(--text);line-height:1.5;vertical-align:top;}
+  td:first-child{font-family:'JetBrains Mono',monospace;font-size:.75rem;color:var(--accent);white-space:nowrap;}
+  tr:last-child td{border-bottom:none;}
+  tr:hover td{background:rgba(248,113,113,0.02);}
+  .info-box{background:var(--card);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:10px;padding:18px 20px;margin-bottom:20px;font-size:.87rem;color:var(--muted);line-height:1.6;}
+  .info-box strong{color:var(--text);}
+  .info-box code{font-family:'JetBrains Mono',monospace;font-size:.8rem;background:rgba(248,113,113,0.08);padding:1px 6px;border-radius:4px;color:var(--accent);}
+  .checklist{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:24px;margin-bottom:20px;}
+  .checklist-item{display:flex;align-items:flex-start;gap:12px;padding:8px 0;border-bottom:1px solid rgba(45,26,26,0.5);font-size:.88rem;color:var(--muted);line-height:1.4;}
+  .checklist-item:last-child{border-bottom:none;}
+  .checklist-item input[type=checkbox]{margin-top:2px;accent-color:var(--accent);width:16px;height:16px;flex-shrink:0;cursor:pointer;}
+  .checklist-item label{cursor:pointer;}
+  .checklist-item.done label{text-decoration:line-through;color:var(--red-dark);}
+  .exercise{background:linear-gradient(135deg,rgba(248,113,113,0.05),rgba(220,38,38,0.05));border:1px solid rgba(248,113,113,0.2);border-radius:12px;padding:20px 24px;margin-bottom:20px;}
+  .exercise-label{font-family:'JetBrains Mono',monospace;font-size:.68rem;color:var(--accent);text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px;}
+  .exercise h3{font-size:.95rem;font-weight:700;color:var(--text);margin-bottom:10px;}
+  .exercise p{font-size:.85rem;color:var(--muted);line-height:1.6;}
+  .page-footer{position:relative;z-index:1;display:flex;justify-content:space-between;align-items:center;max-width:860px;margin:0 auto;padding:24px;border-top:1px solid var(--border);flex-wrap:wrap;gap:12px;}
+  .page-footer a{font-family:'JetBrains Mono',monospace;font-size:.78rem;color:var(--muted);text-decoration:none;padding:8px 16px;border:1px solid var(--border);border-radius:8px;transition:color .15s,border-color .15s;}
+  .page-footer a:hover{color:var(--accent);border-color:rgba(248,113,113,0.3);}
+  .page-footer span{font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--red-dark);}
+  .toc{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px 24px;margin-bottom:40px;}
+  .toc-title{font-family:'JetBrains Mono',monospace;font-size:.7rem;color:var(--accent);text-transform:uppercase;letter-spacing:.08em;margin-bottom:14px;}
+  .toc a{display:block;font-size:.84rem;color:var(--muted);text-decoration:none;padding:5px 0;border-bottom:1px solid rgba(45,26,26,0.4);transition:color .15s,padding-left .15s;}
+  .toc a:last-child{border-bottom:none;}
+  .toc a:hover{color:var(--accent);padding-left:6px;}
+  .toc a::before{content:'›  ';color:var(--red-dark);}
+</style>
+</head>
+<body>
+<nav>
+  <a href="index.html" class="home">⌂ Índice</a>
+  <span class="breadcrumb">/ Módulo 14</span>
+  <div class="nav-links"><a href="modulo13.html">← Módulo 13</a><a href="index.html">Volver al Índice →</a></div>
+</nav>
+<div class="mod-header">
+  <div class="mod-badge">MÓDULO 14</div>
+  <h1>Cheat Sheet y Ejercicios de Examen</h1>
+  <p>Referencia rápida de todos los conceptos clave de Angular, ejercicios tipo examen resueltos y checklist final para preparar el examen.</p>
+</div>
+<div class="content">
+  <div class="toc"><div class="toc-title">Contenido</div><a href="#s14-1">14.1 Cheat Sheet</a><a href="#s14-2">14.2 Ejercicio 1</a><a href="#s14-3">14.3 Ejercicio 2</a><a href="#s14-4">14.4 Checklist</a></div>
+  <div class="section" id="s14-1"><h2 class="section-title"><span class="num">14.1</span> Cheat Sheet — Referencia rápida Angular</h2><div class="table-wrap"><table><thead><tr><th>Concepto</th><th>Descripción</th></tr></thead><tbody><tr><td>@Component({selector,template,imports})</td><td>Define un componente Angular standalone</td></tr><tr><td>@Input() propiedad: Tipo</td><td>Recibir datos del componente padre</td></tr><tr><td>@Output() evento = new EventEmitter<T>()</td><td>Emitir eventos al componente padre</td></tr><tr><td>@ViewChild(Ref) ref!: ElementRef</td><td>Acceder a elemento del DOM o componente hijo</td></tr><tr><td>ngOnInit / ngOnDestroy</td><td>Hooks de ciclo de vida principales</td></tr><tr><td>{{ valor }}</td><td>Interpolación — mostrar valor en HTML</td></tr><tr><td>[propiedad]="expresion"</td><td>Property binding — dato → DOM</td></tr><tr><td>(evento)="metodo($event)"</td><td>Event binding — DOM → dato</td></tr><tr><td>[(ngModel)]="campo"</td><td>Two-way binding (requiere FormsModule)</td></tr><tr><td>@if (cond) {} @else {}</td><td>Control de flujo condicional (Angular 17+)</td></tr><tr><td>@for (item of lista; track item.id) {}</td><td>Control de flujo bucle (Angular 17+)</td></tr><tr><td>*ngIf / *ngFor / ngClass / ngStyle</td><td>Directivas clásicas (siguen funcionando)</td></tr><tr><td>pipe | uppercase | date | async | json</td><td>Transformar valores en templates</td></tr><tr><td>@Injectable({ providedIn: 'root' })</td><td>Servicio singleton en toda la app</td></tr><tr><td>inject(Servicio)</td><td>Inyección de dependencia moderna (sin constructor)</td></tr><tr><td>signal() / computed() / effect()</td><td>Estado reactivo moderno (Angular 17+)</td></tr><tr><td>Observable.pipe(map, filter, switchMap...)</td><td>Operadores RxJS</td></tr><tr><td>this.router.navigate(['/ruta', id])</td><td>Navegación programática</td></tr><tr><td>this.route.paramMap.get('id')</td><td>Leer parámetro de la URL</td></tr><tr><td>this.http.get/post/put/delete<T>(url)</td><td>Peticiones HTTP con HttpClient</td></tr><tr><td>FormBuilder + FormGroup + FormControl</td><td>Reactive Forms</td></tr><tr><td>Validators.required / email / minLength</td><td>Validadores built-in de formularios</td></tr></tbody></table></div></div><div class="section" id="s14-2"><h2 class="section-title"><span class="num">14.2</span> Ejercicio 1 — Componente con @Input/@Output</h2><div class="exercise"><div class="exercise-label">📝 EJERCICIO 1 — Nivel básico</div><h3>Componente ProductoCard con @Input y @Output</h3><p>Crea un componente <strong>ProductoCardComponent</strong> con: @Input() producto: Producto (requerido), @Output() añadirCarrito (emite el producto), @Output() verDetalle (emite el id). La card debe mostrar el nombre, precio con pipe currency en EUR, stock con ngClass (verde si > 0, rojo si 0) y dos botones. Si stock === 0, el botón de carrito debe estar deshabilitado.</p></div><div class="code-block"><div class="code-header"><span class="code-filename">ProductoCardComponent.ts</span><button class="copy-btn">Copiar</button></div><pre>@Component({
+  selector: 'app-producto-card',
+  standalone: true,
+  imports: [CommonModule, CurrencyPipe],
+  template: `
+    &lt;div class='card'&gt;
+      &lt;h3&gt;{{ producto.nombre }}&lt;/h3&gt;
+      &lt;p&gt;{{ producto.precio | currency:'EUR' }}&lt;/p&gt;
+      &lt;span [ngClass]="{'verde': producto.stock &gt; 0, 'rojo': producto.stock === 0}"&gt;
+        Stock: {{ producto.stock }}
+      &lt;/span&gt;
+      &lt;button (click)="onAñadir()" [disabled]="producto.stock === 0"&gt;
+        Añadir al carrito
+      &lt;/button&gt;
+      &lt;button (click)="verDetalle.emit(producto.id)"&gt;Ver detalle&lt;/button&gt;
+    &lt;/div&gt;
+  `
+})
+export class ProductoCardComponent {
+  @Input({ required: true }) producto!: Producto;
+  @Output() añadirCarrito = new EventEmitter&lt;Producto&gt;();
+  @Output() verDetalle = new EventEmitter&lt;number&gt;();
+
+  onAñadir(): void {
+    if (this.producto.stock &gt; 0) this.añadirCarrito.emit(this.producto);
+  }
+}</pre></div></div><div class="section" id="s14-3"><h2 class="section-title"><span class="num">14.3</span> Ejercicio 2 — Servicio + Reactive Form + HTTP</h2><div class="exercise"><div class="exercise-label">📝 EJERCICIO 2 — Nivel medio</div><h3>Formulario de nueva reseña con Reactive Forms</h3><p>Crea un componente <strong>NuevaReseñaComponent</strong> con Reactive Form: titulo (requerido, min 5, max 100), contenido (requerido, min 20), valoracion (requerido, número 1-5). Al hacer submit, llama a reseñaService.crear(). Muestra spinner durante la carga, mensaje de éxito o error. El botón submit debe estar deshabilitado mientras el form es inválido o carga.</p></div><div class="code-block"><div class="code-header"><span class="code-filename">NuevaReseñaComponent.ts</span><button class="copy-btn">Copiar</button></div><pre>@Component({
+  standalone: true,
+  imports: [ReactiveFormsModule, CommonModule],
+  template: `
+    &lt;form [formGroup]="form" (ngSubmit)="onSubmit()"&gt;
+      &lt;input formControlName="titulo" placeholder="Título"&gt;
+      &lt;div *ngIf="f['titulo'].errors?.['required'] &amp;&amp; f['titulo'].touched"&gt;Obligatorio&lt;/div&gt;
+      &lt;textarea formControlName="contenido" placeholder="Contenido"&gt;&lt;/textarea&gt;
+      &lt;input formControlName="valoracion" type="number" min="1" max="5"&gt;
+      &lt;div *ngIf="exito" class="success"&gt;Reseña creada correctamente&lt;/div&gt;
+      &lt;div *ngIf="error" class="error"&gt;{{ error }}&lt;/div&gt;
+      &lt;button type="submit" [disabled]="form.invalid || cargando"&gt;
+        {{ cargando ? 'Enviando...' : 'Publicar reseña' }}
+      &lt;/button&gt;
+    &lt;/form&gt;
+  `
+})
+export class NuevaReseñaComponent {
+  private fb = inject(FormBuilder);
+  private service = inject(ReseñaService);
+
+  form = this.fb.group({
+    titulo:    ['', [Validators.required, Validators.minLength(5), Validators.maxLength(100)]],
+    contenido: ['', [Validators.required, Validators.minLength(20)]],
+    valoracion: [null, [Validators.required, Validators.min(1), Validators.max(5)]],
+  });
+
+  get f() { return this.form.controls; }
+  cargando = false; exito = false; error = '';
+
+  onSubmit(): void {
+    if (this.form.invalid) { this.form.markAllAsTouched(); return; }
+    this.cargando = true; this.error = '';
+    this.service.crear(this.form.value).subscribe({
+      next: () =&gt; { this.exito = true; this.form.reset(); this.cargando = false; },
+      error: (err) =&gt; { this.error = err.message; this.cargando = false; },
+    });
+  }
+}</pre></div></div><div class="section" id="s14-4"><h2 class="section-title"><span class="num">14.4</span> ✅ Checklist final — Angular</h2><div class="checklist"><div class="checklist-item"><input type="checkbox" id="a1"><label for="a1">Sé instalar Angular CLI y crear un proyecto con ng new</label></div><div class="checklist-item"><input type="checkbox" id="a2"><label for="a2">Entiendo la arquitectura: componentes, servicios, standalone, rutas</label></div><div class="checklist-item"><input type="checkbox" id="a3"><label for="a3">Sé crear componentes standalone con decorador @Component</label></div><div class="checklist-item"><input type="checkbox" id="a4"><label for="a4">Sé usar los hooks del ciclo de vida: ngOnInit, ngOnDestroy, ngOnChanges</label></div><div class="checklist-item"><input type="checkbox" id="a5"><label for="a5">Sé comunicar componentes con @Input, @Output y EventEmitter</label></div><div class="checklist-item"><input type="checkbox" id="a6"><label for="a6">Sé usar data binding: interpolación, property binding, event binding, two-way</label></div><div class="checklist-item"><input type="checkbox" id="a7"><label for="a7">Sé usar @if, @for, @switch (Angular 17+) y las directivas *ngIf, *ngFor</label></div><div class="checklist-item"><input type="checkbox" id="a8"><label for="a8">Sé usar pipes: date, currency, async, y crear un pipe personalizado</label></div><div class="checklist-item"><input type="checkbox" id="a9"><label for="a9">Sé crear servicios con @Injectable y hacer peticiones HTTP con HttpClient</label></div><div class="checklist-item"><input type="checkbox" id="a10"><label for="a10">Sé los operadores RxJS: map, filter, switchMap, debounceTime, takeUntil</label></div><div class="checklist-item"><input type="checkbox" id="a11"><label for="a11">Sé configurar rutas, lazy loading y usar guards (authGuard funcional)</label></div><div class="checklist-item"><input type="checkbox" id="a12"><label for="a12">Sé leer parámetros de ruta con ActivatedRoute y navegar con Router</label></div><div class="checklist-item"><input type="checkbox" id="a13"><label for="a13">Sé crear interceptors para añadir JWT a las peticiones</label></div><div class="checklist-item"><input type="checkbox" id="a14"><label for="a14">Sé crear formularios Template-Driven con ngModel y ngForm</label></div><div class="checklist-item"><input type="checkbox" id="a15"><label for="a15">Sé crear formularios Reactive con FormBuilder, FormGroup, FormArray</label></div><div class="checklist-item"><input type="checkbox" id="a16"><label for="a16">Sé usar Signals con signal(), computed() y effect() (Angular 17+)</label></div><div class="checklist-item"><input type="checkbox" id="a17"><label for="a17">Sé instalar y usar componentes de Angular Material</label></div><div class="checklist-item"><input type="checkbox" id="a18"><label for="a18">Sé escribir tests de servicios con HttpClientTestingModule</label></div><div class="checklist-item"><input type="checkbox" id="a19"><label for="a19">Sé escribir tests de componentes con TestBed y ComponentFixture</label></div><div class="checklist-item"><input type="checkbox" id="a20"><label for="a20">Sé gestionar autenticación JWT: login, token, interceptor, guard</label></div></div></div>
+</div>
+<div class="page-footer"><a href="modulo13.html">← Módulo 13</a><span>Módulo 14 / 14</span><a href="index.html">Volver al Índice →</a></div>
+<script>
+  document.querySelectorAll('.copy-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const code = btn.closest('.code-block').querySelector('pre').innerText;
+      navigator.clipboard.writeText(code).then(() => {
+        btn.textContent = '✓ Copiado'; btn.classList.add('copied');
+        setTimeout(() => { btn.textContent = 'Copiar'; btn.classList.remove('copied'); }, 2000);
+      });
+    });
+  });
+  document.querySelectorAll('.checklist-item input').forEach(cb => {
+    const key = 'ang_cb_' + cb.id;
+    if (localStorage.getItem(key) === '1') { cb.checked = true; cb.closest('.checklist-item').classList.add('done'); }
+    cb.addEventListener('change', () => {
+      localStorage.setItem(key, cb.checked ? '1' : '0');
+      cb.closest('.checklist-item').classList.toggle('done', cb.checked);
+    });
+  });
+</script>
+</body>
+</html>
