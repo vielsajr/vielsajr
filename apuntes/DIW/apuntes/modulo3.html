@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Módulo 3: Fetch API — La Forma Moderna de AJAX — AJAX 2º DAW</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet"><style>
+  :root{--acc:#22d3ee;--acc2:#06b6d4;--acc3:#0891b2;--bg:#030f12;--bg2:#061419;--card:#071a1f;--border:#0d2d35;--text:#ecfeff;--muted:#4d9aaa;--code-bg:#040d10;--code-border:#0c2530;}
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{font-family:'Syne',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+  body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(34,211,238,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(34,211,238,0.03) 1px,transparent 1px);background-size:40px 40px;pointer-events:none;z-index:0;}
+  nav{position:sticky;top:0;z-index:100;background:rgba(3,15,18,0.93);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:14px 24px;display:flex;align-items:center;gap:16px;}
+  nav a.home{font-family:'JetBrains Mono',monospace;font-size:.75rem;color:var(--acc);text-decoration:none;padding:5px 12px;border:1px solid rgba(34,211,238,0.25);border-radius:6px;transition:background .15s;}
+  nav a.home:hover{background:rgba(34,211,238,0.08);}
+  nav .breadcrumb{font-family:'JetBrains Mono',monospace;font-size:.75rem;color:var(--muted);}
+  nav .nav-links{margin-left:auto;display:flex;gap:8px;}
+  nav .nav-links a{font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--muted);text-decoration:none;padding:4px 10px;border-radius:5px;transition:color .15s,background .15s;}
+  nav .nav-links a:hover{color:var(--acc);background:rgba(34,211,238,0.06);}
+  .mod-header{position:relative;z-index:1;max-width:860px;margin:0 auto;padding:52px 24px 36px;}
+  .mod-badge{display:inline-block;background:rgba(34,211,238,0.08);border:1px solid rgba(34,211,238,0.2);color:var(--acc);font-family:'JetBrains Mono',monospace;font-size:.7rem;padding:4px 12px;border-radius:100px;margin-bottom:20px;letter-spacing:.05em;}
+  .mod-header h1{font-size:clamp(1.8rem,4vw,2.8rem);font-weight:800;letter-spacing:-.02em;background:linear-gradient(135deg,#a5f3fc,#22d3ee,#0891b2);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1.15;margin-bottom:12px;}
+  .mod-header p{color:var(--muted);font-size:.95rem;line-height:1.5;}
+  .content{position:relative;z-index:1;max-width:860px;margin:0 auto;padding:0 24px 80px;}
+  .section{margin-bottom:48px;}
+  .section-title{font-size:1.15rem;font-weight:700;color:var(--text);margin-bottom:18px;padding-bottom:10px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;}
+  .section-title span.num{font-family:'JetBrains Mono',monospace;font-size:.7rem;color:var(--acc);background:rgba(34,211,238,0.08);padding:2px 8px;border-radius:4px;}
+  .code-block{background:var(--code-bg);border:1px solid var(--code-border);border-radius:12px;overflow:hidden;margin-bottom:20px;}
+  .code-header{display:flex;align-items:center;justify-content:space-between;padding:10px 16px;background:rgba(34,211,238,0.04);border-bottom:1px solid var(--code-border);}
+  .code-filename{font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--acc);}
+  .code-filename::before{content:'📄 ';}
+  .copy-btn{font-family:'JetBrains Mono',monospace;font-size:.68rem;color:var(--muted);background:none;border:1px solid var(--code-border);padding:3px 10px;border-radius:5px;cursor:pointer;transition:color .15s,border-color .15s;}
+  .copy-btn:hover{color:var(--acc);border-color:rgba(34,211,238,0.3);}
+  .copy-btn.copied{color:var(--acc);}
+  pre{padding:20px;overflow-x:auto;font-family:'JetBrains Mono',monospace;font-size:.8rem;line-height:1.7;color:#cffafe;tab-size:2;}
+  .table-wrap{overflow-x:auto;margin-bottom:20px;border-radius:12px;border:1px solid var(--border);}
+  table{width:100%;border-collapse:collapse;font-size:.84rem;}
+  thead tr{background:rgba(34,211,238,0.05);}
+  th{padding:12px 16px;text-align:left;font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--acc);letter-spacing:.05em;text-transform:uppercase;border-bottom:1px solid var(--border);white-space:nowrap;}
+  td{padding:11px 16px;border-bottom:1px solid rgba(13,45,53,0.8);color:var(--text);line-height:1.5;vertical-align:top;}
+  td:first-child{font-family:'JetBrains Mono',monospace;font-size:.75rem;color:var(--acc);white-space:nowrap;}
+  tr:last-child td{border-bottom:none;}
+  tr:hover td{background:rgba(34,211,238,0.02);}
+  .info-box{background:var(--card);border:1px solid var(--border);border-left:3px solid var(--acc);border-radius:10px;padding:18px 20px;margin-bottom:20px;font-size:.87rem;color:var(--muted);line-height:1.6;}
+  .info-box strong{color:var(--text);}
+  .info-box code{font-family:'JetBrains Mono',monospace;font-size:.8rem;background:rgba(34,211,238,0.08);padding:1px 6px;border-radius:4px;color:var(--acc);}
+  .tip-box{background:rgba(34,211,238,0.04);border:1px solid rgba(34,211,238,0.18);border-radius:10px;padding:16px 20px;margin-bottom:20px;font-size:.86rem;color:var(--muted);line-height:1.6;}
+  .tip-box strong{color:var(--acc);}
+  .tip-box code{font-family:'JetBrains Mono',monospace;font-size:.78rem;background:rgba(34,211,238,0.08);padding:1px 5px;border-radius:3px;color:var(--acc);}
+  .checklist{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:24px;margin-bottom:20px;}
+  .checklist-item{display:flex;align-items:flex-start;gap:12px;padding:8px 0;border-bottom:1px solid rgba(13,45,53,0.7);font-size:.88rem;color:var(--muted);line-height:1.4;}
+  .checklist-item:last-child{border-bottom:none;}
+  .checklist-item input[type=checkbox]{margin-top:2px;accent-color:var(--acc);width:16px;height:16px;flex-shrink:0;cursor:pointer;}
+  .checklist-item label{cursor:pointer;}
+  .checklist-item.done label{text-decoration:line-through;color:var(--acc3);}
+  .exercise{background:linear-gradient(135deg,rgba(34,211,238,0.04),rgba(8,145,178,0.03));border:1px solid rgba(34,211,238,0.18);border-radius:12px;padding:20px 24px;margin-bottom:20px;}
+  .exercise-label{font-family:'JetBrains Mono',monospace;font-size:.68rem;color:var(--acc);text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px;}
+  .exercise h3{font-size:.95rem;font-weight:700;color:var(--text);margin-bottom:10px;}
+  .exercise p{font-size:.85rem;color:var(--muted);line-height:1.6;}
+  .page-footer{position:relative;z-index:1;display:flex;justify-content:space-between;align-items:center;max-width:860px;margin:0 auto;padding:24px;border-top:1px solid var(--border);flex-wrap:wrap;gap:12px;}
+  .page-footer a{font-family:'JetBrains Mono',monospace;font-size:.78rem;color:var(--muted);text-decoration:none;padding:8px 16px;border:1px solid var(--border);border-radius:8px;transition:color .15s,border-color .15s;}
+  .page-footer a:hover{color:var(--acc);border-color:rgba(34,211,238,0.3);}
+  .page-footer span{font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--acc3);}
+  .toc{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px 24px;margin-bottom:40px;}
+  .toc-title{font-family:'JetBrains Mono',monospace;font-size:.7rem;color:var(--acc);text-transform:uppercase;letter-spacing:.08em;margin-bottom:14px;}
+  .toc a{display:block;font-size:.84rem;color:var(--muted);text-decoration:none;padding:5px 0;border-bottom:1px solid rgba(13,45,53,0.6);transition:color .15s,padding-left .15s;}
+  .toc a:last-child{border-bottom:none;}
+  .toc a:hover{color:var(--acc);padding-left:6px;}
+  .toc a::before{content:'›  ';color:var(--acc3);}
+</style>
+</head>
+<body>
+<nav>
+  <a href="index.html" class="home">⌂ Índice</a>
+  <span class="breadcrumb">/ Módulo 3</span>
+  <div class="nav-links"><a href="modulo2.html">← Módulo 2</a><a href="modulo4.html">Módulo 4 →</a></div>
+</nav>
+<div class="mod-header">
+  <div class="mod-badge">MÓDULO 03</div>
+  <h1>Fetch API — La Forma Moderna de AJAX</h1>
+  <p>Anatomía completa de fetch(), el objeto Response y response.ok, GET/POST/PUT/PATCH/DELETE, subida de archivos con FormData y cancelación con AbortController.</p>
+</div>
+<div class="content">
+  <div class="toc"><div class="toc-title">Contenido</div><a href="#s3-1">3.1 Fetch vs XHR y anatomía</a><a href="#s3-2">3.2 response.ok</a><a href="#s3-3">3.3 Todos los métodos HTTP</a><a href="#s3-4">3.4 AbortController</a></div>
+  <div class="section" id="s3-1"><h2 class="section-title"><span class="num">3.1</span> Fetch vs XHR y anatomía completa</h2><div class="tip-box"><strong>Fetch vs XHR — diferencias clave:</strong><br>
+• Fetch devuelve Promises → compatible con <code>.then()/.catch()</code> y <code>async/await</code><br>
+• Fetch <strong>NO rechaza</strong> la Promise en errores HTTP (404, 500…) — solo rechaza si hay error de red. Hay que comprobar <code>response.ok</code><br>
+• Fetch tiene mejor integración con APIs modernas (Streams, Cache API, Service Workers)<br>
+• XHR tiene mejor soporte para progreso de subida (upload progress)<br>
+• XHR se cancela con <code>xhr.abort()</code>. Fetch necesita <code>AbortController</code><br>
+• XHR soporta peticiones síncronas (bloqueantes). Fetch es siempre asíncrono</div><div class="code-block"><div class="code-header"><span class="code-filename">fetch_anatomia.js</span><button class="copy-btn">Copiar</button></div><pre>// fetch(url, opciones?) devuelve Promise&lt;Response&gt;
+
+fetch('https://jsonplaceholder.typicode.com/users/1', {
+  method: 'GET',        // 'POST' | 'PUT' | 'PATCH' | 'DELETE'
+  headers: {
+    'Content-Type': 'application/json',
+    'Accept':       'application/json',
+    'Authorization':'Bearer mi-token',
+  },
+  // body: JSON.stringify({ nombre: 'Ana' }), // solo POST, PUT, PATCH
+  cache:          'no-cache',  // 'default'|'no-store'|'reload'|'no-cache'|'force-cache'
+  credentials:    'same-origin', // 'omit'|'same-origin'|'include'
+  redirect:       'follow',    // 'follow'|'error'|'manual'
+  mode:           'cors',      // 'cors'|'no-cors'|'same-origin'
+  // signal: miAbortController.signal,
+})
+.then(response =&gt; {
+  // ── El objeto Response ─────────────────────────────────────────────
+  console.log(response.ok);         // true si status 200-299
+  console.log(response.status);     // 200, 404, 500...
+  console.log(response.statusText); // 'OK', 'Not Found'...
+  console.log(response.headers.get('Content-Type'));
+  console.log(response.url);
+  console.log(response.redirected);
+
+  // ⚠️ El body solo se puede leer UNA vez — elige uno:
+  return response.json();       // parsea como JSON → objeto JS
+  // return response.text();    // como string
+  // return response.blob();    // datos binarios (imagen, PDF...)
+  // return response.arrayBuffer();
+})
+.then(datos  =&gt; console.log('Datos:', datos))
+.catch(error =&gt; console.error('Error de red:', error.message));</pre></div></div><div class="section" id="s3-2"><h2 class="section-title"><span class="num">3.2</span> response.ok — el error más común</h2><div class="code-block"><div class="code-header"><span class="code-filename">fetch_response_ok.js</span><button class="copy-btn">Copiar</button></div><pre>// ── MALO: no comprueba errores HTTP ──────────────────────────────────
+fetch('/api/usuarios/9999') // devuelve 404
+  .then(res  =&gt; res.json())       // ← ejecuta aunque sea 404
+  .then(datos =&gt; console.log(datos)) // ← puede dar error raro
+  .catch(err  =&gt; console.error(err)); // solo captura errores de red
+
+// ── BIEN: comprobación correcta con response.ok ───────────────────────
+fetch('/api/usuarios/1')
+  .then(response =&gt; {
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+    }
+    return response.json();
+  })
+  .then(usuario =&gt; console.log('Usuario:', usuario.name))
+  .catch(error  =&gt; console.error('Error:', error.message));
+
+// ── MEJOR: función reutilizable ───────────────────────────────────────
+async function fetchJSON(url, opciones = {}) {
+  const response = await fetch(url, opciones);
+  if (!response.ok) {
+    let mensajeError = `Error ${response.status}`;
+    try {
+      const errorData = await response.json();
+      mensajeError = errorData.mensaje || errorData.error || mensajeError;
+    } catch (e) {}
+    throw new Error(mensajeError);
+  }
+  if (response.status === 204) return null; // No Content
+  return response.json();
+}</pre></div></div><div class="section" id="s3-3"><h2 class="section-title"><span class="num">3.3</span> Todos los métodos HTTP con Fetch</h2><div class="code-block"><div class="code-header"><span class="code-filename">fetch_metodos.js</span><button class="copy-btn">Copiar</button></div><pre>const API = 'https://jsonplaceholder.typicode.com';
+
+// ── GET ───────────────────────────────────────────────────────────────
+const getUsuarios = () =&gt;
+  fetch(`${API}/users`).then(r =&gt; r.ok ? r.json() : Promise.reject(r.status));
+
+// GET con query params
+const buscar = (termino) =&gt; {
+  const params = new URLSearchParams({ q: termino, _limit: 10 });
+  return fetch(`${API}/users?${params}`).then(r =&gt; r.json());
+};
+
+// ── POST ──────────────────────────────────────────────────────────────
+const crearPost = (datos) =&gt;
+  fetch(`${API}/posts`, {
+    method:  'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body:    JSON.stringify(datos),
+  }).then(r =&gt; r.json());
+
+// ── PUT (reemplaza todo el recurso) ───────────────────────────────────
+const actualizarPost = (id, datos) =&gt;
+  fetch(`${API}/posts/${id}`, {
+    method: 'PUT', headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(datos),
+  }).then(r =&gt; r.json());
+
+// ── PATCH (actualiza parcialmente) ────────────────────────────────────
+const patchPost = (id, cambios) =&gt;
+  fetch(`${API}/posts/${id}`, {
+    method: 'PATCH', headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(cambios),
+  }).then(r =&gt; r.json());
+
+// ── DELETE ────────────────────────────────────────────────────────────
+const eliminarPost = (id) =&gt;
+  fetch(`${API}/posts/${id}`, { method: 'DELETE' })
+    .then(r =&gt; { if (!r.ok) throw new Error(`Error ${r.status}`); return true; });
+
+// ── Subir archivo (FormData) ──────────────────────────────────────────
+const subirImagen = (archivo) =&gt; {
+  const fd = new FormData();
+  fd.append('imagen', archivo);
+  fd.append('descripcion', 'Mi foto');
+  // NO poner Content-Type: el navegador lo gestiona (con boundary)
+  return fetch('/api/imagenes', { method: 'POST', body: fd }).then(r =&gt; r.json());
+};</pre></div></div><div class="section" id="s3-4"><h2 class="section-title"><span class="num">3.4</span> Cancelar peticiones con AbortController</h2><div class="code-block"><div class="code-header"><span class="code-filename">abort_controller.js</span><button class="copy-btn">Copiar</button></div><pre>// AbortController permite cancelar peticiones Fetch en curso
+const controller = new AbortController();
+const signal = controller.signal;
+
+fetch('/api/datos-lentos', { signal })
+  .then(r =&gt; r.json())
+  .then(datos =&gt; console.log(datos))
+  .catch(err =&gt; {
+    if (err.name === 'AbortError') {
+      console.log('Petición cancelada');
+    } else {
+      console.error('Error:', err.message);
+    }
+  });
+
+// Cancelar después de 3 segundos (timeout manual)
+setTimeout(() =&gt; controller.abort(), 3000);
+
+// ── Patrón: cancelar búsqueda anterior al escribir ────────────────────
+let abortController = null;
+
+document.getElementById('busqueda').addEventListener('input', async (e) =&gt; {
+  if (abortController) abortController.abort(); // cancelar anterior
+  abortController = new AbortController();
+
+  const termino = e.target.value.trim();
+  if (termino.length &lt; 2) return;
+
+  try {
+    const res = await fetch(`/api/buscar?q=${termino}`, {
+      signal: abortController.signal
+    });
+    const resultados = await res.json();
+    mostrarResultados(resultados);
+  } catch (err) {
+    if (err.name !== 'AbortError') console.error('Error:', err.message);
+  }
+});</pre></div></div>
+</div>
+<div class="page-footer"><a href="modulo2.html">← Módulo 2</a><span>Módulo 3 / 14</span><a href="modulo4.html">Módulo 4 →</a></div>
+<script>
+  document.querySelectorAll('.copy-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const code = btn.closest('.code-block').querySelector('pre').innerText;
+      navigator.clipboard.writeText(code).then(() => {
+        btn.textContent = '✓ Copiado'; btn.classList.add('copied');
+        setTimeout(() => { btn.textContent = 'Copiar'; btn.classList.remove('copied'); }, 2000);
+      });
+    });
+  });
+  document.querySelectorAll('.checklist-item input').forEach(cb => {
+    const key = 'ajax_cb_' + cb.id;
+    try { if (localStorage.getItem(key) === '1') { cb.checked = true; cb.closest('.checklist-item').classList.add('done'); } } catch(e){}
+    cb.addEventListener('change', () => {
+      try { localStorage.setItem(key, cb.checked ? '1' : '0'); } catch(e){}
+      cb.closest('.checklist-item').classList.toggle('done', cb.checked);
+    });
+  });
+</script>
+</body>
+</html>

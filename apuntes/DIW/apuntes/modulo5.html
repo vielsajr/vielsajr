@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Módulo 5: Async / Await — Código Asíncrono Legible — AJAX 2º DAW</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet"><style>
+  :root{--acc:#22d3ee;--acc2:#06b6d4;--acc3:#0891b2;--bg:#030f12;--bg2:#061419;--card:#071a1f;--border:#0d2d35;--text:#ecfeff;--muted:#4d9aaa;--code-bg:#040d10;--code-border:#0c2530;}
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{font-family:'Syne',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+  body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(34,211,238,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(34,211,238,0.03) 1px,transparent 1px);background-size:40px 40px;pointer-events:none;z-index:0;}
+  nav{position:sticky;top:0;z-index:100;background:rgba(3,15,18,0.93);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:14px 24px;display:flex;align-items:center;gap:16px;}
+  nav a.home{font-family:'JetBrains Mono',monospace;font-size:.75rem;color:var(--acc);text-decoration:none;padding:5px 12px;border:1px solid rgba(34,211,238,0.25);border-radius:6px;transition:background .15s;}
+  nav a.home:hover{background:rgba(34,211,238,0.08);}
+  nav .breadcrumb{font-family:'JetBrains Mono',monospace;font-size:.75rem;color:var(--muted);}
+  nav .nav-links{margin-left:auto;display:flex;gap:8px;}
+  nav .nav-links a{font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--muted);text-decoration:none;padding:4px 10px;border-radius:5px;transition:color .15s,background .15s;}
+  nav .nav-links a:hover{color:var(--acc);background:rgba(34,211,238,0.06);}
+  .mod-header{position:relative;z-index:1;max-width:860px;margin:0 auto;padding:52px 24px 36px;}
+  .mod-badge{display:inline-block;background:rgba(34,211,238,0.08);border:1px solid rgba(34,211,238,0.2);color:var(--acc);font-family:'JetBrains Mono',monospace;font-size:.7rem;padding:4px 12px;border-radius:100px;margin-bottom:20px;letter-spacing:.05em;}
+  .mod-header h1{font-size:clamp(1.8rem,4vw,2.8rem);font-weight:800;letter-spacing:-.02em;background:linear-gradient(135deg,#a5f3fc,#22d3ee,#0891b2);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1.15;margin-bottom:12px;}
+  .mod-header p{color:var(--muted);font-size:.95rem;line-height:1.5;}
+  .content{position:relative;z-index:1;max-width:860px;margin:0 auto;padding:0 24px 80px;}
+  .section{margin-bottom:48px;}
+  .section-title{font-size:1.15rem;font-weight:700;color:var(--text);margin-bottom:18px;padding-bottom:10px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;}
+  .section-title span.num{font-family:'JetBrains Mono',monospace;font-size:.7rem;color:var(--acc);background:rgba(34,211,238,0.08);padding:2px 8px;border-radius:4px;}
+  .code-block{background:var(--code-bg);border:1px solid var(--code-border);border-radius:12px;overflow:hidden;margin-bottom:20px;}
+  .code-header{display:flex;align-items:center;justify-content:space-between;padding:10px 16px;background:rgba(34,211,238,0.04);border-bottom:1px solid var(--code-border);}
+  .code-filename{font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--acc);}
+  .code-filename::before{content:'📄 ';}
+  .copy-btn{font-family:'JetBrains Mono',monospace;font-size:.68rem;color:var(--muted);background:none;border:1px solid var(--code-border);padding:3px 10px;border-radius:5px;cursor:pointer;transition:color .15s,border-color .15s;}
+  .copy-btn:hover{color:var(--acc);border-color:rgba(34,211,238,0.3);}
+  .copy-btn.copied{color:var(--acc);}
+  pre{padding:20px;overflow-x:auto;font-family:'JetBrains Mono',monospace;font-size:.8rem;line-height:1.7;color:#cffafe;tab-size:2;}
+  .table-wrap{overflow-x:auto;margin-bottom:20px;border-radius:12px;border:1px solid var(--border);}
+  table{width:100%;border-collapse:collapse;font-size:.84rem;}
+  thead tr{background:rgba(34,211,238,0.05);}
+  th{padding:12px 16px;text-align:left;font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--acc);letter-spacing:.05em;text-transform:uppercase;border-bottom:1px solid var(--border);white-space:nowrap;}
+  td{padding:11px 16px;border-bottom:1px solid rgba(13,45,53,0.8);color:var(--text);line-height:1.5;vertical-align:top;}
+  td:first-child{font-family:'JetBrains Mono',monospace;font-size:.75rem;color:var(--acc);white-space:nowrap;}
+  tr:last-child td{border-bottom:none;}
+  tr:hover td{background:rgba(34,211,238,0.02);}
+  .info-box{background:var(--card);border:1px solid var(--border);border-left:3px solid var(--acc);border-radius:10px;padding:18px 20px;margin-bottom:20px;font-size:.87rem;color:var(--muted);line-height:1.6;}
+  .info-box strong{color:var(--text);}
+  .info-box code{font-family:'JetBrains Mono',monospace;font-size:.8rem;background:rgba(34,211,238,0.08);padding:1px 6px;border-radius:4px;color:var(--acc);}
+  .tip-box{background:rgba(34,211,238,0.04);border:1px solid rgba(34,211,238,0.18);border-radius:10px;padding:16px 20px;margin-bottom:20px;font-size:.86rem;color:var(--muted);line-height:1.6;}
+  .tip-box strong{color:var(--acc);}
+  .tip-box code{font-family:'JetBrains Mono',monospace;font-size:.78rem;background:rgba(34,211,238,0.08);padding:1px 5px;border-radius:3px;color:var(--acc);}
+  .checklist{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:24px;margin-bottom:20px;}
+  .checklist-item{display:flex;align-items:flex-start;gap:12px;padding:8px 0;border-bottom:1px solid rgba(13,45,53,0.7);font-size:.88rem;color:var(--muted);line-height:1.4;}
+  .checklist-item:last-child{border-bottom:none;}
+  .checklist-item input[type=checkbox]{margin-top:2px;accent-color:var(--acc);width:16px;height:16px;flex-shrink:0;cursor:pointer;}
+  .checklist-item label{cursor:pointer;}
+  .checklist-item.done label{text-decoration:line-through;color:var(--acc3);}
+  .exercise{background:linear-gradient(135deg,rgba(34,211,238,0.04),rgba(8,145,178,0.03));border:1px solid rgba(34,211,238,0.18);border-radius:12px;padding:20px 24px;margin-bottom:20px;}
+  .exercise-label{font-family:'JetBrains Mono',monospace;font-size:.68rem;color:var(--acc);text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px;}
+  .exercise h3{font-size:.95rem;font-weight:700;color:var(--text);margin-bottom:10px;}
+  .exercise p{font-size:.85rem;color:var(--muted);line-height:1.6;}
+  .page-footer{position:relative;z-index:1;display:flex;justify-content:space-between;align-items:center;max-width:860px;margin:0 auto;padding:24px;border-top:1px solid var(--border);flex-wrap:wrap;gap:12px;}
+  .page-footer a{font-family:'JetBrains Mono',monospace;font-size:.78rem;color:var(--muted);text-decoration:none;padding:8px 16px;border:1px solid var(--border);border-radius:8px;transition:color .15s,border-color .15s;}
+  .page-footer a:hover{color:var(--acc);border-color:rgba(34,211,238,0.3);}
+  .page-footer span{font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--acc3);}
+  .toc{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px 24px;margin-bottom:40px;}
+  .toc-title{font-family:'JetBrains Mono',monospace;font-size:.7rem;color:var(--acc);text-transform:uppercase;letter-spacing:.08em;margin-bottom:14px;}
+  .toc a{display:block;font-size:.84rem;color:var(--muted);text-decoration:none;padding:5px 0;border-bottom:1px solid rgba(13,45,53,0.6);transition:color .15s,padding-left .15s;}
+  .toc a:last-child{border-bottom:none;}
+  .toc a:hover{color:var(--acc);padding-left:6px;}
+  .toc a::before{content:'›  ';color:var(--acc3);}
+</style>
+</head>
+<body>
+<nav>
+  <a href="index.html" class="home">⌂ Índice</a>
+  <span class="breadcrumb">/ Módulo 5</span>
+  <div class="nav-links"><a href="modulo4.html">← Módulo 4</a><a href="modulo6.html">Módulo 6 →</a></div>
+</nav>
+<div class="mod-header">
+  <div class="mod-badge">MÓDULO 05</div>
+  <h1>Async / Await — Código Asíncrono Legible</h1>
+  <p>Sintaxis básica de async/await, comparación con .then(), manejo de errores con try/catch, patrón safeAwait, peticiones paralelas vs secuenciales y for...of.</p>
+</div>
+<div class="content">
+  <div class="toc"><div class="toc-title">Contenido</div><a href="#s5-1">5.1 Sintaxis básica</a><a href="#s5-2">5.2 Manejo de errores</a><a href="#s5-3">5.3 Patrones avanzados</a></div>
+  <div class="section" id="s5-1"><h2 class="section-title"><span class="num">5.1</span> Sintaxis básica async/await</h2><div class="info-box"><code>async/await</code> es azúcar sintáctica sobre Promises. Hace que el código asíncrono parezca síncrono. Cualquier función <code>async</code> devuelve siempre una Promise. <code>await</code> solo puede usarse dentro de funciones <code>async</code>.</div><div class="code-block"><div class="code-header"><span class="code-filename">async_await_basico.js</span><button class="copy-btn">Copiar</button></div><pre>// ── La misma operación: con .then() vs async/await ───────────────────
+
+// CON .then() (encadenado):
+function obtenerDatosConThen() {
+  return fetch('/api/usuarios/1')
+    .then(r =&gt; { if (!r.ok) throw new Error(r.status); return r.json(); })
+    .then(usuario =&gt; fetch(`/api/pedidos?userId=${usuario.id}`))
+    .then(r =&gt; r.json());
+}
+
+// CON async/await (mucho más claro):
+async function obtenerDatosConAwait() {
+  // await 'pausa' la función hasta que la Promise se resuelve
+  // El hilo de ejecución NO SE BLOQUEA — JS sigue con otras tareas
+  const resUsuario = await fetch('/api/usuarios/1');
+  if (!resUsuario.ok) throw new Error(`Error ${resUsuario.status}`);
+  const usuario = await resUsuario.json();
+
+  const resPedidos = await fetch(`/api/pedidos?userId=${usuario.id}`);
+  const pedidos    = await resPedidos.json();
+
+  return { usuario, pedidos }; // Promise automáticamente resuelta
+}
+
+// LLAMAR a una función async:
+obtenerDatosConAwait()
+  .then(({ usuario, pedidos }) =&gt; {
+    console.log('Usuario:', usuario.name);
+    console.log('Pedidos:', pedidos.length);
+  })
+  .catch(err =&gt; console.error(err.message));
+
+// O con await (dentro de otra función async o top-level module):
+const { usuario, pedidos } = await obtenerDatosConAwait();</pre></div></div><div class="section" id="s5-2"><h2 class="section-title"><span class="num">5.2</span> Manejo de errores con try/catch</h2><div class="code-block"><div class="code-header"><span class="code-filename">async_errores.js</span><button class="copy-btn">Copiar</button></div><pre>// ── try/catch con async/await ────────────────────────────────────────
+async function obtenerUsuario(id) {
+  try {
+    const response = await fetch(`/api/usuarios/${id}`);
+    if (!response.ok) {
+      const errorData = await response.json().catch(() =&gt; ({}));
+      throw new Error(errorData.mensaje || `Error HTTP ${response.status}`);
+    }
+    const usuario = await response.json();
+    return usuario;
+
+  } catch (error) {
+    if (error.name === 'AbortError') {
+      console.log('Petición cancelada');
+      return null;
+    }
+    if (error.name === 'TypeError') {
+      console.error('Error de red:', error.message);
+    } else {
+      console.error('Error:', error.message);
+    }
+    throw error; // re-lanzar si el llamador necesita saberlo
+
+  } finally {
+    ocultarCargando(); // siempre se ejecuta
+  }
+}
+
+// ── Patrón: manejo al estilo Go/Node [error, datos] ──────────────────
+async function safeAwait(promise) {
+  try {
+    const data = await promise;
+    return [null, data];
+  } catch (error) {
+    return [error, null];
+  }
+}
+
+// Uso más limpio (sin try/catch en el llamador):
+const [error, usuario] = await safeAwait(obtenerUsuario(1));
+if (error) {
+  console.error('No se pudo obtener el usuario:', error.message);
+} else {
+  console.log('Usuario:', usuario.nombre);
+}</pre></div></div><div class="section" id="s5-3"><h2 class="section-title"><span class="num">5.3</span> Patrones avanzados: paralelo vs secuencial</h2><div class="code-block"><div class="code-header"><span class="code-filename">async_patrones.js</span><button class="copy-btn">Copiar</button></div><pre>// ── Peticiones en PARALELO (más eficiente) ───────────────────────────
+
+// ❌ MALO: secuencial — espera a que acabe cada una (total: ~3s)
+async function cargarSecuencial() {
+  const usuarios  = await fetch('/api/usuarios').then(r =&gt; r.json()); // ~1s
+  const productos = await fetch('/api/productos').then(r =&gt; r.json()); // ~1s
+  const pedidos   = await fetch('/api/pedidos').then(r =&gt; r.json());  // ~1s
+  return { usuarios, productos, pedidos };
+}
+
+// ✅ BIEN: paralelo — todas a la vez (total: ~1s, el más lento)
+async function cargarParalelo() {
+  const [usuarios, productos, pedidos] = await Promise.all([
+    fetch('/api/usuarios').then(r =&gt; r.json()),
+    fetch('/api/productos').then(r =&gt; r.json()),
+    fetch('/api/pedidos').then(r =&gt; r.json()),
+  ]);
+  return { usuarios, productos, pedidos };
+}
+
+// ── Flujo que mezcla secuencial (depende de anterior) + paralelo ─────
+async function flujoCompleto(emailUsuario) {
+  // 1. Login (secuencial — necesita el token para lo siguiente)
+  const auth = await fetch('/api/login', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email: emailUsuario, pass: '1234' }),
+  }).then(r =&gt; r.json());
+
+  // 2. Obtener perfil con el token
+  const perfil = await fetch('/api/perfil', {
+    headers: { Authorization: `Bearer ${auth.token}` }
+  }).then(r =&gt; r.json());
+
+  // 3. Cargar pedidos y favoritos en PARALELO (no dependen el uno del otro)
+  const [pedidos, favoritos] = await Promise.all([
+    fetch(`/api/pedidos?userId=${perfil.id}`).then(r =&gt; r.json()),
+    fetch(`/api/favoritos?userId=${perfil.id}`).then(r =&gt; r.json()),
+  ]);
+
+  return { perfil, pedidos, favoritos };
+}
+
+// ── for...of con await (bucle asíncrono secuencial) ───────────────────
+async function procesarIds(ids) {
+  const resultados = [];
+  for (const id of ids) {
+    const datos = await fetch(`/api/items/${id}`).then(r =&gt; r.json());
+    resultados.push(datos);
+    // Útil para throttling o cuando cada petición depende de la anterior
+  }
+  return resultados;
+}</pre></div></div>
+</div>
+<div class="page-footer"><a href="modulo4.html">← Módulo 4</a><span>Módulo 5 / 14</span><a href="modulo6.html">Módulo 6 →</a></div>
+<script>
+  document.querySelectorAll('.copy-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const code = btn.closest('.code-block').querySelector('pre').innerText;
+      navigator.clipboard.writeText(code).then(() => {
+        btn.textContent = '✓ Copiado'; btn.classList.add('copied');
+        setTimeout(() => { btn.textContent = 'Copiar'; btn.classList.remove('copied'); }, 2000);
+      });
+    });
+  });
+  document.querySelectorAll('.checklist-item input').forEach(cb => {
+    const key = 'ajax_cb_' + cb.id;
+    try { if (localStorage.getItem(key) === '1') { cb.checked = true; cb.closest('.checklist-item').classList.add('done'); } } catch(e){}
+    cb.addEventListener('change', () => {
+      try { localStorage.setItem(key, cb.checked ? '1' : '0'); } catch(e){}
+      cb.closest('.checklist-item').classList.toggle('done', cb.checked);
+    });
+  });
+</script>
+</body>
+</html>

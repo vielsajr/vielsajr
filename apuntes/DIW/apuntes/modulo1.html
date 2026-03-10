@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Módulo 1: Fundamentos: HTTP, Asincronía y Event Loop — AJAX 2º DAW</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet"><style>
+  :root{--acc:#22d3ee;--acc2:#06b6d4;--acc3:#0891b2;--bg:#030f12;--bg2:#061419;--card:#071a1f;--border:#0d2d35;--text:#ecfeff;--muted:#4d9aaa;--code-bg:#040d10;--code-border:#0c2530;}
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{font-family:'Syne',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+  body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(34,211,238,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(34,211,238,0.03) 1px,transparent 1px);background-size:40px 40px;pointer-events:none;z-index:0;}
+  nav{position:sticky;top:0;z-index:100;background:rgba(3,15,18,0.93);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:14px 24px;display:flex;align-items:center;gap:16px;}
+  nav a.home{font-family:'JetBrains Mono',monospace;font-size:.75rem;color:var(--acc);text-decoration:none;padding:5px 12px;border:1px solid rgba(34,211,238,0.25);border-radius:6px;transition:background .15s;}
+  nav a.home:hover{background:rgba(34,211,238,0.08);}
+  nav .breadcrumb{font-family:'JetBrains Mono',monospace;font-size:.75rem;color:var(--muted);}
+  nav .nav-links{margin-left:auto;display:flex;gap:8px;}
+  nav .nav-links a{font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--muted);text-decoration:none;padding:4px 10px;border-radius:5px;transition:color .15s,background .15s;}
+  nav .nav-links a:hover{color:var(--acc);background:rgba(34,211,238,0.06);}
+  .mod-header{position:relative;z-index:1;max-width:860px;margin:0 auto;padding:52px 24px 36px;}
+  .mod-badge{display:inline-block;background:rgba(34,211,238,0.08);border:1px solid rgba(34,211,238,0.2);color:var(--acc);font-family:'JetBrains Mono',monospace;font-size:.7rem;padding:4px 12px;border-radius:100px;margin-bottom:20px;letter-spacing:.05em;}
+  .mod-header h1{font-size:clamp(1.8rem,4vw,2.8rem);font-weight:800;letter-spacing:-.02em;background:linear-gradient(135deg,#a5f3fc,#22d3ee,#0891b2);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1.15;margin-bottom:12px;}
+  .mod-header p{color:var(--muted);font-size:.95rem;line-height:1.5;}
+  .content{position:relative;z-index:1;max-width:860px;margin:0 auto;padding:0 24px 80px;}
+  .section{margin-bottom:48px;}
+  .section-title{font-size:1.15rem;font-weight:700;color:var(--text);margin-bottom:18px;padding-bottom:10px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;}
+  .section-title span.num{font-family:'JetBrains Mono',monospace;font-size:.7rem;color:var(--acc);background:rgba(34,211,238,0.08);padding:2px 8px;border-radius:4px;}
+  .code-block{background:var(--code-bg);border:1px solid var(--code-border);border-radius:12px;overflow:hidden;margin-bottom:20px;}
+  .code-header{display:flex;align-items:center;justify-content:space-between;padding:10px 16px;background:rgba(34,211,238,0.04);border-bottom:1px solid var(--code-border);}
+  .code-filename{font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--acc);}
+  .code-filename::before{content:'📄 ';}
+  .copy-btn{font-family:'JetBrains Mono',monospace;font-size:.68rem;color:var(--muted);background:none;border:1px solid var(--code-border);padding:3px 10px;border-radius:5px;cursor:pointer;transition:color .15s,border-color .15s;}
+  .copy-btn:hover{color:var(--acc);border-color:rgba(34,211,238,0.3);}
+  .copy-btn.copied{color:var(--acc);}
+  pre{padding:20px;overflow-x:auto;font-family:'JetBrains Mono',monospace;font-size:.8rem;line-height:1.7;color:#cffafe;tab-size:2;}
+  .table-wrap{overflow-x:auto;margin-bottom:20px;border-radius:12px;border:1px solid var(--border);}
+  table{width:100%;border-collapse:collapse;font-size:.84rem;}
+  thead tr{background:rgba(34,211,238,0.05);}
+  th{padding:12px 16px;text-align:left;font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--acc);letter-spacing:.05em;text-transform:uppercase;border-bottom:1px solid var(--border);white-space:nowrap;}
+  td{padding:11px 16px;border-bottom:1px solid rgba(13,45,53,0.8);color:var(--text);line-height:1.5;vertical-align:top;}
+  td:first-child{font-family:'JetBrains Mono',monospace;font-size:.75rem;color:var(--acc);white-space:nowrap;}
+  tr:last-child td{border-bottom:none;}
+  tr:hover td{background:rgba(34,211,238,0.02);}
+  .info-box{background:var(--card);border:1px solid var(--border);border-left:3px solid var(--acc);border-radius:10px;padding:18px 20px;margin-bottom:20px;font-size:.87rem;color:var(--muted);line-height:1.6;}
+  .info-box strong{color:var(--text);}
+  .info-box code{font-family:'JetBrains Mono',monospace;font-size:.8rem;background:rgba(34,211,238,0.08);padding:1px 6px;border-radius:4px;color:var(--acc);}
+  .tip-box{background:rgba(34,211,238,0.04);border:1px solid rgba(34,211,238,0.18);border-radius:10px;padding:16px 20px;margin-bottom:20px;font-size:.86rem;color:var(--muted);line-height:1.6;}
+  .tip-box strong{color:var(--acc);}
+  .tip-box code{font-family:'JetBrains Mono',monospace;font-size:.78rem;background:rgba(34,211,238,0.08);padding:1px 5px;border-radius:3px;color:var(--acc);}
+  .checklist{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:24px;margin-bottom:20px;}
+  .checklist-item{display:flex;align-items:flex-start;gap:12px;padding:8px 0;border-bottom:1px solid rgba(13,45,53,0.7);font-size:.88rem;color:var(--muted);line-height:1.4;}
+  .checklist-item:last-child{border-bottom:none;}
+  .checklist-item input[type=checkbox]{margin-top:2px;accent-color:var(--acc);width:16px;height:16px;flex-shrink:0;cursor:pointer;}
+  .checklist-item label{cursor:pointer;}
+  .checklist-item.done label{text-decoration:line-through;color:var(--acc3);}
+  .exercise{background:linear-gradient(135deg,rgba(34,211,238,0.04),rgba(8,145,178,0.03));border:1px solid rgba(34,211,238,0.18);border-radius:12px;padding:20px 24px;margin-bottom:20px;}
+  .exercise-label{font-family:'JetBrains Mono',monospace;font-size:.68rem;color:var(--acc);text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px;}
+  .exercise h3{font-size:.95rem;font-weight:700;color:var(--text);margin-bottom:10px;}
+  .exercise p{font-size:.85rem;color:var(--muted);line-height:1.6;}
+  .page-footer{position:relative;z-index:1;display:flex;justify-content:space-between;align-items:center;max-width:860px;margin:0 auto;padding:24px;border-top:1px solid var(--border);flex-wrap:wrap;gap:12px;}
+  .page-footer a{font-family:'JetBrains Mono',monospace;font-size:.78rem;color:var(--muted);text-decoration:none;padding:8px 16px;border:1px solid var(--border);border-radius:8px;transition:color .15s,border-color .15s;}
+  .page-footer a:hover{color:var(--acc);border-color:rgba(34,211,238,0.3);}
+  .page-footer span{font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--acc3);}
+  .toc{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px 24px;margin-bottom:40px;}
+  .toc-title{font-family:'JetBrains Mono',monospace;font-size:.7rem;color:var(--acc);text-transform:uppercase;letter-spacing:.08em;margin-bottom:14px;}
+  .toc a{display:block;font-size:.84rem;color:var(--muted);text-decoration:none;padding:5px 0;border-bottom:1px solid rgba(13,45,53,0.6);transition:color .15s,padding-left .15s;}
+  .toc a:last-child{border-bottom:none;}
+  .toc a:hover{color:var(--acc);padding-left:6px;}
+  .toc a::before{content:'›  ';color:var(--acc3);}
+</style>
+</head>
+<body>
+<nav>
+  <a href="index.html" class="home">⌂ Índice</a>
+  <span class="breadcrumb">/ Módulo 1</span>
+  <div class="nav-links"><a href="index.html">← Índice</a><a href="modulo2.html">Módulo 2 →</a></div>
+</nav>
+<div class="mod-header">
+  <div class="mod-badge">MÓDULO 01</div>
+  <h1>Fundamentos: HTTP, Asincronía y Event Loop</h1>
+  <p>Qué es AJAX y por qué existe, métodos HTTP, códigos de estado, diferencia entre código síncrono y asíncrono, y cómo funciona el Event Loop.</p>
+</div>
+<div class="content">
+  <div class="toc"><div class="toc-title">Contenido</div><a href="#s1-1">1.1 ¿Qué es AJAX?</a><a href="#s1-2">1.2 Métodos y códigos HTTP</a><a href="#s1-3">1.3 Síncrono vs Asíncrono</a><a href="#s1-4">1.4 El Event Loop</a></div>
+  <div class="section" id="s1-1"><h2 class="section-title"><span class="num">1.1</span> ¿Qué es AJAX?</h2><div class="info-box">AJAX (Asynchronous JavaScript And XML) permite enviar y recibir datos del servidor <strong>en segundo plano, sin recargar la página</strong>. Hoy en día se usa JSON (no XML) y Fetch API (no XHR). <strong>Sin AJAX:</strong> el navegador carga la página ENTERA al hacer clic. <strong>Con AJAX:</strong> JavaScript pide datos en segundo plano y solo actualiza la parte necesaria del DOM. Ejemplos: búsqueda Google, Instagram scroll infinito, Gmail.</div></div><div class="section" id="s1-2"><h2 class="section-title"><span class="num">1.2</span> Métodos y códigos HTTP</h2><div class="table-wrap"><table><thead><tr><th>Método</th><th>Descripción</th></tr></thead><tbody><tr><td>GET</td><td>Solicitar datos del servidor. No modifica nada. Parámetros en la URL (?key=val). Cacheable.</td></tr><tr><td>POST</td><td>Enviar datos al servidor para crear un recurso. Cuerpo en el body. No cacheable.</td></tr><tr><td>PUT</td><td>Reemplazar completamente un recurso existente.</td></tr><tr><td>PATCH</td><td>Modificar parcialmente un recurso existente.</td></tr><tr><td>DELETE</td><td>Eliminar un recurso del servidor.</td></tr><tr><td>HEAD</td><td>Como GET pero sin cuerpo de respuesta. Para comprobar existencia/cabeceras.</td></tr><tr><td>OPTIONS</td><td>Consultar qué métodos permite el servidor. Usado en CORS preflight.</td></tr></tbody></table></div><div class="table-wrap"><table><thead><tr><th>Código</th><th>Descripción</th></tr></thead><tbody><tr><td>200 OK</td><td>Petición exitosa. La respuesta contiene los datos solicitados.</td></tr><tr><td>201 Created</td><td>Recurso creado exitosamente (respuesta a POST/PUT).</td></tr><tr><td>204 No Content</td><td>Éxito pero sin cuerpo de respuesta (típico en DELETE).</td></tr><tr><td>301/302</td><td>Redirección permanente/temporal.</td></tr><tr><td>400 Bad Request</td><td>La petición está mal formada (error del cliente).</td></tr><tr><td>401 Unauthorized</td><td>No autenticado — falta o es inválido el token de autenticación.</td></tr><tr><td>403 Forbidden</td><td>Autenticado pero sin permisos para ese recurso.</td></tr><tr><td>404 Not Found</td><td>El recurso solicitado no existe.</td></tr><tr><td>409 Conflict</td><td>Conflicto con el estado actual (ej: email ya registrado).</td></tr><tr><td>422 Unprocessable</td><td>Validación fallida de los datos enviados.</td></tr><tr><td>429 Too Many Requests</td><td>Rate limiting: demasiadas peticiones en poco tiempo.</td></tr><tr><td>500 Internal Server Error</td><td>Error en el servidor (bug en el código del servidor).</td></tr><tr><td>503 Service Unavailable</td><td>Servidor temporalmente no disponible.</td></tr></tbody></table></div></div><div class="section" id="s1-3"><h2 class="section-title"><span class="num">1.3</span> Síncrono vs Asíncrono</h2><div class="code-block"><div class="code-header"><span class="code-filename">asincronia.js</span><button class="copy-btn">Copiar</button></div><pre>// ── PROBLEMA: código SÍNCRONO (bloquea todo) ──────────────────────────
+// Esto NO existe en AJAX moderno, pero ilustra el problema:
+// const datos = esperarRespuestaServidor(); // ← bloquea 3 segundos
+// console.log('Esto no se ejecuta hasta que lleguen los datos');
+
+// ── SOLUCIÓN 1: Callbacks (forma antigua) ─────────────────────────────
+function obtenerUsuario(id, callback) {
+  const xhr = new XMLHttpRequest();
+  xhr.open('GET', `/api/usuarios/${id}`);
+  xhr.onload = function() {
+    if (xhr.status === 200) {
+      callback(null, JSON.parse(xhr.responseText)); // éxito
+    } else {
+      callback(new Error('Error: ' + xhr.status));  // error
+    }
+  };
+  xhr.onerror = () =&gt; callback(new Error('Error de red'));
+  xhr.send();
+}
+
+// Uso con callback — 'Callback Hell' si se anidan
+obtenerUsuario(1, function(error, usuario) {
+  if (error) { console.error(error); return; }
+  console.log(usuario.nombre); // aquí ya tenemos los datos
+});
+
+console.log('Esto se ejecuta ANTES que el console.log de arriba');</pre></div></div><div class="section" id="s1-4"><h2 class="section-title"><span class="num">1.4</span> El Event Loop de JavaScript</h2><div class="info-box"><strong>Call Stack:</strong> donde se ejecuta el código sincrónico. Solo puede hacer una cosa a la vez.<br><br>
+<strong>Web APIs:</strong> el navegador gestiona las operaciones lentas (peticiones HTTP, timers, eventos) fuera del stack.<br><br>
+<strong>Callback Queue:</strong> cuando la Web API termina, pone el callback en la cola.<br><br>
+<strong>Event Loop:</strong> continuamente comprueba si el Call Stack está vacío; si lo está, mueve callbacks de la cola al stack.<br><br>
+<strong>Microtask Queue:</strong> cola especial de mayor prioridad para Promises. Se vacía ANTES que la Callback Queue.<br><br>
+<strong>Implicación práctica:</strong> <code>.then()</code> de una Promise siempre se ejecuta DESPUÉS del código síncrono actual.</div><div class="code-block"><div class="code-header"><span class="code-filename">eventloop_demo.js</span><button class="copy-btn">Copiar</button></div><pre>// Demo del Event Loop — predecir el orden de ejecución
+console.log('1 — síncrono');
+
+setTimeout(() =&gt; {
+  console.log('4 — setTimeout (Callback Queue)');
+}, 0); // ← aunque sea 0ms, va a la cola y espera
+
+Promise.resolve()
+  .then(() =&gt; console.log('3 — Promise (Microtask Queue)'));
+
+console.log('2 — síncrono');
+
+// Salida:
+// 1 — síncrono
+// 2 — síncrono
+// 3 — Promise (Microtask Queue)  ← las microtasks van primero
+// 4 — setTimeout (Callback Queue)</pre></div></div>
+</div>
+<div class="page-footer"><a href="index.html">← Índice</a><span>Módulo 1 / 14</span><a href="modulo2.html">Módulo 2 →</a></div>
+<script>
+  document.querySelectorAll('.copy-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const code = btn.closest('.code-block').querySelector('pre').innerText;
+      navigator.clipboard.writeText(code).then(() => {
+        btn.textContent = '✓ Copiado'; btn.classList.add('copied');
+        setTimeout(() => { btn.textContent = 'Copiar'; btn.classList.remove('copied'); }, 2000);
+      });
+    });
+  });
+  document.querySelectorAll('.checklist-item input').forEach(cb => {
+    const key = 'ajax_cb_' + cb.id;
+    try { if (localStorage.getItem(key) === '1') { cb.checked = true; cb.closest('.checklist-item').classList.add('done'); } } catch(e){}
+    cb.addEventListener('change', () => {
+      try { localStorage.setItem(key, cb.checked ? '1' : '0'); } catch(e){}
+      cb.closest('.checklist-item').classList.toggle('done', cb.checked);
+    });
+  });
+</script>
+</body>
+</html>

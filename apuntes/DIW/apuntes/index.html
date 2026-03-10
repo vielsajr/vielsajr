@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>AJAX — Apuntes 2º DAW</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{--acc:#22d3ee;--acc2:#06b6d4;--acc3:#0891b2;--bg:#030f12;--bg3:#061419;--card:#071a1f;--border:#0d2d35;--text:#ecfeff;--muted:#4d9aaa;}
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:'Syne',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;}
+  body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(34,211,238,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(34,211,238,0.04) 1px,transparent 1px);background-size:40px 40px;pointer-events:none;z-index:0;}
+  .hero{position:relative;z-index:1;text-align:center;padding:80px 20px 60px;max-width:900px;margin:0 auto;}
+  .badge{display:inline-block;background:rgba(34,211,238,0.1);border:1px solid rgba(34,211,238,0.3);color:var(--acc);font-family:'JetBrains Mono',monospace;font-size:.75rem;padding:6px 14px;border-radius:100px;margin-bottom:28px;letter-spacing:.05em;}
+  .hero h1{font-size:clamp(2.5rem,6vw,4.5rem);font-weight:800;line-height:1.05;letter-spacing:-.02em;background:linear-gradient(135deg,#a5f3fc 0%,#22d3ee 50%,#0891b2 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:8px;}
+  .hero .subtitle{font-size:1.1rem;color:var(--muted);margin-top:16px;margin-bottom:10px;}
+  .hero .curso{font-family:'JetBrains Mono',monospace;font-size:.8rem;color:var(--acc3);margin-bottom:48px;}
+  .tags{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin-bottom:60px;}
+  .tag{background:var(--bg3);border:1px solid var(--border);color:var(--muted);font-family:'JetBrains Mono',monospace;font-size:.72rem;padding:5px 12px;border-radius:6px;}
+  .plan-section{position:relative;z-index:1;max-width:900px;margin:0 auto 60px;padding:0 20px;}
+  .section-title{font-size:.72rem;font-family:'JetBrains Mono',monospace;color:var(--acc);letter-spacing:.1em;text-transform:uppercase;margin-bottom:20px;}
+  .plan-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px;}
+  .plan-item{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:14px 16px;font-size:.82rem;color:var(--muted);line-height:1.4;}
+  .plan-item strong{display:block;color:var(--acc);font-family:'JetBrains Mono',monospace;font-size:.7rem;margin-bottom:4px;}
+  .modules{position:relative;z-index:1;max-width:1100px;margin:0 auto 80px;padding:0 20px;display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px;}
+  .module-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:24px;text-decoration:none;color:inherit;display:flex;flex-direction:column;gap:12px;transition:border-color .2s,transform .2s,background .2s;position:relative;overflow:hidden;}
+  .module-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--acc),transparent);opacity:0;transition:opacity .2s;}
+  .module-card:hover{border-color:rgba(34,211,238,0.35);transform:translateY(-3px);background:var(--bg3);}
+  .module-card:hover::before{opacity:1;}
+  .module-number{font-family:'JetBrains Mono',monospace;font-size:.7rem;color:var(--acc3);background:rgba(34,211,238,0.08);border:1px solid rgba(34,211,238,0.15);padding:3px 9px;border-radius:100px;width:fit-content;}
+  .module-title{font-size:1rem;font-weight:700;color:var(--text);line-height:1.3;}
+  .module-desc{font-size:.82rem;color:var(--muted);line-height:1.5;flex:1;}
+  .module-arrow{font-size:.9rem;color:var(--acc);opacity:0;transition:opacity .2s;}
+  .module-card:hover .module-arrow{opacity:1;}
+  footer{position:relative;z-index:1;text-align:center;padding:30px 20px;color:var(--muted);font-size:.78rem;font-family:'JetBrains Mono',monospace;border-top:1px solid var(--border);}
+</style>
+</head>
+<body>
+<div class="hero">
+  <div class="badge">📚 2º DAW · Diseño de Interfaces Web · Curso 2024–2025</div>
+  <h1>AJAX</h1>
+  <p class="subtitle">Asynchronous JavaScript and XML</p>
+  <p class="curso">// Examen en 2 meses · 14 módulos · plan 8 semanas</p>
+  <div class="tags">
+    <span class="tag">XMLHttpRequest</span><span class="tag">Fetch API</span><span class="tag">Promesas</span><span class="tag">Async/Await</span><span class="tag">JSON</span><span class="tag">APIs REST</span><span class="tag">CORS</span><span class="tag">AbortController</span><span class="tag">Debounce</span><span class="tag">FormData</span><span class="tag">JWT</span><span class="tag">Axios</span><span class="tag">PHP</span><span class="tag">PDO</span>
+  </div>
+</div>
+<div class="plan-section">
+  <p class="section-title">📅 Plan de estudio — 8 semanas</p>
+  <div class="plan-grid"><div class="plan-item"><strong>Semana 1</strong>Fundamentos — HTTP, peticiones síncronas vs asíncronas, el Event Loop</div><div class="plan-item"><strong>Semana 2</strong>XMLHttpRequest — objeto clásico, métodos, eventos, readyState</div><div class="plan-item"><strong>Semana 3</strong>Fetch API — Promises, .then()/.catch()/.finally()</div><div class="plan-item"><strong>Semana 4</strong>Async/Await — manejo de errores, patrones avanzados</div><div class="plan-item"><strong>Semana 5</strong>JSON — parse, stringify, trabajar con APIs reales</div><div class="plan-item"><strong>Semana 6</strong>APIs REST — verbos HTTP, cabeceras, CORS, autenticación</div><div class="plan-item"><strong>Semana 7</strong>Patrones AJAX — formularios, paginación, búsqueda en vivo</div><div class="plan-item"><strong>Semana 8</strong>Proyectos completos + repaso + ejercicios tipo examen</div></div>
+</div>
+<div style="position:relative;z-index:1;max-width:1100px;margin:0 auto 20px;padding:0 20px;"><p class="section-title">🗂️ Módulos</p></div>
+<div class="modules"><a href="modulo1.html" class="module-card"><span class="module-number">MÓDULO 01</span><div class="module-title">Fundamentos: HTTP, Asincronía y Event Loop</div><div class="module-desc">Qué es AJAX, métodos HTTP, códigos de estado, síncrono vs asíncrono y el Event Loop.</div><span class="module-arrow">→</span></a><a href="modulo2.html" class="module-card"><span class="module-number">MÓDULO 02</span><div class="module-title">XMLHttpRequest (XHR) — La Base Clásica</div><div class="module-desc">Estados readyState, todos los eventos, petición GET y POST con JSON, FormData.</div><span class="module-arrow">→</span></a><a href="modulo3.html" class="module-card"><span class="module-number">MÓDULO 03</span><div class="module-title">Fetch API — La Forma Moderna de AJAX</div><div class="module-desc">Anatomía completa, response.ok, todos los métodos HTTP, FormData y AbortController.</div><span class="module-arrow">→</span></a><a href="modulo4.html" class="module-card"><span class="module-number">MÓDULO 04</span><div class="module-title">Promesas (Promises) en Profundidad</div><div class="module-desc">Crear/consumir Promises, .then()/.catch()/.finally(), Promise.all/allSettled/race/any.</div><span class="module-arrow">→</span></a><a href="modulo5.html" class="module-card"><span class="module-number">MÓDULO 05</span><div class="module-title">Async / Await — Código Asíncrono Legible</div><div class="module-desc">Sintaxis básica, try/catch, safeAwait, peticiones paralelas vs secuenciales.</div><span class="module-arrow">→</span></a><a href="modulo6.html" class="module-card"><span class="module-number">MÓDULO 06</span><div class="module-title">JSON — Formato de Intercambio de Datos</div><div class="module-desc">Tipos de datos, JSON.stringify() con replacer, JSON.parse() con reviver, errores.</div><span class="module-arrow">→</span></a><a href="modulo7.html" class="module-card"><span class="module-number">MÓDULO 07</span><div class="module-title">APIs REST — Diseño y Consumo</div><div class="module-desc">Principios REST, diseño de URLs, clase ApiClient reutilizable con campos privados.</div><span class="module-arrow">→</span></a><a href="modulo8.html" class="module-card"><span class="module-number">MÓDULO 08</span><div class="module-title">CORS y Cabeceras HTTP</div><div class="module-desc">Same-Origin Policy, cómo funciona CORS (simple/preflight), configuración PHP/Laravel.</div><span class="module-arrow">→</span></a><a href="modulo9.html" class="module-card"><span class="module-number">MÓDULO 09</span><div class="module-title">Manejo de Errores en AJAX</div><div class="module-desc">Tipos de errores, función fetchRobusto con timeout y sistema de notificaciones.</div><span class="module-arrow">→</span></a><a href="modulo10.html" class="module-card"><span class="module-number">MÓDULO 10</span><div class="module-title">Patrones AJAX con el DOM</div><div class="module-desc">Formulario sin recarga, live search con debounce, infinite scroll, CRUD dinámico.</div><span class="module-arrow">→</span></a><a href="modulo11.html" class="module-card"><span class="module-number">MÓDULO 11</span><div class="module-title">AJAX con PHP en el Servidor</div><div class="module-desc">Endpoint PHP completo con CORS, CRUD con PDO, validación y autenticación JWT.</div><span class="module-arrow">→</span></a><a href="modulo12.html" class="module-card"><span class="module-number">MÓDULO 12</span><div class="module-title">Librerías: Axios y jQuery AJAX</div><div class="module-desc">Axios vs Fetch, interceptores, instancia con config base, jQuery $.ajax.</div><span class="module-arrow">→</span></a><a href="modulo13.html" class="module-card"><span class="module-number">MÓDULO 13</span><div class="module-title">Proyecto Completo: App de Notas</div><div class="module-desc">CRUD completo notas: backend PHP + PDO/MySQL y frontend JS con renderizado dinámico.</div><span class="module-arrow">→</span></a><a href="modulo14.html" class="module-card"><span class="module-number">MÓDULO 14</span><div class="module-title">Cheat Sheet y Ejercicios de Examen</div><div class="module-desc">Referencia rápida, 3 ejercicios resueltos (básico/medio/avanzado) y checklist.</div><span class="module-arrow">→</span></a></div>
+<footer>AJAX · Diseño de Interfaces Web · 2º DAW · 2024–2025</footer>
+</body>
+</html>

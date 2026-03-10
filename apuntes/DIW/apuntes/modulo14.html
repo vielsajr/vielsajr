@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Módulo 14: Cheat Sheet y Ejercicios de Examen — AJAX 2º DAW</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet"><style>
+  :root{--acc:#22d3ee;--acc2:#06b6d4;--acc3:#0891b2;--bg:#030f12;--bg2:#061419;--card:#071a1f;--border:#0d2d35;--text:#ecfeff;--muted:#4d9aaa;--code-bg:#040d10;--code-border:#0c2530;}
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{font-family:'Syne',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+  body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(34,211,238,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(34,211,238,0.03) 1px,transparent 1px);background-size:40px 40px;pointer-events:none;z-index:0;}
+  nav{position:sticky;top:0;z-index:100;background:rgba(3,15,18,0.93);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:14px 24px;display:flex;align-items:center;gap:16px;}
+  nav a.home{font-family:'JetBrains Mono',monospace;font-size:.75rem;color:var(--acc);text-decoration:none;padding:5px 12px;border:1px solid rgba(34,211,238,0.25);border-radius:6px;transition:background .15s;}
+  nav a.home:hover{background:rgba(34,211,238,0.08);}
+  nav .breadcrumb{font-family:'JetBrains Mono',monospace;font-size:.75rem;color:var(--muted);}
+  nav .nav-links{margin-left:auto;display:flex;gap:8px;}
+  nav .nav-links a{font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--muted);text-decoration:none;padding:4px 10px;border-radius:5px;transition:color .15s,background .15s;}
+  nav .nav-links a:hover{color:var(--acc);background:rgba(34,211,238,0.06);}
+  .mod-header{position:relative;z-index:1;max-width:860px;margin:0 auto;padding:52px 24px 36px;}
+  .mod-badge{display:inline-block;background:rgba(34,211,238,0.08);border:1px solid rgba(34,211,238,0.2);color:var(--acc);font-family:'JetBrains Mono',monospace;font-size:.7rem;padding:4px 12px;border-radius:100px;margin-bottom:20px;letter-spacing:.05em;}
+  .mod-header h1{font-size:clamp(1.8rem,4vw,2.8rem);font-weight:800;letter-spacing:-.02em;background:linear-gradient(135deg,#a5f3fc,#22d3ee,#0891b2);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1.15;margin-bottom:12px;}
+  .mod-header p{color:var(--muted);font-size:.95rem;line-height:1.5;}
+  .content{position:relative;z-index:1;max-width:860px;margin:0 auto;padding:0 24px 80px;}
+  .section{margin-bottom:48px;}
+  .section-title{font-size:1.15rem;font-weight:700;color:var(--text);margin-bottom:18px;padding-bottom:10px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;}
+  .section-title span.num{font-family:'JetBrains Mono',monospace;font-size:.7rem;color:var(--acc);background:rgba(34,211,238,0.08);padding:2px 8px;border-radius:4px;}
+  .code-block{background:var(--code-bg);border:1px solid var(--code-border);border-radius:12px;overflow:hidden;margin-bottom:20px;}
+  .code-header{display:flex;align-items:center;justify-content:space-between;padding:10px 16px;background:rgba(34,211,238,0.04);border-bottom:1px solid var(--code-border);}
+  .code-filename{font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--acc);}
+  .code-filename::before{content:'📄 ';}
+  .copy-btn{font-family:'JetBrains Mono',monospace;font-size:.68rem;color:var(--muted);background:none;border:1px solid var(--code-border);padding:3px 10px;border-radius:5px;cursor:pointer;transition:color .15s,border-color .15s;}
+  .copy-btn:hover{color:var(--acc);border-color:rgba(34,211,238,0.3);}
+  .copy-btn.copied{color:var(--acc);}
+  pre{padding:20px;overflow-x:auto;font-family:'JetBrains Mono',monospace;font-size:.8rem;line-height:1.7;color:#cffafe;tab-size:2;}
+  .table-wrap{overflow-x:auto;margin-bottom:20px;border-radius:12px;border:1px solid var(--border);}
+  table{width:100%;border-collapse:collapse;font-size:.84rem;}
+  thead tr{background:rgba(34,211,238,0.05);}
+  th{padding:12px 16px;text-align:left;font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--acc);letter-spacing:.05em;text-transform:uppercase;border-bottom:1px solid var(--border);white-space:nowrap;}
+  td{padding:11px 16px;border-bottom:1px solid rgba(13,45,53,0.8);color:var(--text);line-height:1.5;vertical-align:top;}
+  td:first-child{font-family:'JetBrains Mono',monospace;font-size:.75rem;color:var(--acc);white-space:nowrap;}
+  tr:last-child td{border-bottom:none;}
+  tr:hover td{background:rgba(34,211,238,0.02);}
+  .info-box{background:var(--card);border:1px solid var(--border);border-left:3px solid var(--acc);border-radius:10px;padding:18px 20px;margin-bottom:20px;font-size:.87rem;color:var(--muted);line-height:1.6;}
+  .info-box strong{color:var(--text);}
+  .info-box code{font-family:'JetBrains Mono',monospace;font-size:.8rem;background:rgba(34,211,238,0.08);padding:1px 6px;border-radius:4px;color:var(--acc);}
+  .tip-box{background:rgba(34,211,238,0.04);border:1px solid rgba(34,211,238,0.18);border-radius:10px;padding:16px 20px;margin-bottom:20px;font-size:.86rem;color:var(--muted);line-height:1.6;}
+  .tip-box strong{color:var(--acc);}
+  .tip-box code{font-family:'JetBrains Mono',monospace;font-size:.78rem;background:rgba(34,211,238,0.08);padding:1px 5px;border-radius:3px;color:var(--acc);}
+  .checklist{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:24px;margin-bottom:20px;}
+  .checklist-item{display:flex;align-items:flex-start;gap:12px;padding:8px 0;border-bottom:1px solid rgba(13,45,53,0.7);font-size:.88rem;color:var(--muted);line-height:1.4;}
+  .checklist-item:last-child{border-bottom:none;}
+  .checklist-item input[type=checkbox]{margin-top:2px;accent-color:var(--acc);width:16px;height:16px;flex-shrink:0;cursor:pointer;}
+  .checklist-item label{cursor:pointer;}
+  .checklist-item.done label{text-decoration:line-through;color:var(--acc3);}
+  .exercise{background:linear-gradient(135deg,rgba(34,211,238,0.04),rgba(8,145,178,0.03));border:1px solid rgba(34,211,238,0.18);border-radius:12px;padding:20px 24px;margin-bottom:20px;}
+  .exercise-label{font-family:'JetBrains Mono',monospace;font-size:.68rem;color:var(--acc);text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px;}
+  .exercise h3{font-size:.95rem;font-weight:700;color:var(--text);margin-bottom:10px;}
+  .exercise p{font-size:.85rem;color:var(--muted);line-height:1.6;}
+  .page-footer{position:relative;z-index:1;display:flex;justify-content:space-between;align-items:center;max-width:860px;margin:0 auto;padding:24px;border-top:1px solid var(--border);flex-wrap:wrap;gap:12px;}
+  .page-footer a{font-family:'JetBrains Mono',monospace;font-size:.78rem;color:var(--muted);text-decoration:none;padding:8px 16px;border:1px solid var(--border);border-radius:8px;transition:color .15s,border-color .15s;}
+  .page-footer a:hover{color:var(--acc);border-color:rgba(34,211,238,0.3);}
+  .page-footer span{font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--acc3);}
+  .toc{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px 24px;margin-bottom:40px;}
+  .toc-title{font-family:'JetBrains Mono',monospace;font-size:.7rem;color:var(--acc);text-transform:uppercase;letter-spacing:.08em;margin-bottom:14px;}
+  .toc a{display:block;font-size:.84rem;color:var(--muted);text-decoration:none;padding:5px 0;border-bottom:1px solid rgba(13,45,53,0.6);transition:color .15s,padding-left .15s;}
+  .toc a:last-child{border-bottom:none;}
+  .toc a:hover{color:var(--acc);padding-left:6px;}
+  .toc a::before{content:'›  ';color:var(--acc3);}
+</style>
+</head>
+<body>
+<nav>
+  <a href="index.html" class="home">⌂ Índice</a>
+  <span class="breadcrumb">/ Módulo 14</span>
+  <div class="nav-links"><a href="modulo13.html">← Módulo 13</a><a href="index.html">Volver al Índice →</a></div>
+</nav>
+<div class="mod-header">
+  <div class="mod-badge">MÓDULO 14</div>
+  <h1>Cheat Sheet y Ejercicios de Examen</h1>
+  <p>Referencia rápida con los patrones más importantes, tres ejercicios resueltos tipo examen (básico, medio, avanzado) y checklist de preparación.</p>
+</div>
+<div class="content">
+  <div class="toc"><div class="toc-title">Contenido</div><a href="#s14-1">14.1 Cheat Sheet</a><a href="#s14-2">14.2 Ejercicio 1</a><a href="#s14-3">14.3 Ejercicio 2</a><a href="#s14-4">14.4 Ejercicio 3</a><a href="#s14-5">14.5 Checklist</a></div>
+  <div class="section" id="s14-1"><h2 class="section-title"><span class="num">14.1</span> Cheat Sheet — Referencia rápida</h2><div class="table-wrap"><table><thead><tr><th>Concepto</th><th>Código / Descripción</th></tr></thead><tbody><tr><td>XHR básico GET</td><td>const x=new XMLHttpRequest(); x.open("GET",url); x.onload=()=>JSON.parse(x.responseText); x.send()</td></tr><tr><td>Fetch GET</td><td>fetch(url).then(r=>r.json()).then(d=>...).catch(e=>...)</td></tr><tr><td>Fetch POST JSON</td><td>fetch(url,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(data)})</td></tr><tr><td>Fetch + async/await</td><td>const r=await fetch(url); if(!r.ok)throw Error(r.status); const d=await r.json();</td></tr><tr><td>Promise.all</td><td>const [a,b]=await Promise.all([fetch(url1).then(r=>r.json()),fetch(url2).then(r=>r.json())])</td></tr><tr><td>JSON.stringify</td><td>JSON.stringify(objeto) → string para enviar al servidor</td></tr><tr><td>JSON.parse</td><td>JSON.parse(string) → objeto JS para usar en código</td></tr><tr><td>FormData</td><td>const fd=new FormData(form); fetch(url,{method:"POST",body:fd}) (sin Content-Type)</td></tr><tr><td>AbortController</td><td>const ac=new AbortController(); fetch(url,{signal:ac.signal}); ac.abort()</td></tr><tr><td>Debounce</td><td>let t; const deb=(fn,d)=>(...a)=>{clearTimeout(t);t=setTimeout(()=>fn(...a),d)}</td></tr><tr><td>URLSearchParams</td><td>const p=new URLSearchParams({q:"busqueda",page:1}); fetch(`/api?${p}`)</td></tr><tr><td>response.ok</td><td>SIEMPRE comprobar: if(!response.ok) throw new Error(response.status)</td></tr><tr><td>Content-Type JSON</td><td>headers: {"Content-Type":"application/json","Accept":"application/json"}</td></tr><tr><td>Bearer token</td><td>headers: {"Authorization": `Bearer ${localStorage.getItem("token")}`}</td></tr></tbody></table></div></div><div class="section" id="s14-2"><h2 class="section-title"><span class="num">14.2</span> Ejercicio 1 — Fetch básico con manejo de errores</h2><div class="exercise"><div class="exercise-label">📝 EJERCICIO 1 — Nivel básico</div><h3>Función obtenerProducto(id) con Fetch</h3><p>Escribe una función <strong>obtenerProducto(id)</strong> que use Fetch para obtener un producto de <code>/api/productos/{id}</code>. Debe comprobar response.ok, devolver el objeto JSON si hay éxito, y lanzar un Error con el código HTTP si falla. Llama a la función y muestra el nombre en un div con id="resultado".</p></div><div class="code-block"><div class="code-header"><span class="code-filename">Solución Ejercicio 1</span><button class="copy-btn">Copiar</button></div><pre>async function obtenerProducto(id) {
+  const response = await fetch(`/api/productos/${id}`);
+  if (!response.ok) {
+    throw new Error(`Error ${response.status}: ${response.statusText}`);
+  }
+  return response.json();
+}
+
+const resultado = document.getElementById('resultado');
+obtenerProducto(42)
+  .then(producto =&gt; {
+    resultado.textContent = producto.nombre;
+    resultado.className   = 'exito';
+  })
+  .catch(error =&gt; {
+    resultado.textContent = `Error: ${error.message}`;
+    resultado.className   = 'error';
+  });</pre></div></div><div class="section" id="s14-3"><h2 class="section-title"><span class="num">14.3</span> Ejercicio 2 — Formulario AJAX con spinner</h2><div class="exercise"><div class="exercise-label">📝 EJERCICIO 2 — Nivel medio</div><h3>Formulario de login con AJAX</h3><p>Crea el JS para que el formulario con id="form-login" envíe datos por AJAX (POST a /api/login con JSON). Debe: evitar la recarga, mostrar un spinner mientras carga, mostrar el error si status 401, redirigir a /dashboard si status 200, y deshabilitar el botón durante la petición.</p></div><div class="code-block"><div class="code-header"><span class="code-filename">Solución Ejercicio 2</span><button class="copy-btn">Copiar</button></div><pre>document.getElementById('form-login').addEventListener('submit', async (e) =&gt; {
+  e.preventDefault();
+  const form    = e.target;
+  const btn     = form.querySelector('[type=submit]');
+  const msgDiv  = document.getElementById('mensaje-error');
+  const spinner = document.getElementById('spinner');
+
+  btn.disabled         = true;
+  spinner.style.display = 'block';
+  msgDiv.textContent   = '';
+
+  const datos = Object.fromEntries(new FormData(form));
+
+  try {
+    const res  = await fetch('/api/login', {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body:    JSON.stringify(datos),
+    });
+    const json = await res.json();
+
+    if (res.status === 401) {
+      msgDiv.textContent = json.mensaje || 'Credenciales incorrectas';
+      return;
+    }
+    if (!res.ok) throw new Error(json.mensaje || `Error ${res.status}`);
+
+    localStorage.setItem('token', json.token);
+    window.location.href = '/dashboard';
+
+  } catch (error) {
+    msgDiv.textContent = error.message;
+  } finally {
+    btn.disabled          = false;
+    spinner.style.display = 'none';
+  }
+});</pre></div></div><div class="section" id="s14-4"><h2 class="section-title"><span class="num">14.4</span> Ejercicio 3 — Búsqueda con debounce y AbortController</h2><div class="exercise"><div class="exercise-label">📝 EJERCICIO 3 — Nivel avanzado</div><h3>Live search con debounce 400ms</h3><p>Implementa una búsqueda en tiempo real en el input con id="search". Requisitos: no hacer petición si el input tiene menos de 3 caracteres, usar debounce de 400ms, cancelar la petición anterior si el usuario sigue escribiendo, mostrar resultados en div id="results" con nombre y precio, manejar AbortError sin mostrarlo al usuario.</p></div><div class="code-block"><div class="code-header"><span class="code-filename">Solución Ejercicio 3</span><button class="copy-btn">Copiar</button></div><pre>const searchInput = document.getElementById('search');
+const resultsDiv  = document.getElementById('results');
+let currentCtrl   = null;
+
+function debounce(fn, delay) {
+  let timer;
+  return (...args) =&gt; { clearTimeout(timer); timer = setTimeout(() =&gt; fn(...args), delay); };
+}
+
+async function buscar(termino) {
+  if (termino.length &lt; 3) { resultsDiv.innerHTML = ''; return; }
+
+  if (currentCtrl) currentCtrl.abort();
+  currentCtrl = new AbortController();
+
+  try {
+    const params = new URLSearchParams({ q: termino });
+    const res    = await fetch(`/api/productos?${params}`, {
+      signal: currentCtrl.signal
+    });
+    const items = await res.json();
+
+    resultsDiv.innerHTML = items.length === 0
+      ? '&lt;p&gt;Sin resultados&lt;/p&gt;'
+      : items.map(i =&gt;
+          `&lt;div class="result"&gt;&lt;b&gt;${i.nombre}&lt;/b&gt; — ${i.precio} €&lt;/div&gt;`
+        ).join('');
+
+  } catch (err) {
+    if (err.name !== 'AbortError') {
+      resultsDiv.innerHTML = '&lt;p class="error"&gt;Error al buscar&lt;/p&gt;';
+    }
+  }
+}
+
+searchInput.addEventListener('input', debounce(e =&gt; buscar(e.target.value.trim()), 400));</pre></div></div><div class="section" id="s14-5"><h2 class="section-title"><span class="num">14.5</span> ✅ Checklist final — AJAX</h2><div class="checklist"><div class="checklist-item"><input type="checkbox" id="a1"><label for="a1">Sé qué es AJAX y por qué se usa (sin recarga, asincronía, experiencia de usuario)</label></div><div class="checklist-item"><input type="checkbox" id="a2"><label for="a2">Sé los métodos HTTP principales y sus diferencias (GET, POST, PUT, PATCH, DELETE)</label></div><div class="checklist-item"><input type="checkbox" id="a3"><label for="a3">Sé los códigos de estado HTTP más importantes (200, 201, 204, 400, 401, 403, 404, 422, 500)</label></div><div class="checklist-item"><input type="checkbox" id="a4"><label for="a4">Sé crear y usar XMLHttpRequest con onload, onerror, readyState 4</label></div><div class="checklist-item"><input type="checkbox" id="a5"><label for="a5">Sé usar Fetch API con .then()/.catch() y comprobar response.ok SIEMPRE</label></div><div class="checklist-item"><input type="checkbox" id="a6"><label for="a6">Sé usar Fetch con async/await y try/catch</label></div><div class="checklist-item"><input type="checkbox" id="a7"><label for="a7">Sé hacer peticiones POST con body JSON y cabecera Content-Type: application/json</label></div><div class="checklist-item"><input type="checkbox" id="a8"><label for="a8">Sé cancelar peticiones con AbortController</label></div><div class="checklist-item"><input type="checkbox" id="a9"><label for="a9">Sé usar JSON.stringify() y JSON.parse() correctamente</label></div><div class="checklist-item"><input type="checkbox" id="a10"><label for="a10">Sé usar Promise.all() para peticiones en paralelo</label></div><div class="checklist-item"><input type="checkbox" id="a11"><label for="a11">Sé el método debounce y para qué sirve en búsquedas en tiempo real</label></div><div class="checklist-item"><input type="checkbox" id="a12"><label for="a12">Sé prevenir el envío de formulario con event.preventDefault()</label></div><div class="checklist-item"><input type="checkbox" id="a13"><label for="a13">Sé enviar formularios con FormData (sin Content-Type manual)</label></div><div class="checklist-item"><input type="checkbox" id="a14"><label for="a14">Sé manipular el DOM con los resultados de AJAX (createElement, innerHTML)</label></div><div class="checklist-item"><input type="checkbox" id="a15"><label for="a15">Sé crear un endpoint PHP que responda JSON correctamente (header + json_encode)</label></div><div class="checklist-item"><input type="checkbox" id="a16"><label for="a16">Sé qué es CORS y cómo se configura en PHP</label></div><div class="checklist-item"><input type="checkbox" id="a17"><label for="a17">Sé crear un sistema CRUD completo con AJAX + PHP + MySQL</label></div><div class="checklist-item"><input type="checkbox" id="a18"><label for="a18">Sé gestionar autenticación JWT con AJAX (guardar token, enviarlo en cabeceras)</label></div><div class="checklist-item"><input type="checkbox" id="a19"><label for="a19">Sé implementar carga dinámica e infinite scroll con AJAX</label></div><div class="checklist-item"><input type="checkbox" id="a20"><label for="a20">Sé la diferencia entre Fetch y Axios, y cuándo usar cada uno</label></div></div></div>
+</div>
+<div class="page-footer"><a href="modulo13.html">← Módulo 13</a><span>Módulo 14 / 14</span><a href="index.html">Volver al Índice →</a></div>
+<script>
+  document.querySelectorAll('.copy-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const code = btn.closest('.code-block').querySelector('pre').innerText;
+      navigator.clipboard.writeText(code).then(() => {
+        btn.textContent = '✓ Copiado'; btn.classList.add('copied');
+        setTimeout(() => { btn.textContent = 'Copiar'; btn.classList.remove('copied'); }, 2000);
+      });
+    });
+  });
+  document.querySelectorAll('.checklist-item input').forEach(cb => {
+    const key = 'ajax_cb_' + cb.id;
+    try { if (localStorage.getItem(key) === '1') { cb.checked = true; cb.closest('.checklist-item').classList.add('done'); } } catch(e){}
+    cb.addEventListener('change', () => {
+      try { localStorage.setItem(key, cb.checked ? '1' : '0'); } catch(e){}
+      cb.closest('.checklist-item').classList.toggle('done', cb.checked);
+    });
+  });
+</script>
+</body>
+</html>

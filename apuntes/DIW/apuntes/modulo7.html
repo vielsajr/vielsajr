@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Módulo 7: APIs REST — Diseño y Consumo — AJAX 2º DAW</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet"><style>
+  :root{--acc:#22d3ee;--acc2:#06b6d4;--acc3:#0891b2;--bg:#030f12;--bg2:#061419;--card:#071a1f;--border:#0d2d35;--text:#ecfeff;--muted:#4d9aaa;--code-bg:#040d10;--code-border:#0c2530;}
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{font-family:'Syne',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+  body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(34,211,238,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(34,211,238,0.03) 1px,transparent 1px);background-size:40px 40px;pointer-events:none;z-index:0;}
+  nav{position:sticky;top:0;z-index:100;background:rgba(3,15,18,0.93);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:14px 24px;display:flex;align-items:center;gap:16px;}
+  nav a.home{font-family:'JetBrains Mono',monospace;font-size:.75rem;color:var(--acc);text-decoration:none;padding:5px 12px;border:1px solid rgba(34,211,238,0.25);border-radius:6px;transition:background .15s;}
+  nav a.home:hover{background:rgba(34,211,238,0.08);}
+  nav .breadcrumb{font-family:'JetBrains Mono',monospace;font-size:.75rem;color:var(--muted);}
+  nav .nav-links{margin-left:auto;display:flex;gap:8px;}
+  nav .nav-links a{font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--muted);text-decoration:none;padding:4px 10px;border-radius:5px;transition:color .15s,background .15s;}
+  nav .nav-links a:hover{color:var(--acc);background:rgba(34,211,238,0.06);}
+  .mod-header{position:relative;z-index:1;max-width:860px;margin:0 auto;padding:52px 24px 36px;}
+  .mod-badge{display:inline-block;background:rgba(34,211,238,0.08);border:1px solid rgba(34,211,238,0.2);color:var(--acc);font-family:'JetBrains Mono',monospace;font-size:.7rem;padding:4px 12px;border-radius:100px;margin-bottom:20px;letter-spacing:.05em;}
+  .mod-header h1{font-size:clamp(1.8rem,4vw,2.8rem);font-weight:800;letter-spacing:-.02em;background:linear-gradient(135deg,#a5f3fc,#22d3ee,#0891b2);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1.15;margin-bottom:12px;}
+  .mod-header p{color:var(--muted);font-size:.95rem;line-height:1.5;}
+  .content{position:relative;z-index:1;max-width:860px;margin:0 auto;padding:0 24px 80px;}
+  .section{margin-bottom:48px;}
+  .section-title{font-size:1.15rem;font-weight:700;color:var(--text);margin-bottom:18px;padding-bottom:10px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;}
+  .section-title span.num{font-family:'JetBrains Mono',monospace;font-size:.7rem;color:var(--acc);background:rgba(34,211,238,0.08);padding:2px 8px;border-radius:4px;}
+  .code-block{background:var(--code-bg);border:1px solid var(--code-border);border-radius:12px;overflow:hidden;margin-bottom:20px;}
+  .code-header{display:flex;align-items:center;justify-content:space-between;padding:10px 16px;background:rgba(34,211,238,0.04);border-bottom:1px solid var(--code-border);}
+  .code-filename{font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--acc);}
+  .code-filename::before{content:'📄 ';}
+  .copy-btn{font-family:'JetBrains Mono',monospace;font-size:.68rem;color:var(--muted);background:none;border:1px solid var(--code-border);padding:3px 10px;border-radius:5px;cursor:pointer;transition:color .15s,border-color .15s;}
+  .copy-btn:hover{color:var(--acc);border-color:rgba(34,211,238,0.3);}
+  .copy-btn.copied{color:var(--acc);}
+  pre{padding:20px;overflow-x:auto;font-family:'JetBrains Mono',monospace;font-size:.8rem;line-height:1.7;color:#cffafe;tab-size:2;}
+  .table-wrap{overflow-x:auto;margin-bottom:20px;border-radius:12px;border:1px solid var(--border);}
+  table{width:100%;border-collapse:collapse;font-size:.84rem;}
+  thead tr{background:rgba(34,211,238,0.05);}
+  th{padding:12px 16px;text-align:left;font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--acc);letter-spacing:.05em;text-transform:uppercase;border-bottom:1px solid var(--border);white-space:nowrap;}
+  td{padding:11px 16px;border-bottom:1px solid rgba(13,45,53,0.8);color:var(--text);line-height:1.5;vertical-align:top;}
+  td:first-child{font-family:'JetBrains Mono',monospace;font-size:.75rem;color:var(--acc);white-space:nowrap;}
+  tr:last-child td{border-bottom:none;}
+  tr:hover td{background:rgba(34,211,238,0.02);}
+  .info-box{background:var(--card);border:1px solid var(--border);border-left:3px solid var(--acc);border-radius:10px;padding:18px 20px;margin-bottom:20px;font-size:.87rem;color:var(--muted);line-height:1.6;}
+  .info-box strong{color:var(--text);}
+  .info-box code{font-family:'JetBrains Mono',monospace;font-size:.8rem;background:rgba(34,211,238,0.08);padding:1px 6px;border-radius:4px;color:var(--acc);}
+  .tip-box{background:rgba(34,211,238,0.04);border:1px solid rgba(34,211,238,0.18);border-radius:10px;padding:16px 20px;margin-bottom:20px;font-size:.86rem;color:var(--muted);line-height:1.6;}
+  .tip-box strong{color:var(--acc);}
+  .tip-box code{font-family:'JetBrains Mono',monospace;font-size:.78rem;background:rgba(34,211,238,0.08);padding:1px 5px;border-radius:3px;color:var(--acc);}
+  .checklist{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:24px;margin-bottom:20px;}
+  .checklist-item{display:flex;align-items:flex-start;gap:12px;padding:8px 0;border-bottom:1px solid rgba(13,45,53,0.7);font-size:.88rem;color:var(--muted);line-height:1.4;}
+  .checklist-item:last-child{border-bottom:none;}
+  .checklist-item input[type=checkbox]{margin-top:2px;accent-color:var(--acc);width:16px;height:16px;flex-shrink:0;cursor:pointer;}
+  .checklist-item label{cursor:pointer;}
+  .checklist-item.done label{text-decoration:line-through;color:var(--acc3);}
+  .exercise{background:linear-gradient(135deg,rgba(34,211,238,0.04),rgba(8,145,178,0.03));border:1px solid rgba(34,211,238,0.18);border-radius:12px;padding:20px 24px;margin-bottom:20px;}
+  .exercise-label{font-family:'JetBrains Mono',monospace;font-size:.68rem;color:var(--acc);text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px;}
+  .exercise h3{font-size:.95rem;font-weight:700;color:var(--text);margin-bottom:10px;}
+  .exercise p{font-size:.85rem;color:var(--muted);line-height:1.6;}
+  .page-footer{position:relative;z-index:1;display:flex;justify-content:space-between;align-items:center;max-width:860px;margin:0 auto;padding:24px;border-top:1px solid var(--border);flex-wrap:wrap;gap:12px;}
+  .page-footer a{font-family:'JetBrains Mono',monospace;font-size:.78rem;color:var(--muted);text-decoration:none;padding:8px 16px;border:1px solid var(--border);border-radius:8px;transition:color .15s,border-color .15s;}
+  .page-footer a:hover{color:var(--acc);border-color:rgba(34,211,238,0.3);}
+  .page-footer span{font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--acc3);}
+  .toc{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px 24px;margin-bottom:40px;}
+  .toc-title{font-family:'JetBrains Mono',monospace;font-size:.7rem;color:var(--acc);text-transform:uppercase;letter-spacing:.08em;margin-bottom:14px;}
+  .toc a{display:block;font-size:.84rem;color:var(--muted);text-decoration:none;padding:5px 0;border-bottom:1px solid rgba(13,45,53,0.6);transition:color .15s,padding-left .15s;}
+  .toc a:last-child{border-bottom:none;}
+  .toc a:hover{color:var(--acc);padding-left:6px;}
+  .toc a::before{content:'›  ';color:var(--acc3);}
+</style>
+</head>
+<body>
+<nav>
+  <a href="index.html" class="home">⌂ Índice</a>
+  <span class="breadcrumb">/ Módulo 7</span>
+  <div class="nav-links"><a href="modulo6.html">← Módulo 6</a><a href="modulo8.html">Módulo 8 →</a></div>
+</nav>
+<div class="mod-header">
+  <div class="mod-badge">MÓDULO 07</div>
+  <h1>APIs REST — Diseño y Consumo</h1>
+  <p>Principios REST, diseño de URLs (recursos, verbos HTTP, query params, paginación) y clase ApiClient reutilizable con campos privados y manejo de errores.</p>
+</div>
+<div class="content">
+  <div class="toc"><div class="toc-title">Contenido</div><a href="#s7-1">7.1 Principios REST y URLs</a><a href="#s7-2">7.2 Clase ApiClient</a></div>
+  <div class="section" id="s7-1"><h2 class="section-title"><span class="num">7.1</span> Principios REST y diseño de URLs</h2><div class="tip-box"><strong>Principios REST:</strong><br>
+• <strong>Sin estado (Stateless):</strong> cada petición contiene toda la información necesaria. El servidor no guarda estado entre peticiones.<br>
+• <strong>Recursos:</strong> todo se modela como recursos con URLs únicas. <code>/api/usuarios</code>, <code>/api/productos/42</code><br>
+• <strong>Verbos HTTP:</strong> GET lee, POST crea, PUT/PATCH actualiza, DELETE elimina.<br>
+• <strong>Representaciones:</strong> los recursos se devuelven en JSON (hoy en día casi siempre).<br>
+• <strong>Interfaz uniforme:</strong> URLs consistentes, cabeceras estándar, códigos HTTP correctos.<br>
+• <strong>Capas:</strong> el cliente no sabe si habla con el servidor real o un intermediario (proxy, CDN...).</div><div class="table-wrap"><table><thead><tr><th>Endpoint</th><th>Descripción</th></tr></thead><tbody><tr><td>GET /api/productos</td><td>Listar todos los productos</td></tr><tr><td>GET /api/productos/42</td><td>Obtener el producto con id=42</td></tr><tr><td>POST /api/productos</td><td>Crear un nuevo producto (datos en el body)</td></tr><tr><td>PUT /api/productos/42</td><td>Reemplazar completamente el producto 42</td></tr><tr><td>PATCH /api/productos/42</td><td>Actualizar parcialmente el producto 42</td></tr><tr><td>DELETE /api/productos/42</td><td>Eliminar el producto 42</td></tr><tr><td>GET /api/usuarios/5/pedidos</td><td>Pedidos del usuario 5 (recurso anidado)</td></tr><tr><td>GET /api/productos?cat=ropa&min=10&max=50</td><td>Filtrar con query params</td></tr><tr><td>GET /api/productos?page=2&per_page=20</td><td>Paginación con query params</td></tr><tr><td>GET /api/productos?sort=precio&order=desc</td><td>Ordenación</td></tr></tbody></table></div></div><div class="section" id="s7-2"><h2 class="section-title"><span class="num">7.2</span> Clase ApiClient reutilizable</h2><div class="code-block"><div class="code-header"><span class="code-filename">api_client.js</span><button class="copy-btn">Copiar</button></div><pre>// Clase ApiClient — abstracción reutilizable para consumir APIs REST
+class ApiClient {
+  #baseUrl;
+  #token;
+
+  constructor(baseUrl, token = null) {
+    this.#baseUrl = baseUrl.replace(/\/$/, '');
+    this.#token   = token;
+  }
+
+  setToken(token) { this.#token = token; }
+
+  #getHeaders(extra = {}) {
+    const headers = {
+      'Content-Type': 'application/json',
+      'Accept':       'application/json',
+      ...extra,
+    };
+    if (this.#token) headers['Authorization'] = `Bearer ${this.#token}`;
+    return headers;
+  }
+
+  async #request(method, endpoint, data = null, signal = null) {
+    const url    = `${this.#baseUrl}${endpoint}`;
+    const config = { method, headers: this.#getHeaders() };
+
+    if (data)   config.body   = JSON.stringify(data);
+    if (signal) config.signal = signal;
+
+    const response = await fetch(url, config);
+    if (!response.ok) {
+      let errorMsg = `Error ${response.status}`;
+      try {
+        const err = await response.json();
+        errorMsg = err.mensaje || err.error || errorMsg;
+      } catch (_) {}
+      throw new Error(errorMsg);
+    }
+    if (response.status === 204) return null;
+    return response.json();
+  }
+
+  get(endpoint, signal)         { return this.#request('GET',    endpoint, null, signal); }
+  post(endpoint, data, signal)  { return this.#request('POST',   endpoint, data, signal); }
+  put(endpoint, data, signal)   { return this.#request('PUT',    endpoint, data, signal); }
+  patch(endpoint, data, signal) { return this.#request('PATCH',  endpoint, data, signal); }
+  delete(endpoint, signal)      { return this.#request('DELETE', endpoint, null, signal); }
+}
+
+// ── Uso del ApiClient ─────────────────────────────────────────────────
+const api = new ApiClient('https://mi-api.com/api', localStorage.getItem('token'));
+
+const productos = await api.get('/productos?page=1&amp;per_page=20');
+const producto  = await api.get('/productos/42');
+const nuevo     = await api.post('/productos', { nombre: 'Teclado', precio: 89.99 });
+const actualiz  = await api.patch('/productos/42', { precio: 79.99 });
+await api.delete('/productos/42');</pre></div></div>
+</div>
+<div class="page-footer"><a href="modulo6.html">← Módulo 6</a><span>Módulo 7 / 14</span><a href="modulo8.html">Módulo 8 →</a></div>
+<script>
+  document.querySelectorAll('.copy-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const code = btn.closest('.code-block').querySelector('pre').innerText;
+      navigator.clipboard.writeText(code).then(() => {
+        btn.textContent = '✓ Copiado'; btn.classList.add('copied');
+        setTimeout(() => { btn.textContent = 'Copiar'; btn.classList.remove('copied'); }, 2000);
+      });
+    });
+  });
+  document.querySelectorAll('.checklist-item input').forEach(cb => {
+    const key = 'ajax_cb_' + cb.id;
+    try { if (localStorage.getItem(key) === '1') { cb.checked = true; cb.closest('.checklist-item').classList.add('done'); } } catch(e){}
+    cb.addEventListener('change', () => {
+      try { localStorage.setItem(key, cb.checked ? '1' : '0'); } catch(e){}
+      cb.closest('.checklist-item').classList.toggle('done', cb.checked);
+    });
+  });
+</script>
+</body>
+</html>
