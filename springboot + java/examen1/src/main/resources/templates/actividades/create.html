@@ -1,0 +1,69 @@
+<th:block th:replace="~{layouts/master :: layout(titulo='Nueva actividad', contenido=~{::#contenido})}">
+    <div id="contenido">
+        <div class="row">
+            <div class="offset-md-3 col-md-6">
+                <div class="card">
+                    <div class="card-header text-center">
+                        Nueva Actividad
+                    </div>
+                    <div class="card-body" style="padding:30px">
+                        <form th:action="@{/actividades/guardar}" th:object="${actividad}" method="post" enctype="multipart/form-data">
+
+                            <div class="mb-3">
+                                <label for="nombre" class="form-label">Nombre</label>
+                                <input th:field="*{nombre}" type="text" class="form-control">
+                                <div th:each="e : ${#fields.errors('nombre')}" th:text="${e}" class="text-danger small"></div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="descripcion" class="form-label">Descripción</label>
+                                <textarea th:field="*{descripcion}" class="form-control"></textarea>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col">
+                                    <label for="precioMensual" class="form-label">Precio mensual (€)</label>
+                                    <input th:field="*{precioMensual}" type="number" step="0.01" class="form-control">
+                                    <div th:if="${#fields.hasErrors('precioMensual')}" th:errors="*{precioMensual}" class="text-danger small"></div>
+                                </div>
+                                <div class="col">
+                                    <label for="plazas" class="form-label">Plazas</label>
+                                    <input th:field="*{plazas}" type="number" class="form-control">
+                                    <div th:if="${#fields.hasErrors('plazas')}" th:errors="*{plazas}" class="text-danger small"></div>
+                                </div>
+                                <div class="col">
+                                    <label for="fechaInicio" class="form-label">Fecha de inicio</label>
+                                    <input th:field="*{fechaInicio}" type="date" class="form-control">
+                                    <div th:if="${#fields.hasErrors('fechaInicio')}" th:errors="*{fechaInicio}" class="text-danger small"></div>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="monitor" class="form-label">Monitor</label>
+                                <select th:field="*{monitor.id}" id="monitor" class="form-select">
+                                    <option value="">Seleccione un monitor</option>
+                                    <option th:each="m : ${monitor}" th:value="${m.id}"
+                                            th:text="${m.nombre} + ' (' + ${m.especialidad} + ')'"></option>
+                                </select>
+                                <div th:if="${#fields.hasErrors('monitor.id')}" th:errors="*{monitor.id}" class="text-danger small"></div>
+                            </div>
+
+                            <div class="mb-3 form-check">
+                                <input th:field="*{activa}" type="checkbox" class="form-check-input">
+                                <label th:for="${#ids.prev('activa')}" class="form-check-label">Activa</label>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="archivo" class="form-label">Imagen (opcional)</label>
+                                <input type="file" name="archivo" id="archivo" class="form-control" accept="image/*">
+                            </div>
+
+                            <button type="submit" class="btn btn-success">Guardar</button>
+                            <a th:href="@{/actividades}">Cancelar</a>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</th:block>

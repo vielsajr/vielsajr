@@ -1,0 +1,24 @@
+<th:block th:replace="~{layouts/master :: layout(titulo='Instalaciones', contenido=~{::#contenido})}">
+    <div id="contenido">
+        <h1 class="mb-4">Instalaciones</h1>
+
+        <h2 class="h4 mt-4">historialReservas()</h2>
+        <ul>
+            <li th:each="i : ${historial}" th:text="${i.nombre}"></li>
+        </ul>
+
+        <h2 class="h4 mt-4">findMasCarasQue(10)</h2>
+        <ul>
+            <li th:each="i : ${masCaras}" th:text="${i.nombre}"></li>
+        </ul>
+
+        <h2 class="h4 mt-4">calcularPrecioTotal(2)</h2>
+        <p th:text="|${#numbers.formatDecimal(precioTotal, 1, 'POINT', 2, 'COMMA')} €|"></p>
+
+        <h2 class="h4 mt-4">contarReservables()</h2>
+        <p th:text="${reservables}"></p>
+
+        <h2 class="h4 mt-4">obtenerMasCara()</h2>
+        <p th:text="${masCara}"></p>
+    </div>
+</th:block>

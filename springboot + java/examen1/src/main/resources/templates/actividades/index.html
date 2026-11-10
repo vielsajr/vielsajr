@@ -1,0 +1,57 @@
+<th:block th:replace="~{layouts/master :: layout(titulo='Actividades', contenido=~{::#contenido})}">
+    <div id="contenido">
+        <h2 class="h4 mb-3">Actividades</h2>
+
+        <div th:if="${mensaje}" class="alert alert-success" th:text="${mensaje}"></div>
+        <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+
+        <div class="table-responsive">
+            <table class="table table-striped align-middle">
+                <thead>
+                <tr>
+                    <th>Imagen</th>
+                    <th>Actividad</th>
+                    <th>Monitor</th>
+                    <th>Inicio</th>
+                    <th>Precio/mes</th>
+                    <th>Plazas</th>
+                    <th>Estado</th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="a : ${actividad}">
+                    <td>
+                        <img th:if="${a.imagen != null and !a.imagen.isBlank()}"
+                             th:src="@{/img/imagenes/{img}(img=${a.imagen})}"
+                             th:alt="${a.nombre}" style="width:60px">
+                        <span th:unless="${a.imagen != null and !a.imagen.isBlank()}" class="text-muted small">Sin imagen</span>
+                    </td>
+                    <td>
+                        <strong th:text="${a.nombre}"></strong><br>
+                        <small class="text-muted" th:text="${a.descripcion}"></small>
+                    </td>
+                    <td th:text="|${a.monitor.nombre} (${a.monitor.especialidad})|"></td>
+                    <td th:text="${#temporals.format(a.fechaInicio, 'dd/MM/yyyy')}"></td>
+                    <td th:style="${a.precioMensual > 30} ? 'color:red; font-weight:bold' : 'color:green'"
+                        th:text="|${#numbers.formatDecimal(a.precioMensual, 1, 'POINT', 2, 'COMMA')} €|"></td>
+                    <td th:text="${a.plazas}"></td>
+                    <td>
+                        <span class="badge"
+                              th:classappend="${a.activa} ? 'bg-success' : 'bg-secondary'"
+                              th:text="${a.activa} ? 'Activa' : 'Inactiva'"></span>
+                    </td>
+                    <td class="text-end">
+                        <form th:action="@{/actividades/{id}/borrar(id=${a.id})}" th:method="delete">
+                            <button type="submit" class="btn btn-outline-danger btn-sm"
+                                    onclick="return confirm('¿Seguro que quieres borrar esta actividad?')">
+                                Eliminar
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</th:block>

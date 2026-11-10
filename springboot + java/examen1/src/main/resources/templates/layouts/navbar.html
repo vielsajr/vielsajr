@@ -1,0 +1,17 @@
+<nav th:fragment="navbar-principal" class="navbar navbar-expand-lg navbar-dark fixed-top bg-success shadow">
+    <div class="container-fluid">
+        <a class="navbar-brand" th:href="@{/}">Club Deportivo</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarPrincipal"
+                aria-controls="navbarPrincipal" aria-expanded="false" aria-label="Menú">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarPrincipal">
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item"><a th:href="@{/actividades}" class="nav-link">Actividades</a></li>
+                <li class="nav-item"><a th:href="@{/actividades/crear}" class="nav-link">Nueva actividad</a></li>
+                <li class="nav-item"><a th:href="@{/monitores}" class="nav-link">Monitores</a></li>
+                <li class="nav-item"><a th:href="@{/instalaciones}" class="nav-link">Instalaciones</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>

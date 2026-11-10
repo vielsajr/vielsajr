@@ -1,0 +1,31 @@
+<th:block th:replace="~{layouts/master :: layout(titulo='Monitores', contenido=~{::#contenido})}">
+    <div id="contenido">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h2 class="h4 mb-0">Monitores</h2>
+        </div>
+        <div class="alert alert-info" th:if="${#lists.isEmpty(monitores)}">
+            Todavia no hay numismaticos en la colección.
+        </div>
+        <div th:if="${mensaje}" class="alert alert-success" th:text="${mensaje}"></div>
+        <div class="table-responsive" th:unless="${#lists.isEmpty(monitores)}">
+            <table class="table table-striped align-middle">
+                <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Nombre</th>
+                    <th>Especialidad</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="m : ${monitores}">
+                    <td th:text="${m.id}"></td>
+                    <td>
+                        <a th:href="@{/actividades(monitor=${m.id})}" th:text="${m.nombre}"></a>
+                    </td>
+                    <td th:text="${m.especialidad}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</th:block>

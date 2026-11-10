@@ -1,0 +1,11 @@
+/* Hueco para que la navbar fixed-top no tape el contenido */
+body {
+    padding-top: 70px;
+}
+
+/* Miniatura de la imagen de la actividad en el listado */
+.miniatura {
+    width: 70px;
+    height: 50px;
+    object-fit: cover;
+}
